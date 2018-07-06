@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #fafafa;
+}
+
+.wrapper {
+  padding-top: 2.85714286em;
+}
+
+.page {
+  margin-top: 7em;
+}
