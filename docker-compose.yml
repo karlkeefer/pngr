@@ -1,0 +1,15 @@
+version: '3'
+services:
+  app:
+    build: back
+    ports:
+      - "3000:3000"
+      # volume in the front-end build & live-reload artefacts
+
+  psql:
+    image: "postgres:10.4-alpine"
+
+  nginx:
+    build: nginx
+    ports:
+      - "443:443"

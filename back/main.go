@@ -6,7 +6,7 @@ import (
     "net/http"
 )
 
-const port = ":5000"
+const port = ":3000"
 
 func main() {
     routes.Configure()

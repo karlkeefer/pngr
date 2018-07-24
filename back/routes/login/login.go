@@ -16,20 +16,20 @@ type loginResponse struct {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+    // TODO: guard bad method
     decoder := json.NewDecoder(r.Body)
     var t loginRequest
     err := decoder.Decode(&t)
     if err != nil {
-        panic(err)
+        log.Println("Invalid JSON", err)
+        w.WriteHeader(http.StatusBadRequest)
+        return
     }
 
     log.Println("Logging in:", t.Id, t.Password)
 
-    resp := &loginResponse{
-        Session: "placeholder",
-    }
-
     w.Header().Set("Content-Type", "application/json")
-    encoder := json.NewEncoder(w)
-    encoder.Encode(resp)
+    json.NewEncoder(w).Encode(&loginResponse{
+        Session: "placeholder",
+    })
 }
