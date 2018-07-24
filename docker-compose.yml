@@ -1,14 +1,15 @@
 version: '3'
 services:
   app:
-    build: back
+    build: .
     ports:
       - "3000:3000"
-      # volume in the front-end build & live-reload artefacts
 
+  # postgres is our primary data store
   psql:
     image: "postgres:10.4-alpine"
 
+  # nginx is used for ssl termination
   nginx:
     build: nginx
     ports:
