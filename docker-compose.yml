@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # back-end api built with golang
   golang:
     build: golang
     volumes:
@@ -13,6 +14,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
 
+  # front-end built with react
   react:
     build: react
     volumes:

@@ -11,12 +11,12 @@ FROM node:10.7-alpine
 WORKDIR /root/
 COPY front .
 RUN npm install
-RUN npm run build
+RUN npm run build -o app
 
 # then copy the built binary and static files into a minimal image
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=0 /root/main .
+COPY --from=0 /root/app .
 COPY --from=1 /root/build /root/front
 
-CMD ["./main"]
+CMD ./app
