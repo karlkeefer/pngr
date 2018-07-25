@@ -1,7 +1,16 @@
 version: '3'
 services:
-  app:
-    build: .
+  back:
+    build: back
+    volumes:
+      - ./back:/root
+    ports:
+      - "5000:5000"
+
+  front:
+    build: front
+    volumes:
+      - ./front:/root
     ports:
       - "3000:3000"
 

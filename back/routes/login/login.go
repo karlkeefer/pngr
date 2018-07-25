@@ -16,12 +16,15 @@ type loginResponse struct {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-    // TODO: guard bad method
+    if r.Method != http.MethodPost {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
+
     decoder := json.NewDecoder(r.Body)
     var t loginRequest
     err := decoder.Decode(&t)
     if err != nil {
-        log.Println("Invalid JSON", err)
         w.WriteHeader(http.StatusBadRequest)
         return
     }
