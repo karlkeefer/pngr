@@ -1,16 +1,16 @@
 version: '3'
 services:
-  back:
-    build: back
+  golang:
+    build: golang
     volumes:
-      - ./back:/root
+      - ./golang:/go/src/github.com/karlkeefer/pngr/golang
     ports:
       - "5000:5000"
 
-  front:
-    build: front
+  react:
+    build: react
     volumes:
-      - ./front:/root
+      - ./react:/root
     ports:
       - "3000:3000"
 
