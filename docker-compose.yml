@@ -6,6 +6,12 @@ services:
       - ./golang:/go/src/github.com/karlkeefer/pngr/golang
     ports:
       - "5000:5000"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
 
   react:
     build: react
@@ -15,7 +21,7 @@ services:
       - "3000:3000"
 
   # postgres is our primary data store
-  psql:
+  postgres:
     image: "postgres:10.4-alpine"
 
   # nginx is used for ssl termination

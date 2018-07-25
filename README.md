@@ -13,18 +13,6 @@ This project is meant to be a starting point. Feel free to create issues with su
 2) Visit https://localhost (and approve the self-signed cert)
 3) Make changes to either front-end or back-end code, and watch it rebuild itself!
 
-### Dev Server Proxies
-This is a bit confusing, so I thought I would document how requests are routed in the dev server.
-
-#### Backend
-- Nginx receives api calls on `443` 
-- Docker container `back` is running `gin` on port `5000` which watches for file changes and rebuilds the backend
-- `gin` proxies requruns a proxy to the main app on port `5050`.
-
-#### Frontend
-- Nginx receives api calls on `443` 
-- Docker container `front` is running the create-react-app dev server on port `3000`
-
 ## Production Builds
 *Warning: this code is pre-alpha quality! Run in production at your own risk*
 

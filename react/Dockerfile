@@ -4,4 +4,4 @@
 FROM node:10.7-alpine
 WORKDIR /root/
 RUN npm install
-CMD npm install && npm start
+CMD npm start

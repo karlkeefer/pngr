@@ -5,13 +5,10 @@ FROM golang:1.10
 
 WORKDIR /go/src/github.com/karlkeefer/pngr/golang
 
-RUN go get github.com/codegangsta/gin
 RUN go get github.com/golang/dep/...
+RUN go get github.com/cortesi/modd/cmd/modd
 
 COPY . .
 RUN dep ensure -vendor-only
 
-# make sure it builds even though we are going to rely on gin
-RUN go build main.go
-
-CMD gin --godep --port=5000 --appPort=5050 run /go/src/github.com/karlkeefer/pngr/golang/main.go
+CMD modd
