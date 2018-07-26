@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fs"
 	"net/http"
 	"routes/login"
 	"routes/logout"
