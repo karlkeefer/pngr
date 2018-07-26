@@ -24,7 +24,9 @@ services:
 
   # postgres is our primary data store
   postgres:
-    image: "postgres:10.4-alpine"
+    build: postgres
+    volumes:
+      - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations
 
   # nginx is used for ssl termination
   nginx:
