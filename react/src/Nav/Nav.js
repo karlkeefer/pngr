@@ -14,15 +14,7 @@ const Link = props => (
 export default class Home extends Component {
   handleLogOut() {
     // TODO: move login/logout/sessionHandler stuff into a single spot
-
-    // TODO: optimistically clear out local 
-    // session info in case the logout API call fails
-
-    fetch('/api/logout').then(resp => {
-      if (resp.status !== 200) {
-        // TODO: Warn about API failures in some generic way
-      }
-    });
+    // TODO: delete jwt
   }
 
   render() {
