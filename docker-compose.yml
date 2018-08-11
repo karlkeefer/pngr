@@ -8,6 +8,8 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - APP_ROOT=https://localhost
+      - TOKEN_SECRET=asd973hkalkjhx97asdh
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USER=postgres

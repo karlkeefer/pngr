@@ -18,12 +18,7 @@ export default class Home extends Component {
     // TODO: optimistically clear out local 
     // session info in case the logout API call fails
 
-    fetch('/api/logout', {
-      method: 'POST', 
-      body: JSON.stringify({
-        session: 'mySessionKey'
-      })
-    }).then(resp => {
+    fetch('/api/logout').then(resp => {
       if (resp.status !== 200) {
         // TODO: Warn about API failures in some generic way
       }

@@ -30,9 +30,13 @@
   unused-packages = true
 
 [[constraint]]
-  branch = "master"
   name = "github.com/jmoiron/sqlx"
+  version = "sqlx-v1.1"
 
 [[constraint]]
   branch = "master"
   name = "github.com/lib/pq"
+
+[[constraint]]
+  name = "github.com/dgrijalva/jwt-go"
+  version = "3.2.0"

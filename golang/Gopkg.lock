@@ -2,13 +2,19 @@
 
 
 [[projects]]
-  branch = "master"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   name = "github.com/jmoiron/sqlx"
   packages = [
     ".",
     "reflectx"
   ]
-  revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
+  revision = "69738bd209812c5a381786011aff17944a384554"
+  version = "sqlx-v1.1"
 
 [[projects]]
   branch = "master"
@@ -22,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "79c7eca9f8ea930fa8a85d380dbdc6a9837680b6b0f5ed02272c0c59f8f04d82"
+  inputs-digest = "33df5676aa85a5b0089a8275f0bcee68dc108935a14269af3f0939c5d8d664d6"
   solver-name = "gps-cdcl"
   solver-version = 1

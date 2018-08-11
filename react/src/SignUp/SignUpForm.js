@@ -4,7 +4,7 @@ import { Form, Button } from 'semantic-ui-react'
 const defaultState = {
   loading: false,
   email: '',
-  password: ''
+  pass: ''
 };
 
 export default class SignUpForm extends Component {
@@ -18,23 +18,23 @@ export default class SignUpForm extends Component {
     e.preventDefault();
     this.setState({loading: true});
 
-    const {email, password} = this.state;
+    const {email, pass} = this.state;
 
     fetch('/api/signup', {
       method: 'POST', 
       body: JSON.stringify({
-        id: email,
-        password: password
+        email: email,
+        pass: pass
       })
     }).then(resp => resp.json())
     .then((result)=> {
-      // TODO: redirect somewhere on successful login
+      console.log(result.URL);
       this.setState(defaultState);
     });
   }
 
   render() {
-    const {loading, email, password} = this.state;
+    const {loading, email, pass} = this.state;
 
     return (
       <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
@@ -48,11 +48,11 @@ export default class SignUpForm extends Component {
           onChange={this.handleChange} />
         <Form.Input
           size="big"
-          name="password"
+          name="pass"
           type="password"
           placeholder="Password"
           required
-          value={password}
+          value={pass}
           onChange={this.handleChange} />
         <Button positive fluid size="huge" type="submit">Create Account</Button>
       </Form>
