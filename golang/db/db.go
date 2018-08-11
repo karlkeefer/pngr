@@ -40,7 +40,7 @@ func buildConnectionString() string {
 	port := os.Getenv("POSTGRES_PORT")
 	dbname := os.Getenv("POSTGRES_DB")
 	if host == "" || port == "" || dbname == "" {
-		log.Fatalln("You must include POSTGRES_HOST, POSTGRES_PORT, and OSTGRES_DB environment variables")
+		log.Fatalln("You must include POSTGRES_HOST, POSTGRES_PORT, and POSTGRES_DB environment variables")
 	}
 
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, pass, host, port, dbname)
