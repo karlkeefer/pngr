@@ -9,25 +9,20 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var database *sqlx.DB
-
-func init() {
-	var err error
+func New() (database *sqlx.DB, err error) {
 	str := buildConnectionString()
 
 	database, err = sqlx.Open("postgres", str)
 	if err != nil {
-		log.Fatalln("Unable to open database", err)
+		return
 	}
 
 	err = database.Ping()
 	if err != nil {
-		log.Fatalln("Unable to ping database", err)
+		return
 	}
-}
 
-func DB() *sqlx.DB {
-	return database
+	return
 }
 
 func buildConnectionString() string {

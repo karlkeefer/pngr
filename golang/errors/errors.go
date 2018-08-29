@@ -14,6 +14,7 @@ var (
 	InvalidEmail = errors.New("Invalid Email")
 
 	VerificationNotFound = errors.New("Invalid Verification Code")
+	VerificationExpired  = errors.New("Verification Code Was Already Used")
 	UserNotFound         = errors.New("User does not exist")
 	RouteNotFound        = errors.New("Route not found")
 )
@@ -24,6 +25,7 @@ func codeMap() map[error]int {
 		NoJSONBody:           http.StatusBadRequest,
 		InvalidEmail:         http.StatusBadRequest,
 		VerificationNotFound: http.StatusNotFound,
+		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
 		RouteNotFound:        http.StatusNotFound,
 		InternalError:        http.StatusInternalServerError,

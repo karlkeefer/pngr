@@ -7,8 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/routes"
+	"github.com/karlkeefer/pngr/golang/server"
 )
 
 const port = ":5000"
@@ -16,12 +15,13 @@ const port = ":5000"
 func main() {
 	go handleSignals()
 
-	// connect to postgres
-	_ = db.DB()
-	log.Println("Successfully connected to postgres")
+	srv, err := server.New()
+	if err != nil {
+		log.Fatalln("Unable to initialize server", err)
+	}
 
 	log.Println("Listening on", port)
-	err := http.ListenAndServe(port, routes.Configure())
+	err = http.ListenAndServe(port, srv)
 
 	if err != nil {
 		log.Fatalln("ListenAndServe error:", err)

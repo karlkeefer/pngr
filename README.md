@@ -9,7 +9,7 @@ This project is meant to be a starting point. Feel free to create issues with su
 - Install docker && docker-compose
 
 ## Start the Dev Server
-1) `docker-compose up` (might need sudo)
+1) `sudo docker-compose up`
 2) Visit https://localhost (and approve the self-signed cert)
 3) Make changes to either golang or react code, and watch the app rebuild itself!
 
@@ -31,14 +31,14 @@ Migrations are run using [pgmigrate](https://github.com/yandex/pgmigrate).
 - `postgres/run-migrations.sh` will execute any new migrations 
 
 ### Opening a psql client
-`docker exec -it pngr_postgres_1 psql --username postgres --dbname postgres`
+`sudo docker exec -it pngr_postgres_1 psql --username postgres --dbname postgres`
 Remember to use `\q` to exit.
 
 ### Rebuilding your database from scratch
 If you want to clear out your postgres instance and start fresh, due to a bad migration or some other issue, normal container recreation isn't enough, because docker compose creates a volume for postgres data.
 
 To *fully* reset your postgres instance, run:
-`docker-compose down -v postgres && docker-compose --build --force-recreate`
+`sudo docker-compose down -v && sudo docker-compose up --build --force-recreate`
 
 --- 
 

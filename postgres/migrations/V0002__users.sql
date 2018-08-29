@@ -5,7 +5,6 @@ CREATE TABLE users (
 	name			VARCHAR(60)		UNIQUE,
 	email			VARCHAR(254)	NOT NULL UNIQUE,
 	pass			VARCHAR(60)		NOT NULL,
-	roles			INTEGER			NOT NULL,
 	status			INTEGER			NOT NULL,
 	verification	VARCHAR(60) 	NOT NULL,
 	created			TIMESTAMP		NOT NULL DEFAULT now()

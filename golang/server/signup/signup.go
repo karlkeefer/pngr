@@ -1,6 +1,7 @@
 package signup
 
 import (
+	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 
@@ -14,18 +15,16 @@ type signupResponse struct {
 	URL string
 }
 
-type Handler struct{}
-
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func ServeHTTP(env *env.Env, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-		h.handlePost(w, r)
+		handlePost(env, w, r)
 	default:
 		errors.Write(w, errors.BadRequestMethod)
 	}
 }
 
-func (h *Handler) handlePost(w http.ResponseWriter, r *http.Request) {
+func handlePost(env *env.Env, w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var u user.User
 	err := decoder.Decode(&u)
@@ -34,13 +33,13 @@ func (h *Handler) handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err, _ = user.FindByEmail(u.Email)
+	err, _ = env.UserRepo().FindByEmail(u.Email)
 	if err != errors.UserNotFound {
 		errors.Write(w, errors.InvalidEmail)
 		return
 	}
 
-	err = user.Insert(&u)
+	err = env.UserRepo().Signup(&u)
 	if err != nil {
 		errors.Write(w, err)
 		return

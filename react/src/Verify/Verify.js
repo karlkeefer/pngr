@@ -1,26 +1,40 @@
 import React, { Component } from 'react'
 import { Container, Grid, Segment } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
 
 export default class Verify extends Component {
 
   state = {
-    loading: false
+    success: false,
+    error: null
   }
 
   componentDidMount = () => {
     const { verification } = this.props.match.params
-    
-    this.setState({loading: true});
 
     fetch(`/api/verify/${verification}`)
       .then(resp => resp.json())
-      .then((result)=> {
-        console.log(result);
-        // Redirect!
+      .then(result => {
+        if (result.Error) {
+          this.setState({
+            error: result.Error
+          });
+        } else {
+          this.setState({
+            success: true
+          });
+        }
       });
   }
 
   render() {
+    const { success, error } = this.state;
+     if (success) {
+      return (
+        <Redirect to="/account"/>
+      );
+    }
+
     return (
       <Container className="page">
         <Grid centered>
@@ -28,8 +42,7 @@ export default class Verify extends Component {
             <h1>Verifying your account...</h1>
             <Segment.Group>
               <Segment>
-                { /*progress bar here, replaced with success message and redirect*/ }
-                Loading...
+                {error ? 'Error: ' + error : 'Loading...'}
               </Segment>
             </Segment.Group>
           </Grid.Column>
