@@ -14,7 +14,7 @@ export default class Verify extends Component {
   componentDidMount = () => {
     const { verification } = this.props.match.params
 
-    API.verify(verification)
+    API.verify({code: verification})
       .then((res) => {
         this.setState({success: true});
       })

@@ -5,9 +5,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/utils"
 
-	"github.com/karlkeefer/pngr/golang/server/login"
-	"github.com/karlkeefer/pngr/golang/server/signup"
-	"github.com/karlkeefer/pngr/golang/server/verify"
+	"github.com/karlkeefer/pngr/golang/server/handlers"
 
 	"net/http"
 )
@@ -30,15 +28,24 @@ func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 	var head string
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
+
+	var handler http.HandlerFunc
+	var err error
+
 	switch head {
-	case "login":
-		login.ServeHTTP(srv.env, w, r)
-	case "signup":
-		signup.ServeHTTP(srv.env, w, r)
-	case "verify":
-		verify.ServeHTTP(srv.env, w, r)
+	case "session":
+		handler, err = handlers.Session(srv.env, w, r)
+	case "user":
+		handler, err = handlers.User(srv.env, w, r)
 	default:
-		errors.Write(w, errors.RouteNotFound)
+		err = errors.RouteNotFound
+	}
+
+	if err != nil {
+		errors.Write(w, err)
+	} else {
+		// TODO: wrap with middleware for CORS, CSRF, etc.
+		handler(w, r)
 	}
 }
 

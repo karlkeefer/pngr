@@ -4,23 +4,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/karlkeefer/pngr/golang/errors"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
 	"encoding/json"
 	"math/rand"
-	"os"
 	"time"
 )
-
-var hmacSecret []byte
-
-func init() {
-	hmacSecret = []byte(os.Getenv("TOKEN_SECRET"))
-	if hmacSecret == nil {
-		panic("No TOKEN_SECRET environment variable was found")
-	}
-}
 
 type User struct {
 	ID           int64
@@ -95,7 +84,7 @@ func generateRandomString(n int) string {
 }
 
 func (r *Repo) Signup(u *User) error {
-	err, _ := r.FindByEmail(u.Email)
+	_, err := r.FindByEmail(u.Email)
 	if err != errors.UserNotFound {
 		return errors.InvalidEmail
 	}
@@ -126,80 +115,52 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-type Auth struct {
-	JWT string
-}
-
-func (r *Repo) Authenticate(u *User) (error, *Auth) {
-	err, fromDB := r.FindByEmail(u.Email)
+func (r *Repo) Authenticate(u *User) (fromDB *User, err error) {
+	fromDB, err = r.FindByEmail(u.Email)
 	if err != nil {
-		return err, nil
+		return
 	}
 
 	if !checkPasswordHash(u.Pass, fromDB.Pass) {
-		return errors.FailedLogin, nil
+		err = errors.FailedLogin
 	}
 
-	u = fromDB
-
-	return buildAuth(u)
+	return
 }
 
-func buildAuth(u *User) (error, *Auth) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": jwt.MapClaims{
-			"ID":      u.ID,
-			"Name":    u.Name,
-			"Email":   u.Email,
-			"Status":  u.Status,
-			"Created": u.Created,
-		},
-		// TODO: setup appropriate JWT values time-related claims
-		"nbf": time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
-	})
-
-	tokenString, err := token.SignedString(hmacSecret)
-	if err != nil {
-		return errors.InternalError, nil
-	}
-
-	return nil, &Auth{
-		JWT: tokenString,
-	}
-}
-
-func (r *Repo) FindByEmail(e string) (error, *User) {
+func (r *Repo) FindByEmail(e string) (*User, error) {
 	var u User
 
 	err := r.db.Get(&u, `SELECT * FROM users WHERE email = $1 LIMIT 1`, e)
 	if err != nil {
-		return errors.UserNotFound, nil
+		return nil, errors.UserNotFound
 	}
 
-	return nil, &u
+	return &u, nil
 }
 
-func (r *Repo) Verify(code string) (error, *Auth) {
-	var u User
+func (r *Repo) Verify(code string) (u *User, err error) {
 
-	err := r.db.Get(&u, `SELECT * FROM users WHERE verification = $1 LIMIT 1`, code)
+	err = r.db.Get(&u, `SELECT * FROM users WHERE verification = $1 LIMIT 1`, code)
 	if err != nil {
-		return errors.VerificationNotFound, nil
+		err = errors.VerificationNotFound
+		return
 	}
 
 	if u.Status != UserStatusUnverified {
-		return errors.VerificationExpired, nil
+		err = errors.VerificationExpired
+		return
 	}
 
 	// update status
 	u.Status = UserStatusActive
 
-	err = r.UpdateStatus(&u)
+	err = r.UpdateStatus(u)
 	if err != nil {
-		return err, nil
+		return
 	}
 
-	return buildAuth(&u)
+	return
 }
 
 func (r *Repo) UpdateStatus(u *User) (err error) {

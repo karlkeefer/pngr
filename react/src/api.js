@@ -1,7 +1,4 @@
 import { Container } from 'unstated'
-import { Cookies } from 'react-cookie'
-
-const cookies = new Cookies();
 
 const defaultState = {
   jwt: '',
@@ -10,59 +7,46 @@ const defaultState = {
   }
 };
 
-function parseToken (token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace('-', '+').replace('_', '/');
-  return JSON.parse(window.atob(base64));
-};
-
+// TODO: add csrf prevention
 export class APIContainer extends Container {
   constructor(props) {
-    super(props);
-
-    const jwt = cookies.get('jwt');
-
-    this.state = Object.assign(defaultState, {jwt: jwt});
-
-    if (jwt) {
-      const claims = parseToken(jwt);
-      if (claims && claims.user) {
-        this.state.user = claims.user;
-      }
-    }
+    super(props)
+    this.whoami();
   }
 
+  state = defaultState
+
   signup = (body) => {
-    return this._post('/api/signup', body);
+    return this._post('/api/user', body);
+  }
+
+  verify = (body) => {
+    return this._post('/api/user/verify', body)
+      .then(this._setUser);
+  }
+
+  whoami = () => {
+    // validates existing jwt from cookies
+    // and sends back parsed user data from that token
+    return this._get('/api/user')
+      .then(this._setUser);
   }
 
   logout = () => {
-    cookies.remove('jwt');
     this.setState(defaultState);
+    return this._delete('/api/session');
   }
 
   login = (body) => {
-    return this._post('/api/login', body)
-      .then(this._handleAuth);
+    return this._post('/api/session', body)
+      .then(this._setUser);
   }
 
-  verify = (code) => {
-    return this._get(`/api/verify/${code}`)
-      .then(this._handleAuth);
-  }
-
-  _handleAuth = (res) => {
-    // TODO: setup httpOnly, secure, and related cookie options
-    // TODO: setup additional CSRF protection for this cookie
-    
-    cookies.set('jwt', res.JWT);
-    const claims = parseToken(res.JWT);
-
+  _setUser = (user) => {
     this.setState({
-      jwt: res.JWT, 
-      user: claims.user
+      user: user
     });
-    return Promise.resolve(res);
+    return Promise.resolve(user);
   }
 
   _get = (url, body) => {
@@ -73,9 +57,14 @@ export class APIContainer extends Container {
     return this._fetch('POST', url, body);
   }
 
+  _delete = (url, body) => {
+    return this._fetch('DELETE', url, body);
+  }
+
+
   _fetch = (method, url, body) => {
     return fetch(url, {
-      method: method, 
+      method: method,
       body: JSON.stringify(body)
     })
     .then(resp => resp.json())
