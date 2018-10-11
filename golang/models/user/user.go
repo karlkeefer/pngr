@@ -127,8 +127,7 @@ func checkPasswordHash(password, hash string) bool {
 }
 
 type Auth struct {
-	JWT  string
-	User *User
+	JWT string
 }
 
 func (r *Repo) Authenticate(u *User) (error, *Auth) {
@@ -149,7 +148,11 @@ func (r *Repo) Authenticate(u *User) (error, *Auth) {
 func buildAuth(u *User) (error, *Auth) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": jwt.MapClaims{
-			"id": u.ID,
+			"ID":      u.ID,
+			"Name":    u.Name,
+			"Email":   u.Email,
+			"Status":  u.Status,
+			"Created": u.Created,
 		},
 		// TODO: setup appropriate JWT values time-related claims
 		"nbf": time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
@@ -161,8 +164,7 @@ func buildAuth(u *User) (error, *Auth) {
 	}
 
 	return nil, &Auth{
-		JWT:  tokenString,
-		User: u,
+		JWT: tokenString,
 	}
 }
 

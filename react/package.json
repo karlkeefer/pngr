@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "react": "^16.4.1",
+    "react-cookie": "^3.0.4",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "^2.0.4",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.2",
     "unstated": "^2.1.1"
@@ -16,5 +17,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

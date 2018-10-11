@@ -1,42 +1,66 @@
 import { Container } from 'unstated'
+import { Cookies } from 'react-cookie'
 
-// TODO: store/retrive token and user in cookie
-// TODO: can we read the user props from the token on the client-side?
+const cookies = new Cookies();
+
 const defaultState = {
-  token: '',
+  jwt: '',
   user: {
     ID: 0
   }
 };
 
+function parseToken (token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace('-', '+').replace('_', '/');
+  return JSON.parse(window.atob(base64));
+};
+
 export class APIContainer extends Container {
-  state = defaultState
+  constructor(props) {
+    super(props);
+
+    const jwt = cookies.get('jwt');
+
+    this.state = Object.assign(defaultState, {jwt: jwt});
+
+    if (jwt) {
+      const claims = parseToken(jwt);
+      if (claims && claims.user) {
+        this.state.user = claims.user;
+      }
+    }
+  }
 
   signup = (body) => {
     return this._post('/api/signup', body);
   }
 
   logout = () => {
-    // TODO: delete cookie
+    cookies.remove('jwt');
     this.setState(defaultState);
   }
 
   login = (body) => {
     return this._post('/api/login', body)
-    .then(this._handleAuth);
+      .then(this._handleAuth);
   }
 
   verify = (code) => {
     return this._get(`/api/verify/${code}`)
-    .then(this._handleAuth);
+      .then(this._handleAuth);
   }
 
   _handleAuth = (res) => {
-    // TODO: set a cookie and read from the cookie on init
-    // TODO: setup CSRF protection for said cookie
+    // TODO: setup httpOnly, secure, and related cookie options
+    // TODO: setup additional CSRF protection for this cookie
+    
+    cookies.set('jwt', res.JWT);
+    const claims = parseToken(res.JWT);
+
     this.setState({
-      token: res.JWT, 
-      user: res.User
+      jwt: res.JWT, 
+      user: claims.user
     });
     return Promise.resolve(res);
   }
