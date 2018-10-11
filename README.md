@@ -50,14 +50,15 @@ It also terminates SSL so that we don't have to deal with certs in our app layer
 
 ## Golang
 Almost-vanilla golang api:
-- [dep](https://github.com/golang/dep) for dependencies (to be replaced with go modules with Go 1.11)
+- Makes use of go modules for dependencies(!)
+- [jwt-gp](github.com/dgrijalva/jwt-go) for JSON Web Tokens
 - [Sqlx](https://github.com/jmoiron/sqlx) for cleaner interactions with postgres
 
 --- 
 
 ## React
 The basic building blocks of the front-end are:
-- [Create React App](https://github.com/facebookincubator/create-react-app)
+- [Create React App](https://github.com/facebookincubator/create-react-app) (unejected!)
 - [React Router](https://github.com/ReactTraining/react-router)
 - [Unstated](https://github.com/jamiebuilds/unstated)
 - [Semantic UI React](https://react.semantic-ui.com/)
