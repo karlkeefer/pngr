@@ -7,6 +7,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
+	"encoding/json"
 	"math/rand"
 	"os"
 	"time"
@@ -29,6 +30,24 @@ type User struct {
 	Status       int
 	Verification string
 	Created      time.Time
+}
+
+// protect private fields from being sent *out*
+func (u User) MarshalJSON() ([]byte, error) {
+	var tmp struct {
+		ID      int64
+		Name    *string // nullable
+		Email   string
+		Status  int
+		Created time.Time
+	}
+
+	tmp.ID = u.ID
+	tmp.Name = u.Name
+	tmp.Email = u.Email
+	tmp.Status = u.Status
+	tmp.Created = u.Created
+	return json.Marshal(&tmp)
 }
 
 const (
@@ -76,11 +95,15 @@ func generateRandomString(n int) string {
 }
 
 func (r *Repo) Signup(u *User) error {
+	err, _ := r.FindByEmail(u.Email)
+	if err != errors.UserNotFound {
+		return errors.InvalidEmail
+	}
+
 	// set verification code
 	u.Verification = generateRandomString(32)
 
 	// hash the password
-	var err error
 	u.Pass, err = hashPassword(u.Pass)
 
 	if err != nil {
@@ -104,11 +127,21 @@ func checkPasswordHash(password, hash string) bool {
 }
 
 type Auth struct {
-	JWT string
+	JWT  string
+	User *User
 }
 
 func (r *Repo) Authenticate(u *User) (error, *Auth) {
-	// TODO: check that email and pass match
+	err, fromDB := r.FindByEmail(u.Email)
+	if err != nil {
+		return err, nil
+	}
+
+	if !checkPasswordHash(u.Pass, fromDB.Pass) {
+		return errors.FailedLogin, nil
+	}
+
+	u = fromDB
 
 	return buildAuth(u)
 }
@@ -128,13 +161,20 @@ func buildAuth(u *User) (error, *Auth) {
 	}
 
 	return nil, &Auth{
-		JWT: tokenString,
+		JWT:  tokenString,
+		User: u,
 	}
 }
 
 func (r *Repo) FindByEmail(e string) (error, *User) {
-	// r.db.Select()
-	return errors.UserNotFound, nil
+	var u User
+
+	err := r.db.Get(&u, `SELECT * FROM users WHERE email = $1 LIMIT 1`, e)
+	if err != nil {
+		return errors.UserNotFound, nil
+	}
+
+	return nil, &u
 }
 
 func (r *Repo) Verify(code string) (error, *Auth) {
@@ -145,7 +185,7 @@ func (r *Repo) Verify(code string) (error, *Auth) {
 		return errors.VerificationNotFound, nil
 	}
 
-	if u.Status == UserStatusUnverified {
+	if u.Status != UserStatusUnverified {
 		return errors.VerificationExpired, nil
 	}
 

@@ -33,12 +33,6 @@ func handlePost(env *env.Env, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err, _ = env.UserRepo().FindByEmail(u.Email)
-	if err != errors.UserNotFound {
-		errors.Write(w, errors.InvalidEmail)
-		return
-	}
-
 	err = env.UserRepo().Signup(&u)
 	if err != nil {
 		errors.Write(w, err)

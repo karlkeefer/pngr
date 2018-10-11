@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Grid, Segment } from 'semantic-ui-react'
+import { Container, Grid, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
+
+import API from '../api'
 
 export default class Verify extends Component {
 
@@ -12,18 +14,12 @@ export default class Verify extends Component {
   componentDidMount = () => {
     const { verification } = this.props.match.params
 
-    fetch(`/api/verify/${verification}`)
-      .then(resp => resp.json())
-      .then(result => {
-        if (result.Error) {
-          this.setState({
-            error: result.Error
-          });
-        } else {
-          this.setState({
-            success: true
-          });
-        }
+    API.verify(verification)
+      .then((res) => {
+        this.setState({success: true});
+      })
+      .catch((e) => {
+        this.setState({error: e});
       });
   }
 
@@ -31,7 +27,7 @@ export default class Verify extends Component {
     const { success, error } = this.state;
      if (success) {
       return (
-        <Redirect to="/account"/>
+        <Redirect to="/dashboard"/>
       );
     }
 
@@ -40,11 +36,9 @@ export default class Verify extends Component {
         <Grid centered>
           <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
             <h1>Verifying your account...</h1>
-            <Segment.Group>
-              <Segment>
-                {error ? 'Error: ' + error : 'Loading...'}
-              </Segment>
-            </Segment.Group>
+            <div>
+              {error ? <Message negative>Error: {error}</Message> : <Message>Loading...</Message>}
+            </div>
           </Grid.Column>
         </Grid>
       </Container>

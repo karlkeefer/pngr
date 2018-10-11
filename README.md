@@ -3,7 +3,7 @@ dockerized (postgres + nginx + golang + react) starter kit
 
 I've only implemented basic user management stuff in terms of actual features, but this scaffolding can be extended to serve a huge variety of purposes.
 
-This project is meant to be a starting point. Feel free to create issues with suggestions, or pull requests for security improvements or developer ergonomics.
+This project is meant to be a starting point. Feel free to create issues with suggestions, or pull requests for security or developer ergonomics improvements.
 
 ## Requirements
 - Install docker && docker-compose

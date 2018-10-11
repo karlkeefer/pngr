@@ -1,43 +1,56 @@
 import React, { Component } from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, Message } from 'semantic-ui-react'
+import { Redirect } from 'react-router'
+
+import API from '../api'
 
 const defaultState = {
   loading: false,
   email: '',
-  password: ''
+  pass: '',
+  error: ''
 };
 
 export default class LogInForm extends Component {
   state = defaultState
 
   handleChange = (e, {name, value}) => {
-    this.setState({ [name]: value });
+    this.setState({[name]: value });
   }
 
   handleSubmit = (e, val) => {
     e.preventDefault();
     this.setState({loading: true});
 
-    const {email, password} = this.state;
+    const {email, pass} = this.state;
 
-    fetch('/api/login', {
-      method: 'POST', 
-      body: JSON.stringify({
-        id: email,
-        password: password
-      })
-    }).then(resp => resp.json())
-    .then((result)=> {
-      console.log(result);
-      this.setState(defaultState);
+    API.login({
+      email: email,
+      pass: pass
+    })
+    .then((success) => {
+      this.setState({
+        loading: false
+      });
+    })
+    .catch((error) => {
+      this.setState({
+        loading: false,
+        error: error
+      });
     });
   }
 
   render() {
-    const {loading, email, password} = this.state;
+    const {loading, email, pass, error} = this.state;
+
+    if (API.state.user.ID > 0) {
+      return <Redirect to='/dashboard' />;
+    }
 
     return (
       <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
+        {error ? <Message negative>{error}</Message> : ''}
         <Form.Input
           size="big"
           name="email"
@@ -48,11 +61,11 @@ export default class LogInForm extends Component {
           onChange={this.handleChange} />
         <Form.Input
           size="big"
-          name="password"
+          name="pass"
           type="password"
           placeholder="Password"
           required
-          value={password}
+          value={pass}
           onChange={this.handleChange} />
         <Button primary fluid size="huge" type="submit">Log In</Button>
       </Form>

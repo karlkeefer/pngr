@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, Message } from 'semantic-ui-react'
+import API from '../api'
 
 const defaultState = {
   loading: false,
   email: '',
-  pass: ''
+  pass: '',
+  error: '',
+  success: false,
+  verifyURL: ''
 };
 
 export default class SignUpForm extends Component {
@@ -20,24 +24,37 @@ export default class SignUpForm extends Component {
 
     const {email, pass} = this.state;
 
-    fetch('/api/signup', {
-      method: 'POST', 
-      body: JSON.stringify({
-        email: email,
-        pass: pass
-      })
-    }).then(resp => resp.json())
-    .then((result)=> {
-      console.log(result.URL);
-      this.setState(defaultState);
+    API.signup({
+      email: email,
+      pass: pass
+    })
+    .then((res) => {
+      this.setState({
+        loading: false,
+        success: true,
+        verifyURL: res.URL
+      });
+    })
+    .catch((error) => {
+      this.setState({
+        loading: false,
+        error: error
+      });
     });
   }
 
   render() {
-    const {loading, email, pass} = this.state;
+    const {loading, email, pass, error, success, verifyURL} = this.state;
+
+    if (success) {
+      // TODO: this should be a message saying to check your email
+      // and the verificationURL should be sent via email instead of passed in response
+      return <Message positive><a href={verifyURL}>Click to confirm your email</a></Message>
+    }
 
     return (
-      <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
+      <Form name="signup" loading={loading} onSubmit={this.handleSubmit}>
+        {error ? <Message negative>{error}</Message> : ''}
         <Form.Input
           size="big"
           name="email"

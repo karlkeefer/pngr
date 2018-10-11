@@ -13,6 +13,7 @@ var (
 	NoJSONBody   = errors.New("Unable to decode JSON")
 	InvalidEmail = errors.New("Invalid Email")
 
+	FailedLogin          = errors.New("Invalid Email or Password")
 	VerificationNotFound = errors.New("Invalid Verification Code")
 	VerificationExpired  = errors.New("Verification Code Was Already Used")
 	UserNotFound         = errors.New("User does not exist")
@@ -24,6 +25,7 @@ func codeMap() map[error]int {
 		BadRequestMethod:     http.StatusMethodNotAllowed,
 		NoJSONBody:           http.StatusBadRequest,
 		InvalidEmail:         http.StatusBadRequest,
+		FailedLogin:          http.StatusUnauthorized,
 		VerificationNotFound: http.StatusNotFound,
 		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
