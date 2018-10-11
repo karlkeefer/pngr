@@ -20,7 +20,10 @@ export default class LogInForm extends Component {
 
   handleSubmit = (e, val) => {
     e.preventDefault();
-    this.setState({loading: true});
+    this.setState({
+      loading: true,
+      error: ''
+    });
 
     const {email, pass} = this.state;
 
