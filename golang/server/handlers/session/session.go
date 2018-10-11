@@ -1,16 +1,16 @@
-package handlers
+package session
 
 import (
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
-	"github.com/karlkeefer/pngr/golang/utils"
+	"github.com/karlkeefer/pngr/golang/server/jwt"
 
 	"encoding/json"
 	"net/http"
 )
 
-func Session(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
+func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
 	switch r.Method {
 	case "POST":
 		return login(env, w, r), nil
@@ -37,7 +37,7 @@ func login(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 			return
 		}
 
-		utils.SetCookieForUser(w, u)
+		jwt.WriteUserCookie(w, u)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(u)
 	}
@@ -46,7 +46,10 @@ func login(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 func logout(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u := &user.User{}
-		utils.SetCookieForUser(w, u)
+		jwt.WriteUserCookie(w, u)
 		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]bool{
+			"success": true,
+		})
 	}
 }

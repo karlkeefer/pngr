@@ -33,9 +33,7 @@ export default class LogInForm extends Component {
       pass: pass
     })
     .then((success) => {
-      this.setState({
-        loading: false
-      });
+      // redirects immediately from api.state.user.ID change
     })
     .catch((error) => {
       this.setState({

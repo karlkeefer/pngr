@@ -1,9 +1,10 @@
-package handlers
+package user
 
 import (
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
+	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/utils"
 
 	"encoding/json"
@@ -16,9 +17,8 @@ type signupResponse struct {
 	URL string
 }
 
-func User(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
+func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
 	head, _ := utils.ShiftPath(r.URL.Path)
-
 	switch r.Method {
 	case "POST":
 		if head == "verify" {
@@ -61,14 +61,15 @@ func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 func whoami(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, _ := r.Cookie("jwt")
-		var jwt string
+		var token string
 		if cookie != nil {
-			jwt = cookie.Value
+			token = cookie.Value
 		}
 
-		u, err := utils.FromToken(jwt)
+		u, err := jwt.ParseUser(token)
 		if err != nil {
 			errors.Write(w, err)
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -94,9 +95,10 @@ func verify(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 		u, err := env.UserRepo().Verify(req.Code)
 		if err != nil {
 			errors.Write(w, err)
+			return
 		}
 
-		utils.SetCookieForUser(w, u)
+		jwt.WriteUserCookie(w, u)
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(u)

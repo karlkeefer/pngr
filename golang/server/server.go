@@ -5,7 +5,8 @@ import (
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/utils"
 
-	"github.com/karlkeefer/pngr/golang/server/handlers"
+	"github.com/karlkeefer/pngr/golang/server/handlers/session"
+	"github.com/karlkeefer/pngr/golang/server/handlers/user"
 
 	"net/http"
 )
@@ -34,19 +35,20 @@ func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 
 	switch head {
 	case "session":
-		handler, err = handlers.Session(srv.env, w, r)
+		handler, err = session.Handler(srv.env, w, r)
 	case "user":
-		handler, err = handlers.User(srv.env, w, r)
+		handler, err = user.Handler(srv.env, w, r)
 	default:
 		err = errors.RouteNotFound
 	}
 
 	if err != nil {
 		errors.Write(w, err)
-	} else {
-		// TODO: wrap with middleware for CORS, CSRF, etc.
-		handler(w, r)
+		return
 	}
+
+	// TODO: wrap with middleware for CORS, CSRF, etc.
+	handler(w, r)
 }
 
 func New() (*server, error) {

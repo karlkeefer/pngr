@@ -3,7 +3,7 @@
 
 FROM golang:1.11
 
-WORKDIR /pngr
+WORKDIR /pngr/golang
 
 RUN go get github.com/cortesi/modd/cmd/modd
 

@@ -139,28 +139,25 @@ func (r *Repo) FindByEmail(e string) (*User, error) {
 	return &u, nil
 }
 
-func (r *Repo) Verify(code string) (u *User, err error) {
-
-	err = r.db.Get(&u, `SELECT * FROM users WHERE verification = $1 LIMIT 1`, code)
+func (r *Repo) Verify(code string) (*User, error) {
+	u := &User{}
+	err := r.db.Get(u, `SELECT * FROM users WHERE verification = $1 LIMIT 1`, code)
 	if err != nil {
-		err = errors.VerificationNotFound
-		return
+		return nil, errors.VerificationNotFound
 	}
 
 	if u.Status != UserStatusUnverified {
-		err = errors.VerificationExpired
-		return
+		return nil, errors.VerificationExpired
 	}
 
 	// update status
 	u.Status = UserStatusActive
-
 	err = r.UpdateStatus(u)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	return
+	return u, nil
 }
 
 func (r *Repo) UpdateStatus(u *User) (err error) {
