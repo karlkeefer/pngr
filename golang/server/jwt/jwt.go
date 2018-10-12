@@ -7,10 +7,12 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 )
 
 // jwt-cookie building and parsing
+const cookieName = "pngr-jwt"
 
 var hmacSecret []byte
 
@@ -26,9 +28,20 @@ type claims struct {
 	jwt.StandardClaims
 }
 
+// RequireAuth middleware makes sure the user exists based on their JWT
+func RequireAuth(r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
+	u, err := ParseUserCookie(r)
+	if u.ID == 0 || err != nil {
+		return func(w http.ResponseWriter, r *http.Request) {
+			errors.Write(w, errors.RouteUnauthorized)
+		}
+	}
+	return fn(u)
+}
+
 func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "jwt",
+		Name:     cookieName,
 		Value:    encodeUser(u),
 		Path:     "/",
 		HttpOnly: true,
@@ -36,10 +49,17 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	})
 }
 
-func ParseUser(tokenString string) (*user.User, error) {
+func ParseUserCookie(r *http.Request) (*user.User, error) {
+	cookie, _ := r.Cookie(cookieName)
+	var tokenString string
+	if cookie != nil {
+		tokenString = cookie.Value
+	}
+
 	if tokenString == "" {
 		return &user.User{}, nil
 	}
+
 	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})

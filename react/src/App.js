@@ -10,6 +10,7 @@ import LogIn from './LogIn/LogIn'
 import SignUp from './SignUp/SignUp'
 import NoMatch from './NoMatch/NoMatch'
 import Verify from './Verify/Verify'
+import PostsCreate from './PostsCreate/PostsCreate'
 
 import Dashboard from './Dashboard/Dashboard'
 
@@ -30,11 +31,13 @@ export default class App extends Component {
             <section className="page">
               <Switch>
                 <Route exact path="/" component={Home} />
+
                 <Route path="/signup" component={SignUp} />
                 <Route path="/login" component={LogIn} />
                 <Route path="/verify/:verification" component={Verify}/>
 
                 <Route path="/dashboard" component={Dashboard}/>
+                <Route path="/posts/create" component={PostsCreate}/>
 
                 <Route component={NoMatch} />
               </Switch>

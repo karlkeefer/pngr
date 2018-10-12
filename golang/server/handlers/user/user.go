@@ -60,13 +60,7 @@ func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 
 func whoami(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cookie, _ := r.Cookie("jwt")
-		var token string
-		if cookie != nil {
-			token = cookie.Value
-		}
-
-		u, err := jwt.ParseUser(token)
+		u, err := jwt.ParseUserCookie(r)
 		if err != nil {
 			errors.Write(w, err)
 			return

@@ -23,11 +23,11 @@ type User struct {
 // protect private fields from being sent *out*
 func (u User) MarshalJSON() ([]byte, error) {
 	var tmp struct {
-		ID      int64
-		Name    string     `json:",omitempty"`
-		Email   string     `json:",omitempty"`
-		Status  int        `json:",omitempty"`
-		Created *time.Time `json:",omitempty"`
+		ID      int64      `json:"id"`
+		Name    string     `json:"name,omitempty"`
+		Email   string     `json:"email,omitempty"`
+		Status  int        `json:"status,omitempty"`
+		Created *time.Time `json:"created,omitempty"`
 	}
 
 	tmp.ID = u.ID
@@ -50,14 +50,16 @@ const (
 	UserStatusDisabled   = 2
 )
 
+// REPO stuff
+// TODO: consider moving repo to separate package
+type Repo struct {
+	db *sqlx.DB
+}
+
 func NewRepo(db *sqlx.DB) *Repo {
 	return &Repo{
 		db: db,
 	}
-}
-
-type Repo struct {
-	db *sqlx.DB
 }
 
 // generate random verification codes

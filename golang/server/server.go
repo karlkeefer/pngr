@@ -5,6 +5,7 @@ import (
 
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
+	"github.com/karlkeefer/pngr/golang/server/handlers/posts"
 	"github.com/karlkeefer/pngr/golang/server/handlers/session"
 	"github.com/karlkeefer/pngr/golang/server/handlers/user"
 	"github.com/karlkeefer/pngr/golang/utils"
@@ -37,6 +38,8 @@ func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 		handler, err = session.Handler(srv.env, w, r)
 	case "user":
 		handler, err = user.Handler(srv.env, w, r)
+	case "posts":
+		handler, err = posts.Handler(srv.env, w, r)
 	default:
 		err = errors.RouteNotFound
 	}

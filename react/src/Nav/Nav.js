@@ -21,7 +21,7 @@ class Nav extends Component {
   render() {
     let userMenu;
 
-    if (this.props.api.state.user.ID > 0) {
+    if (this.props.api.state.user.id > 0) {
       userMenu = (
       <Menu.Menu position="right">
         <Menu.Item as={Link} to="/dashboard" name="Dashboard" />

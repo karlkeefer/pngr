@@ -3,7 +3,7 @@ import { Container } from 'unstated'
 const defaultState = {
   jwt: '',
   user: {
-    ID: 0
+    id: 0
   }
 };
 
@@ -16,6 +16,7 @@ export class APIContainer extends Container {
 
   state = defaultState
 
+  // User stuff
   signup = (body) => {
     return this._post('/api/user', body);
   }
@@ -49,6 +50,15 @@ export class APIContainer extends Container {
     return Promise.resolve(user);
   }
 
+  // Post stuff
+  getPosts = () => {
+    return this._get('/api/posts');
+  }
+  createPost = (body) => {
+    return this._post('/api/posts', body); 
+  }
+
+  // internal utils
   _get = (url, body) => {
     return this._fetch('GET', url, body);
   }

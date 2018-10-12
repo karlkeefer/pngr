@@ -17,6 +17,7 @@ var (
 	VerificationNotFound = errors.New("Invalid Verification Code")
 	VerificationExpired  = errors.New("Verification Code Was Already Used")
 	UserNotFound         = errors.New("User does not exist")
+	RouteUnauthorized    = errors.New("You don't have permission to view this resource")
 	RouteNotFound        = errors.New("Route not found")
 )
 
@@ -30,6 +31,7 @@ func codeMap() map[error]int {
 		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
 		RouteNotFound:        http.StatusNotFound,
+		RouteUnauthorized:    http.StatusUnauthorized,
 		InternalError:        http.StatusInternalServerError,
 	}
 }

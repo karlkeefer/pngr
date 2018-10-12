@@ -33,7 +33,7 @@ export default class LogInForm extends Component {
       pass: pass
     })
     .then((success) => {
-      // redirects immediately from api.state.user.ID change
+      // redirects immediately from api.state.user.id change
     })
     .catch((error) => {
       this.setState({
@@ -49,7 +49,7 @@ export default class LogInForm extends Component {
     return (
       <Subscribe to={[API]}>
         {api => {
-          if (api.state.user.ID > 0) {
+          if (api.state.user.id > 0) {
             return <Redirect to='/dashboard' />;
           }
           return (

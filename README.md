@@ -28,7 +28,7 @@ Some tips for working with your postgres docker instance
 Migrations are run using [pgmigrate](https://github.com/yandex/pgmigrate).
 
 - `postgres/new-migration.sh my_migration_name` will create a template for the next migration-
-- `postgres/run-migrations.sh` will execute any new migrations 
+- `sudo postgres/run-migrations.sh` will execute any new migrations 
 
 ### Opening a psql client
 `sudo docker exec -it pngr_postgres_1 psql --username postgres --dbname postgres`

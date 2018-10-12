@@ -3,16 +3,22 @@ package env
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/karlkeefer/pngr/golang/db"
+	"github.com/karlkeefer/pngr/golang/models/post"
 	"github.com/karlkeefer/pngr/golang/models/user"
 )
 
 type Env struct {
 	db       *sqlx.DB
 	userRepo *user.Repo
+	postRepo *post.Repo
 }
 
 func (e *Env) UserRepo() *user.Repo {
 	return e.userRepo
+}
+
+func (e *Env) PostRepo() *post.Repo {
+	return e.postRepo
 }
 
 func New() (*Env, error) {
@@ -24,5 +30,6 @@ func New() (*Env, error) {
 	return &Env{
 		db:       db,
 		userRepo: user.NewRepo(db),
+		postRepo: post.NewRepo(db),
 	}, nil
 }
