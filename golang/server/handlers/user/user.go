@@ -1,16 +1,16 @@
 package user
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/utils"
-
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"os"
 )
 
 type signupResponse struct {

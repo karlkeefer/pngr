@@ -1,14 +1,13 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/utils"
-
 	"github.com/karlkeefer/pngr/golang/server/handlers/session"
 	"github.com/karlkeefer/pngr/golang/server/handlers/user"
-
-	"net/http"
+	"github.com/karlkeefer/pngr/golang/utils"
 )
 
 type server struct {

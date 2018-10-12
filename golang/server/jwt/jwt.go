@@ -1,14 +1,13 @@
 package jwt
 
 import (
-	jwt "github.com/dgrijalva/jwt-go"
-
-	"github.com/karlkeefer/pngr/golang/models/user"
-
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/karlkeefer/pngr/golang/models/user"
 )
 
 // jwt-cookie building and parsing

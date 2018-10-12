@@ -1,13 +1,13 @@
 package session
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
-
-	"encoding/json"
-	"net/http"
 )
 
 func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {

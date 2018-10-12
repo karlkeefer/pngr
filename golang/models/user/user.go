@@ -1,14 +1,13 @@
 package user
 
 import (
-	"github.com/jmoiron/sqlx"
-	"github.com/karlkeefer/pngr/golang/errors"
-
-	"golang.org/x/crypto/bcrypt"
-
 	"encoding/json"
 	"math/rand"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/karlkeefer/pngr/golang/errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -25,17 +24,23 @@ type User struct {
 func (u User) MarshalJSON() ([]byte, error) {
 	var tmp struct {
 		ID      int64
-		Name    *string // nullable
-		Email   string
-		Status  int
-		Created time.Time
+		Name    string     `json:",omitempty"`
+		Email   string     `json:",omitempty"`
+		Status  int        `json:",omitempty"`
+		Created *time.Time `json:",omitempty"`
 	}
 
 	tmp.ID = u.ID
-	tmp.Name = u.Name
+
+	// pick a name
+	if u.Name != nil {
+		tmp.Name = *u.Name
+	}
 	tmp.Email = u.Email
 	tmp.Status = u.Status
-	tmp.Created = u.Created
+	if !u.Created.IsZero() {
+		tmp.Created = &u.Created
+	}
 	return json.Marshal(&tmp)
 }
 
