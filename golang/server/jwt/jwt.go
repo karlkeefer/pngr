@@ -38,6 +38,9 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 }
 
 func ParseUser(tokenString string) (*user.User, error) {
+	if tokenString == "" {
+		return &user.User{}, nil
+	}
 	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
