@@ -50,7 +50,7 @@ func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: wrap with middleware for CORS, CSRF, etc.
-	handler(w, r)
+	csrf(handler)(w, r)
 }
 
 func New() (*server, error) {
@@ -65,4 +65,14 @@ func New() (*server, error) {
 		// container during the production build process
 		fs: http.FileServer(http.Dir("/root/front")),
 	}, nil
+}
+
+func csrf(fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("X-Requested-With") != "XMLHttpRequest" {
+			errors.Write(w, errors.BadCSRF)
+			return
+		}
+		fn(w, r)
+	}
 }

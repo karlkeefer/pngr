@@ -7,7 +7,6 @@ const defaultState = {
   }
 };
 
-// TODO: add csrf prevention
 export class APIContainer extends Container {
   constructor(props) {
     super(props)
@@ -75,7 +74,12 @@ export class APIContainer extends Container {
   _fetch = (method, url, body) => {
     return fetch(url, {
       method: method,
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      headers: {
+        // CSRF prevention
+        // https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Use_of_Custom_Request_Headers
+        'X-Requested-With': 'XMLHttpRequest'
+      }
     })
     .then(resp => resp.json())
     .then(result => {
