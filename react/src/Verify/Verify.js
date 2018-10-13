@@ -8,15 +8,21 @@ export default class Verify extends Component {
 
   state = {
     success: false,
-    error: null
+    redirect: false,
+    error: ''
   }
 
   componentDidMount = () => {
     const { verification } = this.props.match.params
-
+    
     API.verify({code: verification})
       .then((res) => {
-        this.setState({success: true});
+        this.setState({
+          success: true
+        });
+        setTimeout(() => {
+          this.setState({redirect: true});
+        }, 2500);
       })
       .catch((e) => {
         this.setState({error: e});
@@ -24,8 +30,8 @@ export default class Verify extends Component {
   }
 
   render() {
-    const { success, error } = this.state;
-     if (success) {
+    const { success, error, redirect } = this.state;
+     if (redirect) {
       return (
         <Redirect to="/dashboard"/>
       );
@@ -37,7 +43,9 @@ export default class Verify extends Component {
           <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
             <h1>Verifying your account...</h1>
             <div>
-              {error ? <Message negative>Error: {error}</Message> : <Message>Loading...</Message>}
+              {!success && !error ? <Message>Loading...</Message> : ''}
+              {error ? <Message negative>Error: {error}</Message> : ''}
+              {success ? <Message positive>Success! You have verified your email!</Message>: ''}
             </div>
           </Grid.Column>
         </Grid>

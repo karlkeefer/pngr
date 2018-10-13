@@ -2,11 +2,11 @@ package user
 
 import (
 	"encoding/json"
-	"math/rand"
 	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/karlkeefer/pngr/golang/errors"
+	"github.com/karlkeefer/pngr/golang/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -53,63 +53,62 @@ const (
 // REPO stuff
 // TODO: consider moving repo to separate package
 type Repo struct {
-	db *sqlx.DB
+	// db *sqlx.DB
+	signup       *sqlx.NamedStmt
+	updateStatus *sqlx.NamedStmt
+	findByEmail  *sqlx.Stmt
+	verify       *sqlx.Stmt
 }
 
 func NewRepo(db *sqlx.DB) *Repo {
+	// TODO: create a helper to prepare named and regular statements
+	signup, err := db.PrepareNamed(`INSERT INTO users (email, pass, status, verification) VALUES (:email, :pass, :status, :verification) RETURNING *`)
+	if err != nil {
+		panic(err)
+	}
+	updateStatus, err := db.PrepareNamed(`UPDATE users SET status = :status WHERE id = :id`)
+	if err != nil {
+		panic(err)
+	}
+	findByEmail, err := db.Preparex(`SELECT * FROM users WHERE email = $1 LIMIT 1`)
+	if err != nil {
+		panic(err)
+	}
+	verify, err := db.Preparex(`SELECT * FROM users WHERE verification = $1 LIMIT 1`)
+	if err != nil {
+		panic(err)
+	}
 	return &Repo{
-		db: db,
+		// db: db,
+		signup,
+		updateStatus,
+		findByEmail,
+		verify,
 	}
 }
 
-// generate random verification codes
-// https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
-var src = rand.NewSource(time.Now().UnixNano())
-
-const (
-	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	letterIdxBits = 6                    // 6 bits to represent a letter index
-	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
-	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
-)
-
-func generateRandomString(n int) string {
-	b := make([]byte, n)
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
-		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
-		}
-		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
-			b[i] = letterBytes[idx]
-			i--
-		}
-		cache >>= letterIdxBits
-		remain--
-	}
-
-	return string(b)
-}
-
-func (r *Repo) Signup(u *User) error {
+func (r *Repo) Signup(u *User) (*User, error) {
 	_, err := r.FindByEmail(u.Email)
 	if err != errors.UserNotFound {
-		return errors.InvalidEmail
+		return nil, errors.InvalidEmail
 	}
 
 	// set verification code
-	u.Verification = generateRandomString(32)
+	u.Verification = utils.GenerateRandomString(32)
 
 	// hash the password
 	u.Pass, err = hashPassword(u.Pass)
-
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = r.db.Exec(`INSERT INTO users (email, pass, status, verification) VALUES ($1, $2, $3, $4)`,
-		u.Email, u.Pass, UserStatusUnverified, u.Verification)
+	fromDB := &User{}
+	err = r.signup.Get(fromDB, u)
+	if err != nil {
+		return nil, err
+	}
 
-	return err
+	return fromDB, nil
 }
 
 func hashPassword(password string) (string, error) {
@@ -136,19 +135,18 @@ func (r *Repo) Authenticate(u *User) (fromDB *User, err error) {
 }
 
 func (r *Repo) FindByEmail(e string) (*User, error) {
-	var u User
-
-	err := r.db.Get(&u, `SELECT * FROM users WHERE email = $1 LIMIT 1`, e)
+	u := &User{}
+	err := r.findByEmail.Get(u, e)
 	if err != nil {
 		return nil, errors.UserNotFound
 	}
 
-	return &u, nil
+	return u, nil
 }
 
 func (r *Repo) Verify(code string) (*User, error) {
 	u := &User{}
-	err := r.db.Get(u, `SELECT * FROM users WHERE verification = $1 LIMIT 1`, code)
+	err := r.verify.Get(u, code)
 	if err != nil {
 		return nil, errors.VerificationNotFound
 	}
@@ -168,8 +166,7 @@ func (r *Repo) Verify(code string) (*User, error) {
 }
 
 func (r *Repo) UpdateStatus(u *User) (err error) {
-	_, err = r.db.Exec(`UPDATE users SET status = $1 WHERE id = $2`,
-		u.Status, u.ID)
+	_, err = r.updateStatus.Exec(u)
 
 	return
 }

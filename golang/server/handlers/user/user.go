@@ -43,7 +43,7 @@ func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 			return
 		}
 
-		err = env.UserRepo().Signup(&u)
+		fromDB, err := env.UserRepo().Signup(&u)
 		if err != nil {
 			errors.Write(w, err)
 			return
@@ -53,7 +53,7 @@ func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 		// for now we just pass verification code back in the response...
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(&signupResponse{
-			URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), u.Verification),
+			URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), fromDB.Verification),
 		})
 	}
 }

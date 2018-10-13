@@ -23,33 +23,36 @@ const (
 // REPO stuff
 // TODO: consider moving repo to separate package
 type Repo struct {
-	db *sqlx.DB
+	// db         *sqlx.DB
+	getForUser *sqlx.Stmt
+	create     *sqlx.NamedStmt
 }
 
+// NewRepo prepares statements and panics if a statement fails to create
 func NewRepo(db *sqlx.DB) *Repo {
+	getForUser, err := db.Preparex(`SELECT * FROM posts WHERE author_id = $1 ORDER BY id DESC`)
+	if err != nil {
+		panic(err)
+	}
+	create, err := db.PrepareNamed(`INSERT INTO posts (author_id, title, body, status) VALUES (:author_id, :title, :body, :status) RETURNING *`)
+	if err != nil {
+		panic(err)
+	}
 	return &Repo{
-		db: db,
+		// db,
+		getForUser,
+		create,
 	}
 }
 
 func (r *Repo) GetPostsForUser(userID int64) (posts []*Post, err error) {
 	posts = []*Post{} // always at least return empty list
-	// TODO: move statement prepartion into NewRepo to do preparation *once*
-	stmt, err := r.db.Preparex(`SELECT * FROM posts WHERE author_id = $1 ORDER BY id DESC`)
-	if err != nil {
-		return
-	}
-	err = stmt.Select(&posts, userID)
+	err = r.getForUser.Select(&posts, userID)
 	return
 }
 
 func (r *Repo) CreatePost(p *Post) (post *Post, err error) {
-	// TODO: move statement prepartion into NewRepo to do preparation *once*
-	createPostQuery, err := r.db.PrepareNamed(`INSERT INTO posts (author_id, title, body, status) VALUES (:author_id, :title, :body, :status) RETURNING *`)
-	if err != nil {
-		return
-	}
 	post = &Post{}
-	err = createPostQuery.Get(post, p)
+	err = r.create.Get(post, p)
 	return
 }
