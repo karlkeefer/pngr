@@ -19,6 +19,7 @@ var (
 	UserNotFound         = errors.New("User does not exist")
 
 	BadCSRF           = errors.New("Missing CSRF Header")
+	BadOrigin         = errors.New("Invalid Origin Header")
 	RouteUnauthorized = errors.New("You don't have permission to view this resource")
 	RouteNotFound     = errors.New("Route not found")
 )
@@ -35,6 +36,7 @@ func codeMap() map[error]int {
 		RouteNotFound:        http.StatusNotFound,
 		RouteUnauthorized:    http.StatusUnauthorized,
 		BadCSRF:              http.StatusUnauthorized,
+		BadOrigin:            http.StatusUnauthorized,
 		InternalError:        http.StatusInternalServerError,
 	}
 }
