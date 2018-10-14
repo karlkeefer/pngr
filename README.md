@@ -1,14 +1,14 @@
 # PNGR
 dockerized (postgres + nginx + golang + react) starter kit
 
-I've only implemented basic user management stuff in terms of actual features, but this scaffolding can be extended to serve a huge variety of purposes.
+I've only implemented basic user signup, session management, and a toy "post" type in terms of actual features, the idea is that this scaffolding can be forked and extended to serve a huge variety of purposes.
 
-This project is meant to be a starting point. Feel free to create issues with suggestions, or pull requests for security or developer ergonomics improvements.
+Feel free to create issues with suggestions, or pull requests for security or developer ergonomics improvements.
 
 ## Requirements
 - Install docker && docker-compose
 
-## Start the Dev Server
+## Quick Start
 1) `sudo docker-compose up`
 2) Visit https://localhost (and approve the self-signed cert)
 3) Make changes to either golang or react code, and watch the app rebuild itself!
@@ -27,6 +27,7 @@ Some tips for working with your postgres docker instance
 ### Creating and running migrations
 Migrations are run using [pgmigrate](https://github.com/yandex/pgmigrate).
 
+I put together little bash scripts to help you get stuff done.
 - `postgres/new-migration.sh my_migration_name` will create a template for the next migration-
 - `sudo postgres/run-migrations.sh` will execute any new migrations 
 
@@ -52,7 +53,7 @@ It also terminates SSL so that we don't have to deal with certs in our app layer
 Almost-vanilla golang api:
 - Makes use of go modules for dependencies(!)
 - [jwt-gp](github.com/dgrijalva/jwt-go) for JSON Web Tokens
-- [Sqlx](https://github.com/jmoiron/sqlx) for cleaner interactions with postgres
+- [sqlx](https://github.com/jmoiron/sqlx) for cleaner interactions with postgres
 
 --- 
 
