@@ -26,8 +26,8 @@ export default class Posts extends Component {
         <Header attached='top' as='h3'>My Posts</Header>
         {error ? <Message attached danger>{error}</Message> : ''}
         {posts.length === 0 ? <Message attached warning>No posts to show</Message> : ''}
-        {posts.map(({title, body}, i) => (
-          <Segment attached>
+        {posts.map(({id, title, body}, i) => (
+          <Segment key={id} attached>
             <h4>{title}</h4>
             <p>{body}</p>
           </Segment>
