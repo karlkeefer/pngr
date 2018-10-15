@@ -43,13 +43,15 @@ func login(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 	}
 }
 
+type logoutResponse struct {
+	success bool
+}
+
 func logout(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u := &user.User{}
 		jwt.WriteUserCookie(w, u)
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]bool{
-			"success": true,
-		})
+		json.NewEncoder(w).Encode(&logoutResponse{true})
 	}
 }

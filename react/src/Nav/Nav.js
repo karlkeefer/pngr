@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { Menu, Container } from 'semantic-ui-react'
+import { Subscribe } from 'unstated'
 import { NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
+
+import UserContainer from '../Containers/User'
+import API from '../Api'
 
 // helper for semanticUI + react-router
 const Link = props => (
@@ -14,34 +18,34 @@ const Link = props => (
 
 class Nav extends Component {
   logout = () => {
-    this.props.api.logout();
+    API.logout();
     this.props.history.push('/');
   }
 
+  loggedOutMenu = (
+    <Menu.Menu position="right">
+      <Menu.Item as={Link} to="/login" name="Log In" />
+      <Menu.Item as={Link} to="/signup" name="Sign Up" />
+    </Menu.Menu>
+  );
+
+  loggedInMenu = (
+    <Menu.Menu position="right">
+      <Menu.Item as={Link} to="/dashboard" name="Dashboard" />
+      <Menu.Item link={true} onClick={this.logout} content="Log Out"/>
+    </Menu.Menu>
+  );
+
   render() {
-    let userMenu;
-
-    if (this.props.api.state.user.id > 0) {
-      userMenu = (
-      <Menu.Menu position="right">
-        <Menu.Item as={Link} to="/dashboard" name="Dashboard" />
-        <Menu.Item link={true} onClick={this.logout} content="Log Out"/>
-      </Menu.Menu>
-      );
-    } else {
-      userMenu = (
-      <Menu.Menu position="right">
-        <Menu.Item as={Link} to="/login" name="Log In" />
-        <Menu.Item as={Link} to="/signup" name="Sign Up" />
-      </Menu.Menu>
-      );
-    }
-
     return (
       <Menu fixed="top" inverted>
         <Container>
           <Menu.Item as={Link} to="/" name="Home" />
-          {userMenu}
+          <Subscribe to={[UserContainer]}>
+            {userContainer => {
+              return userContainer.state.user.id === 0 ? this.loggedOutMenu : this.loggedInMenu;
+            }}
+          </Subscribe>
         </Container>
       </Menu>
     );

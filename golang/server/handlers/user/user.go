@@ -13,12 +13,9 @@ import (
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
-type signupResponse struct {
-	URL string
-}
-
 func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
-	head, _ := utils.ShiftPath(r.URL.Path)
+	var head string
+	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 	switch r.Method {
 	case "POST":
 		if head == "verify" {
@@ -31,6 +28,10 @@ func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.Handler
 	default:
 		return nil, errors.BadRequestMethod
 	}
+}
+
+type signupResponse struct {
+	URL string
 }
 
 func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {

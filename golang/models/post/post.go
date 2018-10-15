@@ -23,25 +23,23 @@ const (
 // REPO stuff
 // TODO: consider moving repo to separate package
 type Repo struct {
-	// db         *sqlx.DB
-	getForUser *sqlx.Stmt
 	create     *sqlx.NamedStmt
+	getForUser *sqlx.Stmt
 }
 
-// NewRepo prepares statements and panics if a statement fails to create
+// NewRepo prepares statements, and panics if a statement fails to create
 func NewRepo(db *sqlx.DB) *Repo {
-	getForUser, err := db.Preparex(`SELECT * FROM posts WHERE author_id = $1 ORDER BY id DESC`)
-	if err != nil {
-		panic(err)
-	}
 	create, err := db.PrepareNamed(`INSERT INTO posts (author_id, title, body, status) VALUES (:author_id, :title, :body, :status) RETURNING *`)
 	if err != nil {
 		panic(err)
 	}
+	getForUser, err := db.Preparex(`SELECT * FROM posts WHERE author_id = $1 ORDER BY id DESC`)
+	if err != nil {
+		panic(err)
+	}
 	return &Repo{
-		// db,
-		getForUser,
 		create,
+		getForUser,
 	}
 }
 

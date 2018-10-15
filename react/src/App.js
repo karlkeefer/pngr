@@ -1,32 +1,33 @@
 import React, { Component } from 'react'
-import { Provider, Subscribe } from 'unstated'
+import { Provider } from 'unstated'
 
-import API from './api'
+import UserContainer from './Containers/User'
+import API from './Api'
 
 import Nav from './Nav/Nav'
 
-import Home from './Home/Home'
-import LogIn from './LogIn/LogIn'
-import SignUp from './SignUp/SignUp'
-import NoMatch from './NoMatch/NoMatch'
-import Verify from './Verify/Verify'
-import PostsCreate from './PostsCreate/PostsCreate'
+import Home from './Routes/Home/Home'
+import LogIn from './Routes/LogIn/LogIn'
+import SignUp from './Routes/SignUp/SignUp'
+import NoMatch from './Routes/NoMatch/NoMatch'
+import Verify from './Routes/Verify/Verify'
 
-import Dashboard from './Dashboard/Dashboard'
+import Dashboard from './Routes/Dashboard/Dashboard'
+import PostsCreate from './Routes/PostsCreate/PostsCreate'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 export default class App extends Component {
+  componentDidMount = () => {
+    API.whoami();
+  }
+
   render() {
     return (
-      <Provider inject={[API]}>
+      <Provider inject={[UserContainer]}>
         <Router>
           <div className="wrapper">
-            <Subscribe to={[API]}>
-              {api => (
-                <Nav api={api}/>
-              )}
-            </Subscribe>
+            <Nav/>
 
             <section className="page">
               <Switch>

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
-
 import { Subscribe } from 'unstated'
-import API from '../api'
+
+import API from '../../Api'
+import UserContainer from '../../Containers/User'
 
 const defaultState = {
   loading: false,
@@ -33,7 +34,7 @@ export default class LogInForm extends Component {
       pass: pass
     })
     .then((success) => {
-      // redirects immediately from api.state.user.id change
+      // redirects immediately from userContainer.state.user.id change
     })
     .catch((error) => {
       this.setState({
@@ -47,9 +48,9 @@ export default class LogInForm extends Component {
     const {loading, email, pass, error} = this.state;
 
     return (
-      <Subscribe to={[API]}>
-        {api => {
-          if (api.state.user.id > 0) {
+      <Subscribe to={[UserContainer]}>
+        {userContainer => {
+          if (userContainer.state.user.id > 0) {
             return <Redirect to='/dashboard' />;
           }
           return (

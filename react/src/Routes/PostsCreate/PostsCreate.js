@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
-import API from '../api'
+import API from '../../Api'
 
 const defaultState = {
   loading: false,
@@ -47,7 +47,7 @@ export default class Posts extends Component {
   }
 
   render() {
-    const { loading, error, title, body, redirectTo} = this.state;
+    const { loading, error, title, body, redirectTo } = this.state;
     if (redirectTo) {
       return <Redirect to={redirectTo}/>
     }

@@ -24,6 +24,7 @@ var (
 	RouteNotFound     = errors.New("Route not found")
 )
 
+// codeMap returns a map of errors to http status codes
 func codeMap() map[error]int {
 	return map[error]int{
 		BadRequestMethod:     http.StatusMethodNotAllowed,
@@ -41,6 +42,7 @@ func codeMap() map[error]int {
 	}
 }
 
+// getCode is a helper to get the relevant code for an error, or just return 500
 func getCode(e error) int {
 	if code, ok := codeMap()[e]; ok {
 		return code
@@ -52,6 +54,7 @@ type errorResponse struct {
 	Error string
 }
 
+// Write is a helper that writes an error out as JSON
 func Write(w http.ResponseWriter, e error) {
 	w.WriteHeader(getCode(e))
 	w.Header().Set("Content-Type", "application/json")

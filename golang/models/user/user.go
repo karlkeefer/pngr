@@ -20,7 +20,8 @@ type User struct {
 	Created      time.Time
 }
 
-// protect private fields from being sent *out*
+// MarshalJSON here protects "private" fields from ever being sent *out*
+// it also makes Name return "" instead of null
 func (u User) MarshalJSON() ([]byte, error) {
 	var tmp struct {
 		ID      int64      `json:"id"`
@@ -36,6 +37,7 @@ func (u User) MarshalJSON() ([]byte, error) {
 	if u.Name != nil {
 		tmp.Name = *u.Name
 	}
+
 	tmp.Email = u.Email
 	tmp.Status = u.Status
 	if !u.Created.IsZero() {
@@ -53,7 +55,6 @@ const (
 // REPO stuff
 // TODO: consider moving repo to separate package
 type Repo struct {
-	// db *sqlx.DB
 	signup       *sqlx.NamedStmt
 	updateStatus *sqlx.NamedStmt
 	findByEmail  *sqlx.Stmt
@@ -79,7 +80,6 @@ func NewRepo(db *sqlx.DB) *Repo {
 		panic(err)
 	}
 	return &Repo{
-		// db: db,
 		signup,
 		updateStatus,
 		findByEmail,

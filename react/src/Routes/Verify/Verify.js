@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Grid, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 
-import API from '../api'
+import API from '../../Api'
 
 export default class Verify extends Component {
 

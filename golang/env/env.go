@@ -13,14 +13,6 @@ type Env struct {
 	postRepo *post.Repo
 }
 
-func (e *Env) UserRepo() *user.Repo {
-	return e.userRepo
-}
-
-func (e *Env) PostRepo() *post.Repo {
-	return e.postRepo
-}
-
 func New() (*Env, error) {
 	db, err := db.New()
 	if err != nil {
@@ -32,4 +24,12 @@ func New() (*Env, error) {
 		userRepo: user.NewRepo(db),
 		postRepo: post.NewRepo(db),
 	}, nil
+}
+
+func (e *Env) UserRepo() *user.Repo {
+	return e.userRepo
+}
+
+func (e *Env) PostRepo() *post.Repo {
+	return e.postRepo
 }

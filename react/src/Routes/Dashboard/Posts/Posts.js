@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Segment, Message, Header, Button } from 'semantic-ui-react'
-import API from '../../api'
+import API from '../../../Api'
 
 export default class Posts extends Component {
   state = {

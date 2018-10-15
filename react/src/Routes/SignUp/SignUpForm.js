@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
-import API from '../api'
+
+import API from '../../Api'
 
 const defaultState = {
   loading: false,
@@ -47,7 +48,7 @@ export default class SignUpForm extends Component {
   }
 
   render() {
-    const {loading, email, pass, error, success, verifyURL} = this.state;
+    const { loading, email, pass, error, success, verifyURL } = this.state;
 
     if (success) {
       // TODO: this should be a message saying to check your email

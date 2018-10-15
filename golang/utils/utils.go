@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// path shunting function
+// ShiftPath is path splitting function; useful in the routing logic
 func ShiftPath(p string) (head, tail string) {
 	p = path.Clean("/" + p)
 	i := strings.Index(p[1:], "/") + 1
@@ -17,8 +17,6 @@ func ShiftPath(p string) (head, tail string) {
 	return p[1:i], p[i:]
 }
 
-// generate random verification codes
-// https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
 var src = rand.NewSource(time.Now().UnixNano())
 
 const (
@@ -28,6 +26,9 @@ const (
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
+// GenerateRandomString can be used to create verification codes or something this
+// this implementation comes from stackoverflow
+// https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
 func GenerateRandomString(n int) string {
 	b := make([]byte, n)
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {

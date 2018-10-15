@@ -39,6 +39,7 @@ func RequireAuth(r *http.Request, fn func(*user.User) http.HandlerFunc) http.Han
 	return fn(u)
 }
 
+// WriteUserCookie encodes a user's JWT and sets it as an httpOnly & Secure cookie
 func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     cookieName,
@@ -49,6 +50,7 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	})
 }
 
+// ParseUserCookie builds a user object from a JWT, if it's valid
 func ParseUserCookie(r *http.Request) (*user.User, error) {
 	cookie, _ := r.Cookie(cookieName)
 	var tokenString string
@@ -60,21 +62,10 @@ func ParseUserCookie(r *http.Request) (*user.User, error) {
 		return &user.User{}, nil
 	}
 
-	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
-		return hmacSecret, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if claims, ok := token.Claims.(*claims); ok && token.Valid {
-		return claims.User, nil
-	}
-
-	// anon
-	return &user.User{}, nil
+	return decodeUser(tokenString)
 }
 
+// encodeUser convert a user struct into a jwt
 func encodeUser(u *user.User) (tokenString string) {
 	claims := claims{
 		u,
@@ -92,4 +83,21 @@ func encodeUser(u *user.User) (tokenString string) {
 		log.Println("Error signing token", err)
 	}
 	return
+}
+
+// decodeUser converts a jwt into a user struct (or returns a zero-value user)
+func decodeUser(tokenString string) (*user.User, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
+		return hmacSecret, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(*claims); ok && token.Valid {
+		return claims.User, nil
+	}
+
+	// anon
+	return &user.User{}, nil
 }
