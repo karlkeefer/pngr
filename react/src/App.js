@@ -29,7 +29,7 @@ export default class App extends Component {
           <div className="wrapper">
             <Nav/>
 
-            <section className="page">
+            <section>
               <Switch>
                 <Route exact path="/" component={Home} />
 

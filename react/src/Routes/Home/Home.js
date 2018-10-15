@@ -7,7 +7,7 @@ export default class Home extends Component {
       <Container className="page">
         <h1>Welcome!</h1>
         <p>This is a boilerplate app using React for the front-end, and Golang + Postgres for the backend.</p>
-        <p>The only thing implemented is basic account management.</p>
+        <p>The only things implemented are basic account creation, session management, and super basic 'content' creation.</p>
       </Container>
     );
   }

@@ -3,12 +3,14 @@ body {
   padding: 0;
   font-family: sans-serif;
   background: #fafafa;
+  color: #222;
 }
 
 .wrapper {
   padding-top: 2.85714286em;
+  min-height: 100vh;
 }
 
 .page {
-  margin-top: 7em;
+  padding-top: 7em;
 }
