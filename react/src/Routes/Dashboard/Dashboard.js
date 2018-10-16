@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from 'semantic-ui-react'
 import { Subscribe } from 'unstated'
-import { Redirect } from 'react-router'
 
 import UserContainer from '../../Containers/User'
 
@@ -12,10 +11,6 @@ export default class Dashboard extends Component {
     return (
       <Subscribe to={[UserContainer]}>
         {(userContainer) => {
-          if (userContainer.state.user.id === 0) {
-            return <Redirect to="login"/>;
-          }
-
           return (
             <Container className="page">
               <h1>Dashboard</h1>
