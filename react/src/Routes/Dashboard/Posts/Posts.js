@@ -5,6 +5,7 @@ import API from '../../../Api'
 
 export default class Posts extends Component {
   state = {
+    loading: true,
     posts: [],
     error: ''
   }
@@ -16,16 +17,19 @@ export default class Posts extends Component {
       })
       .catch(error => {
         this.setState({error: error});
+      })
+      .finally(() => {
+        this.setState({loading: false})
       });
   }
 
   render() {
-    const { posts, error } = this.state;
+    const { loading, posts, error } = this.state;
     return (
       <div>
         <Header attached='top' as='h3'>My Posts</Header>
         {error ? <Message attached danger>{error}</Message> : ''}
-        {posts.length === 0 ? <Message attached warning>No posts to show</Message> : ''}
+        {posts.length === 0 && !loading ? <Message attached warning>No posts to show</Message> : ''}
         {posts.map(({id, title, body}, i) => (
           <Segment key={id} attached>
             <h4>{title}</h4>

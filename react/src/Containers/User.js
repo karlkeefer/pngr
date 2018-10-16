@@ -1,16 +1,18 @@
 import { Container } from 'unstated'
 
-const defaultState = {
-  user: {
-    id: 0
-  }
-};
+function defaultState() {
+  return {
+    user: {
+      id: 0
+    }
+  };
+}
 
 class UserContainer extends Container {
-  state = defaultState
+  state = defaultState()
 
   clearCurrentUser = () => {
-    this.setState(defaultState);
+    this.setState(defaultState());
   }
 
   setCurrentUser = (user) => {

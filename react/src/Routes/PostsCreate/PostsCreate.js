@@ -3,19 +3,26 @@ import { Container, Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
 import API from '../../Api'
 
-const defaultState = {
-  loading: false,
-  title: '',
-  body: '',
-  error: '',
-  redirectTo: ''
-};
+function defaultState(){
+  return {
+    loading: false,
+    error: '',
+    redirectTo: '',
+    fields: {
+      title: '',
+      body: '',
+    }
+  };
+}
 
 export default class Posts extends Component {
-  state = defaultState
+  state = defaultState()
 
   handleChange = (e, {name, value}) => {
-    this.setState({[name]: value });
+    this.setState(state => {
+      state.fields = Object.assign(state.fields, {[name]: value });
+      return state;
+    });
   }
 
   handleSubmit = (e, val) => {
@@ -25,12 +32,7 @@ export default class Posts extends Component {
       error: ''
     });
 
-    const {title, body} = this.state;
-
-    API.createPost({
-      title: title,
-      body: body
-    })
+    API.createPost(this.state.fields)
     .then((post) => {
       this.setState({
         loading: false,
@@ -47,7 +49,8 @@ export default class Posts extends Component {
   }
 
   render() {
-    const { loading, error, title, body, redirectTo } = this.state;
+    const { loading, error, redirectTo } = this.state;
+    const { title, body } = this.state.fields;
     if (redirectTo) {
       return <Redirect to={redirectTo}/>
     }

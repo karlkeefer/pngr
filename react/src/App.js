@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Provider } from 'unstated'
+import { Provider, Subscribe } from 'unstated'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Redirect } from 'react-router'
 
 import UserContainer from './Containers/User'
-import API from './Api'
 
 import Nav from './Nav/Nav'
 
@@ -15,13 +16,24 @@ import Verify from './Routes/Verify/Verify'
 import Dashboard from './Routes/Dashboard/Dashboard'
 import PostsCreate from './Routes/PostsCreate/PostsCreate'
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+const PrivateRoute = ({ component: C, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    <Subscribe to={[UserContainer]}>
+      {user => {
+        if (user.state.user.id > 0) {
+          return <C {...props} />
+        } else {
+          return <Redirect to={{
+            pathname: '/login',
+            state: { from: props.location }
+          }} />
+        }
+      }}
+    </Subscribe>
+  )} />
+)
 
 export default class App extends Component {
-  componentDidMount = () => {
-    API.whoami();
-  }
-
   render() {
     return (
       <Provider inject={[UserContainer]}>
@@ -37,8 +49,8 @@ export default class App extends Component {
                 <Route path="/login" component={LogIn} />
                 <Route path="/verify/:verification" component={Verify}/>
 
-                <Route path="/dashboard" component={Dashboard}/>
-                <Route path="/posts/create" component={PostsCreate}/>
+                <PrivateRoute path="/dashboard" component={Dashboard}/>
+                <PrivateRoute path="/posts/create" component={PostsCreate}/>
 
                 <Route component={NoMatch} />
               </Switch>

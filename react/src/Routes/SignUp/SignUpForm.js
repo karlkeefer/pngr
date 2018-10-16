@@ -3,20 +3,27 @@ import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from '../../Api'
 
-const defaultState = {
-  loading: false,
-  email: '',
-  pass: '',
-  error: '',
-  success: false,
-  verifyURL: ''
-};
+function defaultState() {
+  return {
+    loading: false,
+    error: '',
+    success: false,
+    verifyURL: '',
+    fields: {
+      email: '',
+      pass: '',
+    }
+  };
+}
 
 export default class SignUpForm extends Component {
-  state = defaultState
+  state = defaultState()
 
   handleChange = (e, {name, value}) => {
-    this.setState({ [name]: value });
+    this.setState(state => {
+      state.fields = Object.assign(state.fields, {[name]: value });
+      return state;
+    });
   }
 
   handleSubmit = (e, val) => {
@@ -26,12 +33,7 @@ export default class SignUpForm extends Component {
       error: ''
     });
 
-    const {email, pass} = this.state;
-
-    API.signup({
-      email: email,
-      pass: pass
-    })
+    API.signup(this.state.fields)
     .then((res) => {
       this.setState({
         loading: false,
@@ -48,7 +50,8 @@ export default class SignUpForm extends Component {
   }
 
   render() {
-    const { loading, email, pass, error, success, verifyURL } = this.state;
+    const { loading, error, success, verifyURL } = this.state;
+    const { email, pass } = this.state.fields;
 
     if (success) {
       // TODO: this should be a message saying to check your email
