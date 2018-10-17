@@ -37,7 +37,7 @@ export default class Posts extends Component {
               My Posts
             </Header>
             <p>This page fetches some protected data that only the logged in user ({userContainer.state.user.email}) can see!</p>
-            {error ? <Message danger>{error}</Message> : ''}
+            {error ? <Message negative>{error}</Message> : ''}
             {posts.length === 0 && !loading ? <Message warning>No posts to show</Message> : ''}
             {posts.map(({id, title, body}, i) => (
               <Segment.Group>
