@@ -45,7 +45,7 @@ export default class LogIn extends Component {
   render() {
     const { loading, error } = this.state;
     const { email, pass } = this.state.fields;
-    const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
+    const { from } = this.props.location.state || { from: { pathname: '/posts' } };
 
     if (this.props.userContainer.state.user.id > 0 && !loading) {
       return <Redirect to={from}/>;

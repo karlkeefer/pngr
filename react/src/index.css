@@ -14,3 +14,7 @@ body {
 .page {
   padding-top: 7em;
 }
+
+a {
+  text-decoration: underline;
+}

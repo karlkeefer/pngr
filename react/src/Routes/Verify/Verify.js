@@ -31,7 +31,7 @@ export default class Verify extends Component {
     const { success, error, redirect } = this.state;
     if (redirect) {
       return (
-        <Redirect to="/dashboard"/>
+        <Redirect to="/posts"/>
       );
     }
 

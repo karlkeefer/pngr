@@ -36,8 +36,7 @@ export default class Posts extends Component {
     .then((post) => {
       this.setState({
         loading: false,
-        redirectTo: `/dashboard`
-        // redirectTo: `/posts/${post.id}`
+        redirectTo: `/posts`
       });
     })
     .catch((error) => {

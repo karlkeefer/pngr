@@ -11,7 +11,7 @@ import SignUp from './SignUp/SignUp'
 import NoMatch from './NoMatch/NoMatch'
 import Verify from './Verify/Verify'
 
-import Dashboard from './Dashboard/Dashboard'
+import Posts from './Posts/Posts'
 import PostsCreate from './PostsCreate/PostsCreate'
 
 const Routes = () => (
@@ -34,8 +34,8 @@ const Routes = () => (
       </Subscribe>
     } />
 
-    <PrivateRoute path="/dashboard" component={Dashboard}/>
-    <PrivateRoute path="/posts/create" component={PostsCreate}/>
+    <PrivateRoute path="/posts" component={Posts}/>
+    <PrivateRoute path="/post/create" component={PostsCreate}/>
 
     <Route component={NoMatch} />
   </Switch>

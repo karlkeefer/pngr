@@ -28,7 +28,7 @@ class Nav extends Component {
                   <Menu.Item as={Link} to="/signup" name="Sign Up" />
                 </Menu.Menu> :
                 <Menu.Menu position="right">
-                  <Menu.Item as={Link} to="/dashboard" name="Dashboard" />
+                  <Menu.Item as={Link} to="/posts" name="Posts" />
                   <Menu.Item link={true} onClick={userContainer.logout} content="Log Out"/>
                 </Menu.Menu>
             )}
