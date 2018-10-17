@@ -3,6 +3,7 @@ import API from '../Api'
 
 function defaultState() {
   return {
+    loading: false,
     user: {
       id: 0
     }
@@ -10,6 +11,11 @@ function defaultState() {
 }
 
 export default class UserContainer extends Container {
+  constructor(props) {
+    super(props);
+    this.whoami();
+  }
+
   state = defaultState()
 
   verify = (body) => {
@@ -18,6 +24,7 @@ export default class UserContainer extends Container {
   }
 
   whoami = () => {
+    this.setState({loading: true});
     return API.whoami()
       .then(this._setCurrentUser);
   }
@@ -33,7 +40,10 @@ export default class UserContainer extends Container {
   }
 
   _setCurrentUser = (user) => {
-    this.setState({user});
+    this.setState({
+      user,
+      looading: false
+    });
     return Promise.resolve(user);
   }
 }

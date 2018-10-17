@@ -78,7 +78,7 @@ func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 // csrf checks for the CSRF prevention header and compares the origin header
 func csrf(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Origin") != os.Getenv("APP_ROOT") {
+		if r.Header.Get("Origin") != "" && r.Header.Get("Origin") != os.Getenv("APP_ROOT") {
 			errors.Write(w, errors.BadOrigin)
 			return
 		}
