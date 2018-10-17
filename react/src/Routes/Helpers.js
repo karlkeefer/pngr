@@ -7,7 +7,7 @@ import { Loader, Container, Dimmer } from 'semantic-ui-react'
 import UserContainer from '../Containers/User'
 
 // if unauth'd, check the jwt and then redirect to login screen if still not auth'd
-export default class PrivateRoute extends Component {
+export class PrivateRoute extends Component {
   render = () => {
     const { component: C, render: R, ...rest } = this.props;
     return (
@@ -60,6 +60,17 @@ class CheckAndRedirect extends Component {
         pathname: '/login',
         state: { from: this.props.location }
       }} />
+    );
+  }
+}
+
+export class NoMatch extends Component {
+  render() {
+    return (
+      <Container className="page">
+        <h1>Page not found</h1>
+        <p>The page you are trying to view does not exist!</p>
+      </Container>
     );
   }
 }

@@ -1,14 +1,14 @@
 import React from 'react'
 import { Subscribe } from 'unstated'
 import { Switch, Route } from 'react-router-dom'
-import PrivateRoute from './Helpers'
+import { PrivateRoute, NoMatch } from './Helpers'
 
 import UserContainer from '../Containers/User'
 
 import Home from './Home/Home'
-import LogIn from './LogIn/LogIn'
+
 import SignUp from './SignUp/SignUp'
-import NoMatch from './NoMatch/NoMatch'
+import LogIn from './LogIn/LogIn'
 import Verify from './Verify/Verify'
 
 import Posts from './Posts/Posts'
