@@ -13,10 +13,13 @@ function defaultState() {
 export default class UserContainer extends Container {
   constructor(props) {
     super(props);
-    this.whoami();
+    this.whoami()
+      .finally(() => {
+        this.setState({loading: false});
+      })
   }
 
-  state = defaultState()
+  state = Object.assign(defaultState(), {loading: true})
 
   verify = (body) => {
     return API.verify(body)
@@ -24,7 +27,6 @@ export default class UserContainer extends Container {
   }
 
   whoami = () => {
-    this.setState({loading: true});
     return API.whoami()
       .then(this._setCurrentUser);
   }
@@ -40,10 +42,7 @@ export default class UserContainer extends Container {
   }
 
   _setCurrentUser = (user) => {
-    this.setState({
-      user,
-      looading: false
-    });
+    this.setState({user});
     return Promise.resolve(user);
   }
 }
