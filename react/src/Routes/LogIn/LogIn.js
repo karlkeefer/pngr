@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import { Form, Button, Message, Loader, Container, Grid, Segment, Dimmer } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Subscribe } from 'unstated'
-
-import API from '../../Api'
-import UserContainer from '../../Containers/User'
 
 function defaultState() {
   return {
@@ -26,7 +22,7 @@ export default class LogIn extends Component {
     // check existing cookie first
     this.setState({checkingCookie: true});
 
-    API.whoami()
+    this.props.userContainer.whoami()
       .then(this._handleSuccess)
       .catch(this._handleError);
   }
@@ -57,7 +53,7 @@ export default class LogIn extends Component {
       error: ''
     });
 
-    API.login(this.state.fields)
+    this.props.userContainer.login(this.state.fields)
       .then(this._handleSuccess)
       .catch(this._handleError);
   }
@@ -77,50 +73,45 @@ export default class LogIn extends Component {
       );
     }
 
+    if (this.props.userContainer.state.user.id > 0 && !checkingCookie && !loading) {
+      return <Redirect to={from}/>;
+    }
+
     return (
-      <Subscribe to={[UserContainer]}>
-        {userContainer => {
-          if (userContainer.state.user.id > 0 && !checkingCookie && !loading) {
-            return <Redirect to={from}/>;
-          }
-          return (
-            <Container className="page">
-              <Grid centered>
-                <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
-                  <h1>Log In to your account</h1>
-                  <Segment.Group>
-                    <Segment>
-                      <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
-                        {error ? <Message negative>{error}</Message> : ''}
-                        <Form.Input
-                          size="big"
-                          name="email"
-                          type="email"
-                          placeholder="Email"
-                          required
-                          value={email}
-                          onChange={this.handleChange} />
-                        <Form.Input
-                          size="big"
-                          name="pass"
-                          type="password"
-                          placeholder="Password"
-                          required
-                          value={pass}
-                          onChange={this.handleChange} />
-                        <Button primary fluid size="huge" type="submit">Log In</Button>
-                      </Form>
-                    </Segment>
-                    <Segment>
-                      Don't have an account? <Link to="/signup">Sign Up</Link>.
-                    </Segment>
-                  </Segment.Group>
-                </Grid.Column>
-              </Grid>
-            </Container>
-          );
-        }}
-      </Subscribe>
+      <Container className="page">
+        <Grid centered>
+          <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
+            <h1>Log In to your account</h1>
+            <Segment.Group>
+              <Segment>
+                <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
+                  {error ? <Message negative>{error}</Message> : ''}
+                  <Form.Input
+                    size="big"
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                    value={email}
+                    onChange={this.handleChange} />
+                  <Form.Input
+                    size="big"
+                    name="pass"
+                    type="password"
+                    placeholder="Password"
+                    required
+                    value={pass}
+                    onChange={this.handleChange} />
+                  <Button primary fluid size="huge" type="submit">Log In</Button>
+                </Form>
+              </Segment>
+              <Segment>
+                Don't have an account? <Link to="/signup">Sign Up</Link>.
+              </Segment>
+            </Segment.Group>
+          </Grid.Column>
+        </Grid>
+      </Container>
     );
   }
 }

@@ -1,5 +1,3 @@
-import UserContainer from './Containers/User'
-
 // internal utils
 function _get(url, body) {
   return _fetch('GET', url, body);
@@ -32,11 +30,6 @@ function _fetch(method, url, body) {
   });
 }
 
-function _setUser(user) {
-  UserContainer.setCurrentUser(user);
-  return Promise.resolve(user);
-}
-
 export default class API {
   // User stuff
   static signup = (body) => {
@@ -44,25 +37,21 @@ export default class API {
   }
 
   static verify = (body) => {
-    return _post('/api/user/verify', body)
-      .then(_setUser);
+    return _post('/api/user/verify', body);
   }
 
   static whoami = () => {
     // validates existing jwt from cookies
     // and sends back parsed user data from that token
-    return _get('/api/user')
-      .then(_setUser);
+    return _get('/api/user');
   }
 
   static logout = () => {
-    UserContainer.clearCurrentUser();
     return _delete('/api/session');
   }
 
   static login = (body) => {
-    return _post('/api/session', body)
-      .then(_setUser);
+    return _post('/api/session', body);
   }
 
   // Post stuff

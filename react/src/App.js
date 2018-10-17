@@ -19,8 +19,8 @@ import PostsCreate from './Routes/PostsCreate/PostsCreate'
 const PrivateRoute = ({ component: C, ...rest }) => (
   <Route {...rest} render={(props) => (
     <Subscribe to={[UserContainer]}>
-      {user => {
-        if (user.state.user.id > 0) {
+      {userContainer => {
+        if (userContainer.state.user.id > 0) {
           return <C {...props} />
         } else {
           return <Redirect to={{
@@ -42,18 +42,22 @@ export default class App extends Component {
             <Nav/>
 
             <section>
-              <Switch>
-                <Route exact path="/" component={Home} />
+              <Subscribe to={[UserContainer]}>
+                {userContainer => (
+                  <Switch>
+                    <Route exact path="/" component={Home} />
 
-                <Route path="/signup" component={SignUp} />
-                <Route path="/login" component={LogIn} />
-                <Route path="/verify/:verification" component={Verify}/>
+                    <Route path="/signup" component={SignUp} />
+                    <Route path="/login" render={(props) => <LogIn {...props} userContainer={userContainer}/>} />
+                    <Route path="/verify/:verification" render={(props) => <Verify {...props} userContainer={userContainer}/>} />
 
-                <PrivateRoute path="/dashboard" component={Dashboard}/>
-                <PrivateRoute path="/posts/create" component={PostsCreate}/>
+                    <PrivateRoute path="/dashboard" component={Dashboard}/>
+                    <PrivateRoute path="/posts/create" component={PostsCreate}/>
 
-                <Route component={NoMatch} />
-              </Switch>
+                    <Route component={NoMatch} />
+                  </Switch>
+                )}
+              </Subscribe>
             </section>
           </div>
         </Router>

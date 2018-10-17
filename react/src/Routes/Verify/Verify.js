@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Container, Grid, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 
-import API from '../../Api'
-
 export default class Verify extends Component {
 
   state = {
@@ -13,9 +11,9 @@ export default class Verify extends Component {
   }
 
   componentDidMount = () => {
-    const { verification } = this.props.match.params
+    const { verification } = this.props.match.params;
     
-    API.verify({code: verification})
+    this.props.userContainer.verify({code: verification})
       .then((res) => {
         this.setState({
           success: true
@@ -31,7 +29,7 @@ export default class Verify extends Component {
 
   render() {
     const { success, error, redirect } = this.state;
-     if (redirect) {
+    if (redirect) {
       return (
         <Redirect to="/dashboard"/>
       );

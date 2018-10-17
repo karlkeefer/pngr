@@ -1,4 +1,5 @@
 import { Container } from 'unstated'
+import API from '../Api'
 
 function defaultState() {
   return {
@@ -8,22 +9,31 @@ function defaultState() {
   };
 }
 
-class UserContainer extends Container {
+export default class UserContainer extends Container {
   state = defaultState()
 
-  clearCurrentUser = () => {
-    this.setState(defaultState());
+  verify = (body) => {
+    return API.verify(body)
+      .then(this._setCurrentUser);
   }
 
-  setCurrentUser = (user) => {
-    this.setState({
-      user: user
-    });
+  whoami = () => {
+    return API.whoami()
+      .then(this._setCurrentUser);
+  }
+
+  login = (body) => {
+    return API.login(body)
+      .then(this._setCurrentUser);
+  }
+
+  logout = () => {
+    this.setState(defaultState());
+    return API.logout();
+  }
+
+  _setCurrentUser = (user) => {
+    this.setState({user});
+    return Promise.resolve(user);
   }
 }
-
-// TODO: eww, exporting a singleton(!)
-// this is setup so that we can modify state after API calls
-// maybe there is a way to avoid that by making our API helper more closely tied to REACT
-const u = new UserContainer();
-export default u;
