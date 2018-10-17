@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import { Form, Button, Message, Loader, Container, Grid, Segment, Dimmer } from 'semantic-ui-react'
-import { Redirect } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Form, Button, Message, Container, Grid, Segment } from 'semantic-ui-react'
+import { Redirect, Link } from 'react-router-dom'
 
 function defaultState() {
   return {
     loading: false,
-    checkingCookie: false,
     error: '',
     fields: {
       email: '',
@@ -17,27 +15,6 @@ function defaultState() {
 
 export default class LogIn extends Component {
   state = defaultState()
-
-  componentDidMount() {
-    // check existing cookie first
-    this.setState({checkingCookie: true});
-
-    this.props.userContainer.whoami()
-      .then(this._handleSuccess)
-      .catch(this._handleError);
-  }
-
-  _handleError = (error) => {
-    this.setState({
-      error,
-      loading: false,
-      checkingCookie: false
-    });
-  }
-
-  _handleSuccess = () => {
-    this.setState(Object.assign({}, defaultState()));
-  }
 
   handleChange = (e, {name, value}) => {
     this.setState(state => {
@@ -54,26 +31,23 @@ export default class LogIn extends Component {
     });
 
     this.props.userContainer.login(this.state.fields)
-      .then(this._handleSuccess)
-      .catch(this._handleError);
+      .then(() => {
+        this.setState(Object.assign({}, defaultState()));
+      })
+      .catch((error) => {
+        this.setState({
+          error,
+          loading: false
+        });
+      });
   }
 
   render() {
-    const { loading, error, checkingCookie } = this.state;
+    const { loading, error } = this.state;
     const { email, pass } = this.state.fields;
     const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
 
-    if (checkingCookie) {
-      return (
-        <Container>
-          <Dimmer active inverted>
-            <Loader size="big">Loading</Loader>
-          </Dimmer>
-        </Container>
-      );
-    }
-
-    if (this.props.userContainer.state.user.id > 0 && !checkingCookie && !loading) {
+    if (this.props.userContainer.state.user.id > 0 && !loading) {
       return <Redirect to={from}/>;
     }
 
