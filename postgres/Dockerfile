@@ -1,9 +1,8 @@
-FROM postgres:10.4
+FROM postgres:12
 
 # install pip && pgmigrate
-RUN apt-get update && apt-get install -y python-pip \
-	&& pip install yandex-pgmigrate \
-	&& pip install psycopg2-binary
+RUN apt-get update && apt-get install -y golang git \
+	&& go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
 
 # copy migrations into the image
 COPY migrations /docker-entrypoint-initdb.d/migrations

@@ -5,7 +5,8 @@ DIR=$(dirname "$0")
 if [ -f /.dockerenv ]; then
 	echo "Attempting to run migrations from within the container"
 	cd /docker-entrypoint-initdb.d
-	pgmigrate -t latest migrate
+	echo "Need to setup go-migrate tool...."
+	# pgmigrate -t latest migrate
 	echo "Done!"
 else
 	echo "Run migrations via docker-compose..."
