@@ -1,8 +1,9 @@
-FROM postgres:12
+FROM postgres:12-alpine
 
 # install pip && pgmigrate
-RUN apt-get update && apt-get install -y golang git \
-	&& go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+RUN apk add --no-cache git make musl-dev go
+
+RUN go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
 
 # copy migrations into the image
 COPY migrations /docker-entrypoint-initdb.d/migrations

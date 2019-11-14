@@ -1,7 +1,7 @@
 # This dockerfile builds a dev version of the backend
 # It only really works as expected when run via docker-compose in the parent directory
 
-FROM golang:1.13
+FROM golang:1.13-alpine
 
 WORKDIR /pngr/golang
 
