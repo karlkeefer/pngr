@@ -9,5 +9,3 @@ CREATE TABLE users (
 	verification	VARCHAR(60) 	NOT NULL,
 	created			TIMESTAMP		NOT NULL DEFAULT now()
 );
-
-INSERT INTO ops (op) VALUES('migration V0002__users.sql');

@@ -8,5 +8,3 @@ CREATE TABLE posts (
 	status			INTEGER			NOT NULL,
 	created			TIMESTAMP		NOT NULL DEFAULT now()
 );
-
-INSERT INTO ops (op) VALUES('migration V0003__posts.sql');
