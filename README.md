@@ -34,7 +34,7 @@ I put together little bash scripts to help you get stuff done.
 You can do more advanced migrate commands 
 
 ### Opening a psql client
-`sudo docker exec -it pngr_postgres_1 psql --username postgres --dbname postgres`
+`sudo docker-compose exec postgres psql -U postgres`
 Remember to use `\q` to exit.
 
 ### Rebuilding your database from scratch
