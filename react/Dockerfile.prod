@@ -7,6 +7,4 @@ RUN npm run build -o app
 # multistage build...
 # this runs a lil nginx instance to serve the app
 FROM nginx:alpine
-WORKDIR /root
-COPY --from=0 /pngr/react ./react
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=0 /pngr/react/build /usr/share/nginx/html

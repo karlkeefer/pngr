@@ -22,7 +22,10 @@ Feel free to create issues with suggestions, or pull requests for security or de
 This part is only sketched out, as everyone's production deployment will look different:
 - **P** Consider running an actual postgres instance. The thought of running a production database in docker makes me sweat.
 - **N** Look at `nginx/nginx.prod.conf` for ideas on what a production configuration might look like.
-- **GR** Use `Dockerfile.prod` from `golang` and `react` project dirs to get production containers
+- **G** Use `Dockerfile.prod` from `golang` and `react` project dirs to get production containers
+- **R** Use `Dockerfile.prod` in `react` 
+	- From project root you can run `sudo docker build -t react-prod -f react/Dockerfile.prod react` 
+	- Test it out with `sudo docker run --net=host react-prod` then hit `http://localhost` in your browser
 
 
 
