@@ -8,6 +8,7 @@ if [ -f /.dockerenv ]; then
 	echo ""
 	echo "*** MIGRATIONS ***"
 	# note that we are connecting via UNIX socket here, instead of normal localhost
+	# this is because the docker postgres container doesn't expose postgres "ports" during the entrypoint script phase
 	migrate -path="/docker-entrypoint-initdb.d/migrations/" -database="postgres://postgres@/postgres?host=/var/run/postgresql/" up
 	echo "*** DONE ***"
 else
