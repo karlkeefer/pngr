@@ -14,7 +14,6 @@ import (
 
 type server struct {
 	env *env.Env
-	fs  http.Handler
 }
 
 // New initializes env (database connections and whatnot)
@@ -27,26 +26,19 @@ func New() (*server, error) {
 
 	return &server{
 		env: env,
-		// built front-end and static files get copied into the docker
-		// container during the production build process
-		fs: http.FileServer(http.Dir("/root/front")),
 	}, nil
 }
 
 // ServeHTTP forks API traffic from static asset traffic
 func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	head, tail := utils.ShiftPath(r.URL.Path)
-	if head == "api" {
-		r.URL.Path = tail
-		srv.ServeAPI(w, r)
-	} else {
-		srv.fs.ServeHTTP(w, r)
-	}
-}
-
-// ServeAPI handles all of the API routes
-func (srv *server) ServeAPI(w http.ResponseWriter, r *http.Request) {
 	var head string
+	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
+	if head != "api" {
+		errors.Write(w, errors.RouteNotFound)
+		return
+	}
+
+	// shift head and tail to get below "api/" part of the path
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 
 	var handler http.HandlerFunc

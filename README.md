@@ -16,11 +16,15 @@ Feel free to create issues with suggestions, or pull requests for security or de
 2) Visit https://localhost (and approve the self-signed cert)
 3) Make changes to either golang or react code, and enjoy hot-reload goodness!
 
-## Production Builds
+## Deploying to Production
 *Warning: this code is pre-alpha quality! Run in production at your own risk*
 
-- Generate a production container with `sudo docker build .` 
-- You will need to setup nginx in production for SSL termination and port forwarding to `:5000` look at `nginx/nginx.prod.conf` for ideas on how to do this.
+This part is only sketched out, as everyone's production deployment will look different:
+- **P** Consider running an actual postgres instance. The thought of running a production database in docker makes me sweat.
+- **N** Look at `nginx/nginx.prod.conf` for ideas on what a production configuration might look like.
+- **GR** Use `Dockerfile.prod` from `golang` and `react` project dirs to get production containers
+
+
 
 --- 
 
