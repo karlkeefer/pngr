@@ -67,7 +67,7 @@ It also terminates SSL so that we don't have to deal with certs in our app layer
 ## Golang
 Almost-vanilla golang api:
 - Makes use of go modules for dependencies
-- [jwt-gp](github.com/dgrijalva/jwt-go) for JSON Web Tokens
+- [jwt-go](https://github.com/dgrijalva/jwt-go) for JSON Web Tokens
 - [sqlx](https://github.com/jmoiron/sqlx) for better postgres interface
 
 --- 
