@@ -9,6 +9,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/handlers/posts"
 	"github.com/karlkeefer/pngr/golang/server/handlers/session"
 	"github.com/karlkeefer/pngr/golang/server/handlers/user"
+	"github.com/karlkeefer/pngr/golang/server/write"
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
@@ -46,13 +47,13 @@ func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch head {
 	case "session":
-		handler, err = session.Handler(srv.env, w, r)
+		handler = session.Handler(srv.env, w, r)
 	case "user":
-		handler, err = user.Handler(srv.env, w, r)
+		handler = user.Handler(srv.env, w, r)
 	case "posts":
-		handler, err = posts.Handler(srv.env, w, r)
+		handler = posts.Handler(srv.env, w, r)
 	default:
-		err = errors.RouteNotFound
+		handler = write.Error(errors.RouteNotFound)
 	}
 
 	if err != nil {
@@ -61,11 +62,19 @@ func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: consider a middleware wrapper utility
-	wrappedHandler := csrf(cors(handler))
+	wrappedHandler := lag(csrf(cors(handler)))
 	wrappedHandler(w, r)
 }
 
 // MIDDLEWARE
+
+// simiulate API lag locally to test "loading" states
+func lag(fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// time.Sleep(time.Millisecond * 300)
+		fn(w, r)
+	}
+}
 
 // csrf checks for the CSRF prevention header and compares the origin header
 func csrf(fn http.HandlerFunc) http.HandlerFunc {

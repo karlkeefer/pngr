@@ -22,28 +22,33 @@ var (
 	BadOrigin         = errors.New("Invalid Origin Header")
 	RouteUnauthorized = errors.New("You don't have permission to view this resource")
 	RouteNotFound     = errors.New("Route not found")
+	ExpiredToken      = errors.New("Your access token expired")
 )
 
 // codeMap returns a map of errors to http status codes
 func codeMap() map[error]int {
 	return map[error]int{
-		BadRequestMethod:     http.StatusMethodNotAllowed,
-		NoJSONBody:           http.StatusBadRequest,
-		InvalidEmail:         http.StatusBadRequest,
+		BadRequestMethod: http.StatusMethodNotAllowed,
+		InternalError:    http.StatusInternalServerError,
+
+		NoJSONBody:   http.StatusBadRequest,
+		InvalidEmail: http.StatusBadRequest,
+
 		FailedLogin:          http.StatusUnauthorized,
 		VerificationNotFound: http.StatusNotFound,
 		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
-		RouteNotFound:        http.StatusNotFound,
-		RouteUnauthorized:    http.StatusUnauthorized,
-		BadCSRF:              http.StatusUnauthorized,
-		BadOrigin:            http.StatusUnauthorized,
-		InternalError:        http.StatusInternalServerError,
+
+		BadCSRF:           http.StatusUnauthorized,
+		BadOrigin:         http.StatusUnauthorized,
+		RouteUnauthorized: http.StatusUnauthorized,
+		RouteNotFound:     http.StatusNotFound,
+		ExpiredToken:      http.StatusUnauthorized,
 	}
 }
 
-// getCode is a helper to get the relevant code for an error, or just return 500
-func getCode(e error) int {
+// GetCode is a helper to get the relevant code for an error, or just return 500
+func GetCode(e error) int {
 	if code, ok := codeMap()[e]; ok {
 		return code
 	}
@@ -56,7 +61,7 @@ type errorResponse struct {
 
 // Write is a helper that writes an error out as JSON
 func Write(w http.ResponseWriter, e error) {
-	w.WriteHeader(getCode(e))
+	w.WriteHeader(GetCode(e))
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(&errorResponse{Error: e.Error()})
 }

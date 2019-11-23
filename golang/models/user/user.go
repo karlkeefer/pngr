@@ -15,10 +15,19 @@ type User struct {
 	Name         *string // nullable
 	Email        string
 	Pass         string
-	Status       int
+	Status       UserStatus
 	Verification string
 	Created      time.Time
 }
+
+type UserStatus int
+
+const (
+	UserStatusDisabled   UserStatus = -1
+	UserStatusUnverified            = 0
+	UserStatusActive                = 1
+	UserStatusAdmin                 = 10
+)
 
 // MarshalJSON here protects "private" fields from ever being sent *out*
 // it also makes Name return "" instead of null
@@ -27,7 +36,7 @@ func (u User) MarshalJSON() ([]byte, error) {
 		ID      int64      `json:"id"`
 		Name    string     `json:"name,omitempty"`
 		Email   string     `json:"email,omitempty"`
-		Status  int        `json:"status,omitempty"`
+		Status  UserStatus `json:"status,omitempty"`
 		Created *time.Time `json:"created,omitempty"`
 	}
 
@@ -45,12 +54,6 @@ func (u User) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(&tmp)
 }
-
-const (
-	UserStatusUnverified = 0
-	UserStatusActive     = 1
-	UserStatusDisabled   = 2
-)
 
 // REPO stuff
 // TODO: consider moving repo to separate package

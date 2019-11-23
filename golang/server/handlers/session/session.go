@@ -8,50 +8,43 @@ import (
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
+	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
-func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
+func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	switch r.Method {
 	case "POST":
-		return login(env, w, r), nil
+		return login(env, w, r)
 	case "DELETE":
-		return logout(env, w, r), nil
+		return logout(env, w)
 	default:
-		return nil, errors.BadRequestMethod
+		return write.Error(errors.BadRequestMethod)
 	}
 }
 
 func login(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		decoder := json.NewDecoder(r.Body)
-		u := &user.User{}
-		err := decoder.Decode(u)
-		if err != nil || &u == nil {
-			errors.Write(w, errors.NoJSONBody)
-			return
-		}
-
-		u, err = env.UserRepo().Authenticate(u)
-		if err != nil {
-			errors.Write(w, err)
-			return
-		}
-
-		jwt.WriteUserCookie(w, u)
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(u)
+	decoder := json.NewDecoder(r.Body)
+	u := &user.User{}
+	err := decoder.Decode(u)
+	if err != nil || &u == nil {
+		return write.Error(errors.NoJSONBody)
 	}
+
+	u, err = env.UserRepo().Authenticate(u)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	jwt.WriteUserCookie(w, u)
+	return write.JSON(u)
 }
 
 type logoutResponse struct {
 	success bool
 }
 
-func logout(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		u := &user.User{}
-		jwt.WriteUserCookie(w, u)
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(&logoutResponse{true})
-	}
+func logout(env *env.Env, w http.ResponseWriter) http.HandlerFunc {
+	u := &user.User{}
+	jwt.WriteUserCookie(w, u)
+	return write.JSON(&logoutResponse{true})
 }

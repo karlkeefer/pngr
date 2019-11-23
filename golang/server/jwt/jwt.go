@@ -7,12 +7,18 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
+	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
 // jwt-cookie building and parsing
 const cookieName = "pngr-jwt"
+
+// tokens auto-refresh at the end of their lifetime,
+// so long as the user hasn't been disabled in the interim
+const tokenLifetime = time.Hour * 6
 
 var hmacSecret []byte
 
@@ -29,12 +35,14 @@ type claims struct {
 }
 
 // RequireAuth middleware makes sure the user exists based on their JWT
-func RequireAuth(r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
-	u, err := ParseUserCookie(r)
-	if u.ID == 0 || err != nil {
-		return func(w http.ResponseWriter, r *http.Request) {
-			errors.Write(w, errors.RouteUnauthorized)
-		}
+func RequireAuth(minStatus user.UserStatus, env *env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
+	u, err := HandleUserCookie(env, w, r)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	if u.Status < minStatus {
+		return write.Error(errors.RouteUnauthorized)
 	}
 	return fn(u)
 }
@@ -50,8 +58,9 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	})
 }
 
-// ParseUserCookie builds a user object from a JWT, if it's valid
-func ParseUserCookie(r *http.Request) (*user.User, error) {
+// HandleUserCookie builds a user object from a JWT, if it's valid
+// Also attempts to refresh and reset the cookie if the user submits an expired token
+func HandleUserCookie(env *env.Env, w http.ResponseWriter, r *http.Request) (*user.User, error) {
 	cookie, _ := r.Cookie(cookieName)
 	var tokenString string
 	if cookie != nil {
@@ -62,7 +71,21 @@ func ParseUserCookie(r *http.Request) (*user.User, error) {
 		return &user.User{}, nil
 	}
 
-	return decodeUser(tokenString)
+	u, err := decodeUser(tokenString)
+
+	// attempt refresh of expired token:
+	if err == errors.ExpiredToken && u.Status > 0 {
+		user, fetchError := env.UserRepo().FindByEmail(u.Email)
+		if fetchError != nil {
+			return nil, err
+		}
+		if user.Status > 0 {
+			WriteUserCookie(w, user)
+			return user, nil
+		}
+	}
+
+	return u, err
 }
 
 // encodeUser convert a user struct into a jwt
@@ -70,8 +93,8 @@ func encodeUser(u *user.User) (tokenString string) {
 	claims := claims{
 		u,
 		jwt.StandardClaims{
-			// TODO: setup appropriate JWT values time-related claims
-			NotBefore: time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
+			IssuedAt:  time.Now().Add(-time.Second).Unix(),
+			ExpiresAt: time.Now().Add(tokenLifetime).Unix(),
 		},
 	}
 
@@ -90,14 +113,25 @@ func decodeUser(tokenString string) (*user.User, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
+
+	if claims, ok := token.Claims.(*claims); ok {
+		// check for expired token
+		if verr, ok := err.(*jwt.ValidationError); ok {
+			if verr.Errors&jwt.ValidationErrorExpired != 0 {
+				return claims.User, errors.ExpiredToken
+			}
+		}
+
+		// valid token(!)
+		if token.Valid {
+			return claims.User, nil
+		}
+	}
+
+	// invalid for some reason other than expiry
 	if err != nil {
 		return nil, err
 	}
-
-	if claims, ok := token.Claims.(*claims); ok && token.Valid {
-		return claims.User, nil
-	}
-
 	// anon
 	return &user.User{}, nil
 }

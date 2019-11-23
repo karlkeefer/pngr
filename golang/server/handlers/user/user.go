@@ -10,23 +10,24 @@ import (
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models/user"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
+	"github.com/karlkeefer/pngr/golang/server/write"
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
-func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (http.HandlerFunc, error) {
+func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	var head string
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 	switch r.Method {
 	case "POST":
 		if head == "verify" {
-			return verify(env, w, r), nil
+			return verify(env, w, r)
 		} else {
-			return signup(env, w, r), nil
+			return signup(env, w, r)
 		}
 	case "GET":
-		return whoami(env, w, r), nil
+		return whoami(env, w, r)
 	default:
-		return nil, errors.BadRequestMethod
+		return write.Error(errors.BadRequestMethod)
 	}
 }
 
@@ -35,41 +36,27 @@ type signupResponse struct {
 }
 
 func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		decoder := json.NewDecoder(r.Body)
-		var u user.User
-		err := decoder.Decode(&u)
-		if err != nil || &u == nil {
-			errors.Write(w, errors.NoJSONBody)
-			return
-		}
-
-		fromDB, err := env.UserRepo().Signup(&u)
-		if err != nil {
-			errors.Write(w, err)
-			return
-		}
-
-		// TODO: this is where we should actually email the code with mailgun or something
-		// for now we just pass verification code back in the response...
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(&signupResponse{
-			URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), fromDB.Verification),
-		})
+	decoder := json.NewDecoder(r.Body)
+	var u user.User
+	err := decoder.Decode(&u)
+	if err != nil || &u == nil {
+		return write.Error(errors.NoJSONBody)
 	}
+
+	fromDB, err := env.UserRepo().Signup(&u)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	// TODO: this is where we should actually email the code with mailgun or something
+	// for now we just pass verification code back in the response...
+	return write.JSON(&signupResponse{
+		URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), fromDB.Verification),
+	})
 }
 
 func whoami(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		u, err := jwt.ParseUserCookie(r)
-		if err != nil {
-			errors.Write(w, err)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(u)
-	}
+	return write.JSONorErr(jwt.HandleUserCookie(env, w, r))
 }
 
 type verifyRequest struct {
@@ -77,25 +64,19 @@ type verifyRequest struct {
 }
 
 func verify(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		decoder := json.NewDecoder(r.Body)
-		var req verifyRequest
+	decoder := json.NewDecoder(r.Body)
+	var req verifyRequest
 
-		err := decoder.Decode(&req)
-		if err != nil || &req == nil || req.Code == "" {
-			errors.Write(w, errors.NoJSONBody)
-			return
-		}
-
-		u, err := env.UserRepo().Verify(req.Code)
-		if err != nil {
-			errors.Write(w, err)
-			return
-		}
-
-		jwt.WriteUserCookie(w, u)
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(u)
+	err := decoder.Decode(&req)
+	if err != nil || &req == nil || req.Code == "" {
+		return write.Error(errors.NoJSONBody)
 	}
+
+	u, err := env.UserRepo().Verify(req.Code)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	jwt.WriteUserCookie(w, u)
+	return write.JSON(u)
 }
