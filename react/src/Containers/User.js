@@ -5,7 +5,8 @@ function defaultState() {
   return {
     loading: false,
     user: {
-      id: 0
+      id: 0,
+      status: 0
     }
   };
 }
