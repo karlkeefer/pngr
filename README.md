@@ -4,8 +4,9 @@ Dockerized (postgres + nginx + golang + react) starter kit
 Only implements basic user signup, session management, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
 ## Features
-- Hot-reload, front and back
-- JSON Web-Token cookies with automatic refresh. Ready for horizontal scaling.
+- Hot-reload, front and back, including a test-runner for golang changes
+- JSON Web-Token cookies with automatic refresh: ready for horizontal scaling
+- Uses `alpine` images for small footprint
 - Feature development is up to you!
 
 ## Requirements
