@@ -1,4 +1,4 @@
-FROM postgres:12-alpine
+FROM postgres:12.1
 
 RUN apk add --no-cache git make musl-dev go
 
