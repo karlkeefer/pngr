@@ -36,7 +36,7 @@ func (u User) MarshalJSON() ([]byte, error) {
 		ID      int64      `json:"id"`
 		Name    string     `json:"name,omitempty"`
 		Email   string     `json:"email,omitempty"`
-		Status  UserStatus `json:"status,omitempty"`
+		Status  UserStatus `json:"status"`
 		Created *time.Time `json:"created,omitempty"`
 	}
 
