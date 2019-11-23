@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/jmoiron/sqlx/reflectx"
 	_ "github.com/lib/pq"
 )
 
@@ -21,6 +23,9 @@ func New() (database *sqlx.DB, err error) {
 	if err != nil {
 		return
 	}
+
+	// this lets us use the json tags for finding postgres column names
+	database.Mapper = reflectx.NewMapperFunc("json", strings.ToLower)
 
 	return
 }
