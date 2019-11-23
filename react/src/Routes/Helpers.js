@@ -33,8 +33,7 @@ export class PrivateRoute extends Component {
 // check valid cookie, if invalid, redirect to login
 class CheckAndRedirect extends Component {
   render = () => {
-    console.log(this.props.userContainer.loading);
-    if (this.props.userContainer.loading !== false) {
+    if (this.props.userContainer.state.loading !== false) {
       return (
         <Container>
           <Dimmer active inverted>

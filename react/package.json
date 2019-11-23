@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.4.1",
+    "react": "^16.8.0",
     "react-cookie": "^3.0.4",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.8.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "3.2.0",
     "semantic-ui-css": "^2.3.2",
-    "semantic-ui-react": "^0.81.2",
+    "semantic-ui-react": "0.88.1",
     "unstated": "^2.1.1"
   },
   "scripts": {
