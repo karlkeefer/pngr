@@ -1,22 +1,25 @@
 # PNGR Stack
 Dockerized (postgres + nginx + golang + react) starter kit
 
-This repo only implements basic user signup, session management, and a toy `post` type to demonstrate basic CRUD.
-The idea is that this scaffolding can be forked and extended to serve a _huge_ variety of purposes.
+Only implements basic user signup, session management, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
-![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
-
-PNGR is _not_ a CMS.
-
-Feel free to create issues with suggestions, or pull requests for security or developer ergonomics improvements.
+## Features
+- Hot-reload, front and back
+- JSON Web-Token cookies with automatic refresh. Ready for horizontal scaling.
+- Feature development is up to you!
 
 ## Requirements
 - Install docker && docker-compose
 
 ## Quick Start
 1) `sudo docker-compose up`
-2) Visit https://localhost (and approve the self-signed cert)
-3) Make changes to either golang or react code, and enjoy hot-reload goodness!
+2) Visit `https://localhost` (*note **https***)
+3) Approve the self-signed cert
+4) Make changes to either golang or react code, and enjoy hot-reload goodness!
+
+Preview of the app:
+
+![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
 
 ## Rebuilding your dev environment
 Maybe your postgres went sideways from a wonky migration and you don't want to muck with fixing it.
