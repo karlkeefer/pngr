@@ -1,4 +1,5 @@
-# exclude the bilt app from check-ins
+.cache
+# exclude the built app from check-ins
 app
 # sometimes you might build locally
 # and this will be the default binary name

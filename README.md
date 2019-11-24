@@ -6,7 +6,7 @@ Only implements basic user signup, session management, and a toy `post` type to 
 ## Features
 - Hot-reload, front and back, including a test-runner for golang changes
 - JSON Web-Token cookies with automatic refresh: ready for horizontal scaling
-- Uses `alpine` images for small footprint
+- Uses multi-stage builds for small production images
 - Feature development is up to you!
 
 ## Requirements
@@ -30,13 +30,9 @@ Maybe your postgres went sideways from a wonky migration and you don't want to m
 ## Deploying to Production
 *Warning: Run in production at your own risk - this code is not security hardened!*
 
-Everyone's production deployment will look different, but some thoughts:
-- **P** Consider running an actual postgres instance. Running a production database in docker makes me sweat.
-- **N** Look at `nginx/nginx.prod.conf` for ideas on what a production configuration might look like.
-- **G** Use `golang/Dockerfile.prod`
-- **R** Use `react/Dockerfile.prod`
-	- e.g. From project root you can run `sudo docker build -t react-prod -f react/Dockerfile.prod react` 
-	- Test it out with `sudo docker run --net=host react-prod` then hit `http://localhost` in your browser
+You should install postgresql on the host.
+Then you can use `docker-compose.prod.yml` to build lean images to use in production.
+Don't forget to copy `.env.example -> .env` and setup your secrets/passwords.
 
 --- 
 

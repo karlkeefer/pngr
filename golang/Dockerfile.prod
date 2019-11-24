@@ -1,7 +1,0 @@
-# TODO: consider making this and the dev dockerfile "inherit" from a base image that defines the golang version...
-FROM golang:1.13-alpine
-EXPOSE 5000
-WORKDIR /pngr/golang
-COPY golang .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
-CMD ./app

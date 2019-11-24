@@ -1,24 +1,21 @@
-version: '3'
+version: '3.4'
 services:
   # back-end api built with golang
   golang:
-    build: golang
+    build: 
+      context: golang
+      target: dev
     volumes:
-      - ./golang:/pngr/golang
+      - ./golang:/root
     ports:
       - "5000:5000"
-    environment:
-      - APP_ROOT=https://localhost
-      - TOKEN_SECRET=asd973hkalkjhx97asdh
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+    env_file: .env.example
 
   # front-end built with react
   react:
-    build: react
+    build: 
+      context: react
+      target: dev
     volumes:
       - ./react:/root
     ports:
@@ -32,6 +29,8 @@ services:
 
   # nginx is used for ssl termination
   nginx:
-    build: nginx
+    build: 
+      context: nginx
+      target: dev
     ports:
       - "443:443"
