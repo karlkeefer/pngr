@@ -1,7 +1,7 @@
 FROM postgres:12.1
 
 RUN apt update
-RUN apt install -y git-all golang-go
+RUN apt install -y git golang-go
 
 RUN go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate && cp /root/go/bin/migrate /bin/migrate
 
