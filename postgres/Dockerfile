@@ -1,6 +1,6 @@
 FROM postgres:12.1
 
-RUN apk add --no-cache git make musl-dev go
+RUN apt-get update && apt-get install -y golang git
 
 RUN go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate && cp /root/go/bin/migrate /bin/migrate
 
