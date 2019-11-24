@@ -3,4 +3,7 @@
 
 FROM node:10.7-alpine
 WORKDIR /root/
-CMD npm install && npm start
+CMD echo "getting latest npm modules" \
+    && npm install \
+    && echo "installation complete, starting" \
+    && npm start
