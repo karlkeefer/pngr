@@ -7,6 +7,8 @@ services:
       context: golang
       target: prod
     env_file: .env
+    depends_on: 
+      - postgres
 
   # front-end built with react
   react-prod:
@@ -27,6 +29,10 @@ services:
     build: 
       context: nginx
       target: prod
+    depends_on: 
+      - golang-prod
+      - react-prod
+      - postgres
     # volumes:
     #  - ../certs-data:/data/letsencrypt
     #  - /etc/letsencrypt/:/etc/letsencrypt/
