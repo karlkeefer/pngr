@@ -7,8 +7,6 @@ services:
       context: golang
       target: prod
     network_mode: host
-    ports:
-      - "5000:5000"
     env_file: .env
 
   # front-end built with react
@@ -18,8 +16,6 @@ services:
       context: react
       target: prod
     network_mode: host
-    ports:
-      - "3000:3000"
 
   # nginx is used for ssl termination
   nginx-prod:
