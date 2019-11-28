@@ -17,12 +17,6 @@ services:
       context: react
       target: prod
 
-# postgres is our primary data store
-  postgres:
-    build: postgres
-    volumes:
-      - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations
-
   # nginx is used for ssl termination
   nginx-prod:
     restart: always
