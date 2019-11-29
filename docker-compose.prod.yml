@@ -6,7 +6,6 @@ services:
     build: 
       context: golang
       target: prod
-    network_mode: host
     ports:
       - "5000:5000"
     env_file: .env
@@ -17,7 +16,6 @@ services:
     build: 
       context: react
       target: prod
-    network_mode: host
     ports:
       - "3000:3000"
 
@@ -30,7 +28,9 @@ services:
     # volumes:
     #  - ../certs-data:/data/letsencrypt
     #  - /etc/letsencrypt/:/etc/letsencrypt/
-    network_mode: host
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - golang-prod
+      - react-prod

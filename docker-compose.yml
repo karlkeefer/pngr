@@ -10,6 +10,8 @@ services:
     ports:
       - "5000:5000"
     env_file: .env.example
+    depends_on:
+      - postgres
 
   # front-end built with react
   react:
@@ -34,3 +36,6 @@ services:
       target: dev
     ports:
       - "443:443"
+    depends_on:
+      - react
+      - golang
