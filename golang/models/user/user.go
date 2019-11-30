@@ -15,18 +15,19 @@ type User struct {
 	Name         *string // nullable
 	Email        string
 	Pass         string
-	Status       UserStatus
+	Status       Status
 	Verification string
 	Created      time.Time
 }
 
-type UserStatus int
+// Status is like a role, including unverified
+type Status int
 
 const (
-	UserStatusDisabled   UserStatus = -1
-	UserStatusUnverified            = 0
-	UserStatusActive                = 1
-	UserStatusAdmin                 = 10
+	StatusDisabled   Status = -1
+	StatusUnverified        = 0
+	StatusActive            = 1
+	StatusAdmin             = 10
 )
 
 // MarshalJSON here protects "private" fields from ever being sent *out*
@@ -36,7 +37,7 @@ func (u User) MarshalJSON() ([]byte, error) {
 		ID      int64      `json:"id"`
 		Name    string     `json:"name,omitempty"`
 		Email   string     `json:"email,omitempty"`
-		Status  UserStatus `json:"status"`
+		Status  Status     `json:"status"`
 		Created *time.Time `json:"created,omitempty"`
 	}
 
@@ -154,12 +155,12 @@ func (r *Repo) Verify(code string) (*User, error) {
 		return nil, errors.VerificationNotFound
 	}
 
-	if u.Status != UserStatusUnverified {
+	if u.Status != StatusUnverified {
 		return nil, errors.VerificationExpired
 	}
 
 	// update status
-	u.Status = UserStatusActive
+	u.Status = StatusActive
 	err = r.UpdateStatus(u)
 	if err != nil {
 		return nil, err

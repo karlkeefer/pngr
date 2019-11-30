@@ -14,7 +14,7 @@ import (
 
 func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (handler http.HandlerFunc) {
 	// protect all of these routes with auth wrapper
-	return jwt.RequireAuth(user.UserStatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
+	return jwt.RequireAuth(user.StatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
 		switch r.Method {
 		case "GET":
 			return getPosts(u, env)

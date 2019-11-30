@@ -35,7 +35,7 @@ type claims struct {
 }
 
 // RequireAuth middleware makes sure the user exists based on their JWT
-func RequireAuth(minStatus user.UserStatus, env *env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
+func RequireAuth(minStatus user.Status, env *env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
 	u, err := HandleUserCookie(env, w, r)
 	if err != nil {
 		return write.Error(err)
