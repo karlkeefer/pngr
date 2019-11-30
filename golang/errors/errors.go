@@ -1,7 +1,6 @@
 package errors
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 )
@@ -23,6 +22,7 @@ var (
 	RouteUnauthorized = errors.New("You don't have permission to view this resource")
 	RouteNotFound     = errors.New("Route not found")
 	ExpiredToken      = errors.New("Your access token expired")
+	InvalidToken      = errors.New("Your access token is invalid")
 )
 
 // codeMap returns a map of errors to http status codes
@@ -53,15 +53,4 @@ func GetCode(e error) int {
 		return code
 	}
 	return http.StatusInternalServerError
-}
-
-type errorResponse struct {
-	Error string
-}
-
-// Write is a helper that writes an error out as JSON
-func Write(w http.ResponseWriter, e error) {
-	w.WriteHeader(GetCode(e))
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&errorResponse{Error: e.Error()})
 }

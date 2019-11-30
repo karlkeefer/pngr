@@ -11,13 +11,15 @@ type Post struct {
 	AuthorID int64     `json:"author_id" db:"author_id"`
 	Title    string    `json:"title"`
 	Body     string    `json:"body"`
-	Status   int       `json:"status"`
+	Status   Status    `json:"status"`
 	Created  time.Time `json:"created"`
 }
 
+type Status int
+
 const (
-	PostStatusPrivate = 0
-	PostStatusPublic  = 1
+	StatusPrivate Status = 0
+	StatusPublic         = 1
 )
 
 // REPO stuff

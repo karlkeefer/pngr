@@ -114,24 +114,26 @@ func decodeUser(tokenString string) (*user.User, error) {
 		return hmacSecret, nil
 	})
 
-	if claims, ok := token.Claims.(*claims); ok {
+	if err != nil {
 		// check for expired token
 		if verr, ok := err.(*jwt.ValidationError); ok {
 			if verr.Errors&jwt.ValidationErrorExpired != 0 {
-				return claims.User, errors.ExpiredToken
+				return getUserFromToken(token), errors.ExpiredToken
 			}
 		}
-
-		// valid token(!)
-		if token.Valid {
-			return claims.User, nil
-		}
 	}
 
-	// invalid for some reason other than expiry
-	if err != nil {
-		return nil, err
+	if !token.Valid || err != nil {
+		return nil, errors.InvalidToken
 	}
-	// anon
-	return &user.User{}, nil
+
+	return getUserFromToken(token), nil
+}
+
+func getUserFromToken(token *jwt.Token) *user.User {
+	if claims, ok := token.Claims.(*claims); ok {
+		return claims.User
+	}
+
+	return nil
 }

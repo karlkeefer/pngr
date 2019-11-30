@@ -13,9 +13,9 @@ import (
 
 func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	switch r.Method {
-	case "POST":
+	case http.MethodPost:
 		return login(env, w, r)
-	case "DELETE":
+	case http.MethodDelete:
 		return logout(env, w)
 	default:
 		return write.Error(errors.BadRequestMethod)

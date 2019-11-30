@@ -36,7 +36,7 @@ const (
 func (u User) MarshalJSON() ([]byte, error) {
 	var tmp struct {
 		ID      int64      `json:"id"`
-		Name    string     `json:"name,omitempty"`
+		Name    string     `json:"name"`
 		Email   string     `json:"email,omitempty"`
 		Status  Status     `json:"status"`
 		Created *time.Time `json:"created,omitempty"`
@@ -47,6 +47,8 @@ func (u User) MarshalJSON() ([]byte, error) {
 	// pick a name
 	if u.Name != nil {
 		tmp.Name = *u.Name
+	} else {
+		tmp.Name = ""
 	}
 
 	tmp.Email = u.Email

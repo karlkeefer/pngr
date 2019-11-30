@@ -16,9 +16,9 @@ func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (handler http
 	// protect all of these routes with auth wrapper
 	return jwt.RequireAuth(user.StatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
 		switch r.Method {
-		case "GET":
+		case http.MethodGet:
 			return getPosts(u, env)
-		case "POST":
+		case http.MethodPost:
 			return createPost(u, env, r)
 		default:
 			return write.Error(errors.BadRequestMethod)

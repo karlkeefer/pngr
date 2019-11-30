@@ -18,13 +18,13 @@ func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerF
 	var head string
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 	switch r.Method {
-	case "POST":
+	case http.MethodPost:
 		if head == "verify" {
 			return verify(env, w, r)
 		} else {
 			return signup(env, w, r)
 		}
-	case "GET":
+	case http.MethodGet:
 		return whoami(env, w, r)
 	default:
 		return write.Error(errors.BadRequestMethod)
