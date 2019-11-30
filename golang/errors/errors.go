@@ -15,8 +15,9 @@ var (
 	FailedLogin          = errors.New("Invalid Email or Password")
 	VerificationNotFound = errors.New("Invalid Verification Code")
 	VerificationExpired  = errors.New("Verification Code Was Already Used")
-	UserNotFound         = errors.New("User does not exist")
-	PostNotFound         = errors.New("Post does not exist")
+
+	UserNotFound = errors.New("User does not exist")
+	PostNotFound = errors.New("Post does not exist")
 
 	BadCSRF           = errors.New("Missing CSRF Header")
 	BadOrigin         = errors.New("Invalid Origin Header")
@@ -50,9 +51,9 @@ func codeMap() map[error]int {
 }
 
 // GetCode is a helper to get the relevant code for an error, or just return 500
-func GetCode(e error) int {
+func GetCode(e error) (bool, int) {
 	if code, ok := codeMap()[e]; ok {
-		return code
+		return true, code
 	}
-	return http.StatusInternalServerError
+	return false, http.StatusInternalServerError
 }
