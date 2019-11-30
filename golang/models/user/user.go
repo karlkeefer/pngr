@@ -63,10 +63,10 @@ func (u User) MarshalJSON() ([]byte, error) {
 // TODO: consider moving repo to separate package
 type Repo interface {
 	Signup(u *User) (*User, error)
-	Authenticate(u *User) (fromDB *User, err error)
+	Authenticate(u *User) (*User, error)
 	FindByEmail(e string) (*User, error)
 	Verify(code string) (*User, error)
-	UpdateStatus(u *User) (err error)
+	UpdateStatus(u *User) error
 }
 
 type repo struct {
@@ -137,13 +137,13 @@ func checkPasswordHash(password, salt, hash string) bool {
 	return err == nil
 }
 
-func (r *repo) Authenticate(u *User) (fromDB *User, err error) {
-	fromDB, err = r.FindByEmail(u.Email)
+func (r *repo) Authenticate(u *User) (dbUser *User, err error) {
+	dbUser, err = r.FindByEmail(u.Email)
 	if err != nil {
 		return
 	}
 
-	if !checkPasswordHash(u.Pass, fromDB.Salt, fromDB.Pass) {
+	if !checkPasswordHash(u.Pass, dbUser.Salt, dbUser.Pass) {
 		err = errors.FailedLogin
 	}
 
@@ -203,7 +203,7 @@ func Mock(u *User, e error) Repo {
 func (m *mock) Signup(u *User) (*User, error) {
 	return m.user, m.err
 }
-func (m *mock) Authenticate(u *User) (fromDB *User, err error) {
+func (m *mock) Authenticate(u *User) (*User, error) {
 	return m.user, m.err
 }
 func (m *mock) FindByEmail(e string) (*User, error) {
@@ -212,6 +212,6 @@ func (m *mock) FindByEmail(e string) (*User, error) {
 func (m *mock) Verify(code string) (*User, error) {
 	return m.user, m.err
 }
-func (m *mock) UpdateStatus(u *User) (err error) {
+func (m *mock) UpdateStatus(u *User) error {
 	return m.err
 }

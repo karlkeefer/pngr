@@ -43,7 +43,7 @@ func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 		return write.Error(errors.NoJSONBody)
 	}
 
-	fromDB, err := env.UserRepo().Signup(&u)
+	dbUser, err := env.UserRepo().Signup(&u)
 	if err != nil {
 		return write.Error(err)
 	}
@@ -51,7 +51,7 @@ func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 	// TODO: this is where we should actually email the code with mailgun or something
 	// for now we just pass verification code back in the response...
 	return write.JSON(&signupResponse{
-		URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), fromDB.Verification),
+		URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), dbUser.Verification),
 	})
 }
 

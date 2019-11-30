@@ -31,7 +31,6 @@ func getPosts(u *user.User, env env.Env) http.HandlerFunc {
 }
 
 func createPost(u *user.User, env env.Env, r *http.Request) http.HandlerFunc {
-
 	decoder := json.NewDecoder(r.Body)
 	p := &post.Post{}
 	err := decoder.Decode(p)
