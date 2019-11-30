@@ -14,7 +14,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
-func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Handler(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	var head string
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 	switch r.Method {
@@ -35,7 +35,7 @@ type signupResponse struct {
 	URL string
 }
 
-func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	var u user.User
 	err := decoder.Decode(&u)
@@ -55,7 +55,7 @@ func signup(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 	})
 }
 
-func whoami(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func whoami(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	return write.JSONorErr(jwt.HandleUserCookie(env, w, r))
 }
 
@@ -63,7 +63,7 @@ type verifyRequest struct {
 	Code string
 }
 
-func verify(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func verify(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	var req verifyRequest
 

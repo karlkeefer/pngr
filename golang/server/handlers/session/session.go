@@ -11,7 +11,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
-func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Handler(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	switch r.Method {
 	case http.MethodPost:
 		return login(env, w, r)
@@ -22,7 +22,7 @@ func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerF
 	}
 }
 
-func login(env *env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func login(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	u := &user.User{}
 	err := decoder.Decode(u)
@@ -43,7 +43,7 @@ type logoutResponse struct {
 	success bool
 }
 
-func logout(env *env.Env, w http.ResponseWriter) http.HandlerFunc {
+func logout(env env.Env, w http.ResponseWriter) http.HandlerFunc {
 	u := &user.User{}
 	jwt.WriteUserCookie(w, u)
 	return write.JSON(&logoutResponse{true})

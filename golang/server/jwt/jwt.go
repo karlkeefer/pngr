@@ -35,8 +35,8 @@ type claims struct {
 }
 
 // RequireAuth middleware makes sure the user exists based on their JWT
-func RequireAuth(minStatus user.Status, env *env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
-	u, err := HandleUserCookie(env, w, r)
+func RequireAuth(minStatus user.Status, e env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
+	u, err := HandleUserCookie(e, w, r)
 	if err != nil {
 		return write.Error(err)
 	}
@@ -58,24 +58,13 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 	})
 }
 
-// HandleUserCookie builds a user object from a JWT, if it's valid
-// Also attempts to refresh and reset the cookie if the user submits an expired token
-func HandleUserCookie(env *env.Env, w http.ResponseWriter, r *http.Request) (*user.User, error) {
-	cookie, _ := r.Cookie(cookieName)
-	var tokenString string
-	if cookie != nil {
-		tokenString = cookie.Value
-	}
-
-	if tokenString == "" {
-		return &user.User{}, nil
-	}
-
-	u, err := decodeUser(tokenString)
+// HandleUserCookie attempts to refresh an expired token if the user is still valid
+func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*user.User, error) {
+	u, err := userFromCookie(r)
 
 	// attempt refresh of expired token:
 	if err == errors.ExpiredToken && u.Status > 0 {
-		user, fetchError := env.UserRepo().FindByEmail(u.Email)
+		user, fetchError := e.UserRepo().FindByEmail(u.Email)
 		if fetchError != nil {
 			return nil, err
 		}
@@ -86,6 +75,21 @@ func HandleUserCookie(env *env.Env, w http.ResponseWriter, r *http.Request) (*us
 	}
 
 	return u, err
+}
+
+// userFromCookie builds a user object from a JWT, if it's valid
+func userFromCookie(r *http.Request) (*user.User, error) {
+	cookie, _ := r.Cookie(cookieName)
+	var tokenString string
+	if cookie != nil {
+		tokenString = cookie.Value
+	}
+
+	if tokenString == "" {
+		return &user.User{}, nil
+	}
+
+	return decodeUser(tokenString)
 }
 
 // encodeUser convert a user struct into a jwt
@@ -135,5 +139,5 @@ func getUserFromToken(token *jwt.Token) *user.User {
 		return claims.User
 	}
 
-	return nil
+	return &user.User{}
 }

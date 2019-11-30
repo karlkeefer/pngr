@@ -14,7 +14,7 @@ import (
 )
 
 type server struct {
-	env *env.Env
+	env env.Env
 }
 
 // New initializes env (database connections and whatnot)

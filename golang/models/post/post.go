@@ -24,13 +24,18 @@ const (
 
 // REPO stuff
 // TODO: consider moving repo to separate package
-type Repo struct {
+type Repo interface {
+	GetPostsForUser(userID int64) (posts []*Post, err error)
+	CreatePost(p *Post) (post *Post, err error)
+}
+
+type repo struct {
 	create     *sqlx.NamedStmt
 	getForUser *sqlx.Stmt
 }
 
 // NewRepo prepares statements, and panics if a statement fails to create
-func NewRepo(db *sqlx.DB) *Repo {
+func NewRepo(db *sqlx.DB) Repo {
 	create, err := db.PrepareNamed(`INSERT INTO posts (author_id, title, body, status) VALUES (:author_id, :title, :body, :status) RETURNING *`)
 	if err != nil {
 		panic(err)
@@ -39,19 +44,19 @@ func NewRepo(db *sqlx.DB) *Repo {
 	if err != nil {
 		panic(err)
 	}
-	return &Repo{
+	return &repo{
 		create,
 		getForUser,
 	}
 }
 
-func (r *Repo) GetPostsForUser(userID int64) (posts []*Post, err error) {
+func (r *repo) GetPostsForUser(userID int64) (posts []*Post, err error) {
 	posts = []*Post{} // always at least return empty list
 	err = r.getForUser.Select(&posts, userID)
 	return
 }
 
-func (r *Repo) CreatePost(p *Post) (post *Post, err error) {
+func (r *repo) CreatePost(p *Post) (post *Post, err error) {
 	post = &Post{}
 	err = r.create.Get(post, p)
 	return

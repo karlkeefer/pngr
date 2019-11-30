@@ -61,14 +61,22 @@ func (u User) MarshalJSON() ([]byte, error) {
 
 // REPO stuff
 // TODO: consider moving repo to separate package
-type Repo struct {
+type Repo interface {
+	Signup(u *User) (*User, error)
+	Authenticate(u *User) (fromDB *User, err error)
+	FindByEmail(e string) (*User, error)
+	Verify(code string) (*User, error)
+	UpdateStatus(u *User) (err error)
+}
+
+type repo struct {
 	signup       *sqlx.NamedStmt
 	updateStatus *sqlx.NamedStmt
 	findByEmail  *sqlx.Stmt
 	verify       *sqlx.Stmt
 }
 
-func NewRepo(db *sqlx.DB) *Repo {
+func NewRepo(db *sqlx.DB) Repo {
 	// TODO: create a helper to prepare named and regular statements
 	signup, err := db.PrepareNamed(`INSERT INTO users (email, salt, pass, status, verification) VALUES (:email, :salt, :pass, :status, :verification) RETURNING *`)
 	if err != nil {
@@ -86,7 +94,7 @@ func NewRepo(db *sqlx.DB) *Repo {
 	if err != nil {
 		panic(err)
 	}
-	return &Repo{
+	return &repo{
 		signup,
 		updateStatus,
 		findByEmail,
@@ -94,7 +102,7 @@ func NewRepo(db *sqlx.DB) *Repo {
 	}
 }
 
-func (r *Repo) Signup(u *User) (*User, error) {
+func (r *repo) Signup(u *User) (*User, error) {
 	_, err := r.FindByEmail(u.Email)
 	if err != errors.UserNotFound {
 		return nil, errors.InvalidEmail
@@ -129,7 +137,7 @@ func checkPasswordHash(password, salt, hash string) bool {
 	return err == nil
 }
 
-func (r *Repo) Authenticate(u *User) (fromDB *User, err error) {
+func (r *repo) Authenticate(u *User) (fromDB *User, err error) {
 	fromDB, err = r.FindByEmail(u.Email)
 	if err != nil {
 		return
@@ -142,7 +150,7 @@ func (r *Repo) Authenticate(u *User) (fromDB *User, err error) {
 	return
 }
 
-func (r *Repo) FindByEmail(e string) (*User, error) {
+func (r *repo) FindByEmail(e string) (*User, error) {
 	u := &User{}
 	err := r.findByEmail.Get(u, e)
 	if err != nil {
@@ -152,7 +160,7 @@ func (r *Repo) FindByEmail(e string) (*User, error) {
 	return u, nil
 }
 
-func (r *Repo) Verify(code string) (*User, error) {
+func (r *repo) Verify(code string) (*User, error) {
 	u := &User{}
 	err := r.verify.Get(u, code)
 	if err != nil {
@@ -173,8 +181,37 @@ func (r *Repo) Verify(code string) (*User, error) {
 	return u, nil
 }
 
-func (r *Repo) UpdateStatus(u *User) (err error) {
+func (r *repo) UpdateStatus(u *User) (err error) {
 	_, err = r.updateStatus.Exec(u)
 
 	return
+}
+
+// mock this repository!
+type mock struct {
+	user *User
+	err  error
+}
+
+func Mock(u *User, e error) Repo {
+	return &mock{
+		u,
+		e,
+	}
+}
+
+func (m *mock) Signup(u *User) (*User, error) {
+	return m.user, m.err
+}
+func (m *mock) Authenticate(u *User) (fromDB *User, err error) {
+	return m.user, m.err
+}
+func (m *mock) FindByEmail(e string) (*User, error) {
+	return m.user, m.err
+}
+func (m *mock) Verify(code string) (*User, error) {
+	return m.user, m.err
+}
+func (m *mock) UpdateStatus(u *User) (err error) {
+	return m.err
 }

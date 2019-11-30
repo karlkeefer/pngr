@@ -7,29 +7,44 @@ import (
 	"github.com/karlkeefer/pngr/golang/models/user"
 )
 
-type Env struct {
+type env struct {
 	db       *sqlx.DB
-	userRepo *user.Repo
-	postRepo *post.Repo
+	userRepo user.Repo
+	postRepo post.Repo
 }
 
-func New() (*Env, error) {
+// helpful interface for testing
+type Env interface {
+	UserRepo() user.Repo
+	PostRepo() post.Repo
+}
+
+func New() (Env, error) {
 	db, err := db.New()
 	if err != nil {
 		return nil, err
 	}
 
-	return &Env{
+	return &env{
 		db:       db,
 		userRepo: user.NewRepo(db),
 		postRepo: post.NewRepo(db),
 	}, nil
 }
 
-func (e *Env) UserRepo() *user.Repo {
+func (e *env) UserRepo() user.Repo {
 	return e.userRepo
 }
 
-func (e *Env) PostRepo() *post.Repo {
+func (e *env) PostRepo() post.Repo {
 	return e.postRepo
+}
+
+// mock
+func Mock(db *sqlx.DB, ur user.Repo, pr post.Repo) Env {
+	return &env{
+		db:       db,
+		userRepo: ur,
+		postRepo: pr,
+	}
 }

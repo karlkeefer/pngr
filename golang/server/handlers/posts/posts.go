@@ -12,7 +12,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
-func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (handler http.HandlerFunc) {
+func Handler(env env.Env, w http.ResponseWriter, r *http.Request) (handler http.HandlerFunc) {
 	// protect all of these routes with auth wrapper
 	return jwt.RequireAuth(user.StatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
 		switch r.Method {
@@ -26,11 +26,11 @@ func Handler(env *env.Env, w http.ResponseWriter, r *http.Request) (handler http
 	})
 }
 
-func getPosts(u *user.User, env *env.Env) http.HandlerFunc {
+func getPosts(u *user.User, env env.Env) http.HandlerFunc {
 	return write.JSONorErr(env.PostRepo().GetPostsForUser(u.ID))
 }
 
-func createPost(u *user.User, env *env.Env, r *http.Request) http.HandlerFunc {
+func createPost(u *user.User, env env.Env, r *http.Request) http.HandlerFunc {
 
 	decoder := json.NewDecoder(r.Body)
 	p := &post.Post{}
