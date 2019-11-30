@@ -14,6 +14,7 @@ type User struct {
 	ID           int64
 	Name         *string // nullable
 	Email        string
+	Salt         string
 	Pass         string
 	Status       Status
 	Verification string
@@ -67,7 +68,7 @@ type Repo struct {
 
 func NewRepo(db *sqlx.DB) *Repo {
 	// TODO: create a helper to prepare named and regular statements
-	signup, err := db.PrepareNamed(`INSERT INTO users (email, pass, status, verification) VALUES (:email, :pass, :status, :verification) RETURNING *`)
+	signup, err := db.PrepareNamed(`INSERT INTO users (email, salt, pass, status, verification) VALUES (:email, :salt, :pass, :status, :verification) RETURNING *`)
 	if err != nil {
 		panic(err)
 	}
@@ -99,29 +100,30 @@ func (r *Repo) Signup(u *User) (*User, error) {
 
 	// set verification code
 	u.Verification = utils.GenerateRandomString(32)
+	u.Salt = utils.GenerateRandomString(16)
 
 	// hash the password
-	u.Pass, err = hashPassword(u.Pass)
+	u.Pass, err = hashPassword(u.Pass, u.Salt)
 	if err != nil {
 		return nil, err
 	}
 
-	fromDB := &User{}
-	err = r.signup.Get(fromDB, u)
+	returedUser := &User{}
+	err = r.signup.Get(returedUser, u)
 	if err != nil {
 		return nil, err
 	}
 
-	return fromDB, nil
+	return returedUser, nil
 }
 
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+func hashPassword(password, salt string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password+salt), 14)
 	return string(bytes), err
 }
 
-func checkPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+func checkPasswordHash(password, salt, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password+salt))
 	return err == nil
 }
 
@@ -131,7 +133,7 @@ func (r *Repo) Authenticate(u *User) (fromDB *User, err error) {
 		return
 	}
 
-	if !checkPasswordHash(u.Pass, fromDB.Pass) {
+	if !checkPasswordHash(u.Pass, fromDB.Salt, fromDB.Pass) {
 		err = errors.FailedLogin
 	}
 
