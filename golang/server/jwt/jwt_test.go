@@ -31,6 +31,6 @@ func TestDecodeUser(t *testing.T) {
 	assert.Equal(t, errors.ExpiredToken, err)
 
 	// test garbage token
-	_, err = decodeUser("not_a_real_token")
-	assert.Equal(t, "token contains an invalid number of segments", err.Error())
+	_, err = decodeUser("garbage_token")
+	assert.Equal(t, errors.InvalidToken, err)
 }

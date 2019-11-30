@@ -123,7 +123,7 @@ func decodeUser(tokenString string) (*user.User, error) {
 		}
 	}
 
-	if !token.Valid || err != nil {
+	if err != nil || !token.Valid {
 		return nil, errors.InvalidToken
 	}
 
