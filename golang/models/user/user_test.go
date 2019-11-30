@@ -17,12 +17,12 @@ func TestMarshalJSON(t *testing.T) {
 		Pass:         "myHashGoesHere",
 		Status:       StatusActive,
 		Verification: "VerificationCode",
-		Created:      time.Unix(0, 0),
+		CreatedAt:    time.Unix(0, 0),
 	}
 
 	out, err := u.MarshalJSON()
 	assert.NoError(t, err)
-	assert.Equal(t, `{"id":2,"name":"","email":"test@test.com","status":1,"created":"1970-01-01T00:00:00Z"}`, string(out))
+	assert.Equal(t, `{"id":2,"name":"","email":"test@test.com","status":1,"created_at":"1970-01-01T00:00:00Z"}`, string(out))
 }
 
 func TestHashPassword(t *testing.T) {

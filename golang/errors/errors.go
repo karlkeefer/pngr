@@ -16,6 +16,7 @@ var (
 	VerificationNotFound = errors.New("Invalid Verification Code")
 	VerificationExpired  = errors.New("Verification Code Was Already Used")
 	UserNotFound         = errors.New("User does not exist")
+	PostNotFound         = errors.New("Post does not exist")
 
 	BadCSRF           = errors.New("Missing CSRF Header")
 	BadOrigin         = errors.New("Invalid Origin Header")
@@ -38,6 +39,7 @@ func codeMap() map[error]int {
 		VerificationNotFound: http.StatusNotFound,
 		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
+		PostNotFound:         http.StatusNotFound,
 
 		BadCSRF:           http.StatusUnauthorized,
 		BadOrigin:         http.StatusUnauthorized,

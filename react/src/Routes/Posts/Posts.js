@@ -41,8 +41,14 @@ export default class Posts extends Component {
             {posts.length === 0 && !loading ? <Message warning>No posts to show</Message> : ''}
             {posts.map(({id, title, body}, i) => (
               <Segment.Group key={id}>
-                <Header attached='top' as='h3'>{title}</Header>
-                <Segment attached='bottom' key={id}>
+                <Header attached='top' as='h3'>
+                  {title}
+                  &nbsp;&nbsp;&nbsp;
+                  <Link to={`/post/${id}/edit`}>
+                    <Button compact basic>Edit</Button>
+                  </Link>
+                </Header>
+                <Segment attached='bottom'>
                   {body}
                 </Segment>
               </Segment.Group>

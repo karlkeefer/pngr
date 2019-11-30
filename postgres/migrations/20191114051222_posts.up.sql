@@ -6,5 +6,6 @@ CREATE TABLE posts (
 	title		VARCHAR(60)	NOT NULL,
 	body		TEXT		NOT NULL,
 	status		INTEGER		NOT NULL,
-	created		TIMESTAMP	NOT NULL DEFAULT now()
+	created_at		TIMESTAMP	NOT NULL DEFAULT now(),
+	updated_at		TIMESTAMP	NOT NULL DEFAULT now()
 );

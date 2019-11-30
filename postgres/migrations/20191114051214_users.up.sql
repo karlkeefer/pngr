@@ -8,5 +8,6 @@ CREATE TABLE users (
 	salt		VARCHAR(60)	NOT NULL,
 	status		INTEGER		NOT NULL,
 	verification	VARCHAR(60)	NOT NULL,
-	created		TIMESTAMP	NOT NULL DEFAULT now()
+	created_at		TIMESTAMP	NOT NULL DEFAULT now(),
+	updated_at		TIMESTAMP	NOT NULL DEFAULT now()
 );

@@ -11,6 +11,10 @@ function _delete(url, body) {
   return _fetch('DELETE', url, body);
 }
 
+function _put(endpoint, body) {
+  return _fetch('PUT', endpoint, body);
+}
+
 function _fetch(method, url, body) {
   return fetch(url, {
     method: method,
@@ -60,5 +64,14 @@ export default class API {
   }
   static createPost = (body) => {
     return _post('/api/posts', body); 
+  }
+  static getPost = (id) => {
+    return _get(`/api/posts/${id}`);
+  }
+  static updatePost = (body) => {
+    return _put('/api/posts', body);
+  }
+  static deletePost = (id) => {
+    return _delete(`/api/posts/${id}`);
   }
 }

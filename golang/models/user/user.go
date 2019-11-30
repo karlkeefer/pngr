@@ -18,7 +18,8 @@ type User struct {
 	Pass         string
 	Status       Status
 	Verification string
-	Created      time.Time
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 // Status is like a role, including unverified
@@ -35,11 +36,11 @@ const (
 // it also makes Name return "" instead of null
 func (u User) MarshalJSON() ([]byte, error) {
 	var tmp struct {
-		ID      int64      `json:"id"`
-		Name    string     `json:"name"`
-		Email   string     `json:"email,omitempty"`
-		Status  Status     `json:"status"`
-		Created *time.Time `json:"created,omitempty"`
+		ID        int64      `json:"id"`
+		Name      string     `json:"name"`
+		Email     string     `json:"email,omitempty"`
+		Status    Status     `json:"status"`
+		CreatedAt *time.Time `json:"created_at,omitempty"`
 	}
 
 	tmp.ID = u.ID
@@ -53,8 +54,8 @@ func (u User) MarshalJSON() ([]byte, error) {
 
 	tmp.Email = u.Email
 	tmp.Status = u.Status
-	if !u.Created.IsZero() {
-		tmp.Created = &u.Created
+	if !u.CreatedAt.IsZero() {
+		tmp.CreatedAt = &u.CreatedAt
 	}
 	return json.Marshal(&tmp)
 }
@@ -82,7 +83,7 @@ func NewRepo(db *sqlx.DB) Repo {
 	if err != nil {
 		panic(err)
 	}
-	updateStatus, err := db.PrepareNamed(`UPDATE users SET status = :status WHERE id = :id`)
+	updateStatus, err := db.PrepareNamed(`UPDATE users SET status = :status, updated_at = :updated_at WHERE id = :id`)
 	if err != nil {
 		panic(err)
 	}
@@ -110,7 +111,7 @@ func (r *repo) Signup(u *User) (*User, error) {
 
 	// set verification code
 	u.Verification = utils.GenerateRandomString(32)
-	u.Salt = utils.GenerateRandomString(16)
+	u.Salt = utils.GenerateRandomString(32)
 
 	// hash the password
 	u.Pass, err = hashPassword(u.Pass, u.Salt)
@@ -182,6 +183,7 @@ func (r *repo) Verify(code string) (*User, error) {
 }
 
 func (r *repo) UpdateStatus(u *User) (err error) {
+	u.UpdatedAt = time.Now()
 	_, err = r.updateStatus.Exec(u)
 
 	return

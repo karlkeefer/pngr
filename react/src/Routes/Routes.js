@@ -12,7 +12,7 @@ import LogIn from './LogIn/LogIn'
 import Verify from './Verify/Verify'
 
 import Posts from './Posts/Posts'
-import PostsCreate from './PostsCreate/PostsCreate'
+import PostForm from './PostForm/PostForm'
 
 const Routes = () => (
   <Switch>
@@ -35,7 +35,8 @@ const Routes = () => (
     } />
 
     <PrivateRoute path="/posts" component={Posts}/>
-    <PrivateRoute path="/post/create" component={PostsCreate}/>
+    <PrivateRoute path="/post/create" component={PostForm}/>
+    <PrivateRoute path="/post/:id/edit" component={PostForm}/>
 
     <Route component={NoMatch} />
   </Switch>
