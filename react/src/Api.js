@@ -31,6 +31,9 @@ function _fetch(method, url, body) {
       return Promise.reject(result.Error);
     }
     return Promise.resolve(result);
+  })
+  .catch(error => {
+    return Promise.reject(error.toString());
   });
 }
 
