@@ -17,7 +17,7 @@ export class PrivateRoute extends Component {
           {userContainer => {
             if (userContainer.state.user.id > 0) {
               if (R) {
-                return R();
+                return R(props);
               }
               return <C {...props} />
             } else {

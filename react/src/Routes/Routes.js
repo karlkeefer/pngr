@@ -18,15 +18,15 @@ const Routes = () => (
   <Switch>
     <Route exact path="/" component={Home} />
 
-    <Route path="/signup" component={SignUp} />
-    <Route path="/login" render={(props) => 
+    <Route exact path="/signup" component={SignUp} />
+    <Route exact path="/login" render={(props) => 
       <Subscribe to={[UserContainer]}>
         {userContainer => (
           <LogIn {...props} userContainer={userContainer}/>
         )}
       </Subscribe>
     } />
-    <Route path="/verify/:verification" render={(props) =>
+    <Route exact path="/verify/:verification" render={(props) =>
       <Subscribe to={[UserContainer]}>
         {userContainer => (
           <Verify {...props} userContainer={userContainer}/>
@@ -34,9 +34,9 @@ const Routes = () => (
       </Subscribe>
     } />
 
-    <PrivateRoute path="/posts" component={Posts}/>
-    <PrivateRoute path="/post/create" component={PostForm}/>
-    <PrivateRoute path="/post/:id/edit" component={PostForm}/>
+    <PrivateRoute exact path="/posts" component={Posts}/>
+    <PrivateRoute exact path="/post/create" component={PostForm}/>
+    <PrivateRoute exact path="/post/:id/edit" component={PostForm}/>
 
     <Route component={NoMatch} />
   </Switch>
