@@ -13,7 +13,7 @@ Only implements basic user signup, session management, and a toy `post` type to 
 - Install docker && docker-compose
 
 ## Quick Start
-1) `sudo docker-compose up`
+1) `docker-compose up`
 2) Visit `https://localhost` (*note **https***)
 3) Approve the self-signed cert
 4) Make changes to either golang or react code, and enjoy hot-reload goodness!
@@ -25,7 +25,7 @@ Preview of the app:
 ## Rebuilding your dev environment
 Maybe your postgres went sideways from a wonky migration and you don't want to muck with fixing it.
 
-`sudo docker-compose down -v && sudo docker-compose up --build --force-recreate`
+`docker-compose down -v && docker-compose up --build --force-recreate`
 
 ## Deploying to Production
 *Warning: Run in production at your own risk - this code is not security hardened!*
@@ -43,13 +43,14 @@ Some tips for working with your postgres docker instance
 Migrations are run using [go-migrate](https://github.com/golang-migrate/migrate).
 
 I put together little bash scripts to help you get stuff done.
-- `sudo postgres/new-migration.sh my_migration_name` will create a template for the next migration.
-- `sudo postgres/run-migrations.sh` will execute any new migrations 
+- `postgres/new-migration.sh my_migration_name` will create a template for the next migration
+- `postgres/run-migrations.sh` will execute any new migrations (this is used when the container is created)
+- `postgres/migrate.sh` makes it easy to run arbitrary [go-migrate](https://github.com/golang-migrate/migrate) commands (e.g. `postgres/migrate.sh down 1`)
 
 You can do more advanced migrate commands 
 
 ### Opening a psql client
-`sudo docker-compose exec postgres psql -U postgres`
+`docker-compose exec postgres psql -U postgres`
 Remember to use `\q` to exit.
 
 --- 
