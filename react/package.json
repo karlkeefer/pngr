@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "react": "^16.8.0",
-    "react-cookie": "^3.0.4",
+    "react-cookie": "^3.1.2",
     "react-dom": "^16.8.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5",
     "react-scripts": "3.2.0",
-    "semantic-ui-css": "^2.3.2",
+    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "0.88.1",
     "unstated": "^2.1.1"
   },
