@@ -8,7 +8,6 @@ import UserContainer from 'Containers/User'
 // helper for semanticUI + react-router
 const Link = props => (
   <NavLink
-    exact
     {...props}
     activeClassName="active"
   />
@@ -35,8 +34,8 @@ class NavInner extends Component {
       return (
         <Container>
           <Menu.Menu position="right">
-            <Menu.Item as={Link} to="/login" name="Log In" />
-            <Menu.Item as={Link} to="/signup" name="Sign Up" />
+            <Menu.Item as={Link} exact to="/login" name="Log In" />
+            <Menu.Item as={Link} exact to="/signup" name="Sign Up" />
           </Menu.Menu> 
         </Container>
       );
