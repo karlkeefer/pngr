@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom'
 import { Subscribe } from 'unstated'
 import { Loader, Container, Dimmer } from 'semantic-ui-react'
 
-import UserContainer from '../Containers/User'
+import UserContainer from 'Containers/User'
 
 // if unauth'd, check the jwt and then redirect to login screen if still not auth'd
 // otherwise, behave like a Route while attempting to respect both "render" and "component" properties

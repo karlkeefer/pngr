@@ -3,7 +3,7 @@ import { Subscribe } from 'unstated'
 import { Switch, Route } from 'react-router-dom'
 import { PrivateRoute, NoMatch } from './Helpers'
 
-import UserContainer from '../Containers/User'
+import UserContainer from 'Containers/User'
 
 import Home from './Home/Home'
 

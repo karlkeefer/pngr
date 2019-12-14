@@ -1,5 +1,5 @@
 import { Container } from 'unstated'
-import API from '../Api'
+import API from 'Api'
 
 function defaultState() {
   return {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
-import API from '../../Api'
+import API from 'Api'
 
 function defaultState(){
   return {

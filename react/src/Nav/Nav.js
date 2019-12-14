@@ -3,7 +3,7 @@ import { Menu, Container } from 'semantic-ui-react'
 import { Subscribe } from 'unstated'
 import { NavLink } from 'react-router-dom'
 
-import UserContainer from '../Containers/User'
+import UserContainer from 'Containers/User'
 
 // helper for semanticUI + react-router
 const Link = props => (

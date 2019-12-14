@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { Container, Segment, Message, Header, Button, Icon } from 'semantic-ui-react'
 
 import { Subscribe } from 'unstated'
-import UserContainer from '../../Containers/User'
-import API from '../../Api'
+import UserContainer from 'Containers/User'
+import API from 'Api'
 
 export default class Posts extends Component {
   state = {
