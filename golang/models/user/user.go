@@ -79,7 +79,7 @@ type repo struct {
 
 func NewRepo(db *sqlx.DB) Repo {
 	// TODO: create a helper to prepare named and regular statements
-	signup, err := db.PrepareNamed(`INSERT INTO users (email, salt, pass, status, verification) VALUES (:email, :salt, :pass, :status, :verification) RETURNING *`)
+	signup, err := db.PrepareNamed(`INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER(:email), :salt, :pass, :status, :verification) RETURNING *`)
 	if err != nil {
 		panic(err)
 	}
@@ -87,7 +87,7 @@ func NewRepo(db *sqlx.DB) Repo {
 	if err != nil {
 		panic(err)
 	}
-	findByEmail, err := db.Preparex(`SELECT * FROM users WHERE email = $1 LIMIT 1`)
+	findByEmail, err := db.Preparex(`SELECT * FROM users WHERE email = LOWER($1) LIMIT 1`)
 	if err != nil {
 		panic(err)
 	}
