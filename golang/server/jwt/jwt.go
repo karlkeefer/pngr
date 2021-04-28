@@ -55,6 +55,8 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   60 * 60 * 24 * 7, // one week
 	})
 }
 
@@ -66,15 +68,28 @@ func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*user.
 	if err == errors.ExpiredToken && u.Status > 0 {
 		user, fetchError := e.UserRepo().FindByEmail(u.Email)
 		if fetchError != nil {
-			return nil, err
+			return wipeCookie(e, w)
 		}
 		if user.Status > 0 {
 			WriteUserCookie(w, user)
 			return user, nil
+		} else {
+			// their account isn't verified, log them out
+			return wipeCookie(e, w)
 		}
 	}
 
+	if err != nil {
+		return nil, err
+	}
+
 	return u, err
+}
+
+func wipeCookie(e env.Env, w http.ResponseWriter) (*user.User, error) {
+	u := &user.User{}
+	WriteUserCookie(w, u)
+	return u, nil
 }
 
 // userFromCookie builds a user object from a JWT, if it's valid
