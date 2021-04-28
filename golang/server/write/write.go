@@ -12,6 +12,7 @@ type errorResponse struct {
 	Error string
 }
 
+// Error is a shortcut for converting custom error types into appropriate response codes and JSON
 func Error(err error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		found, code := errors.GetCode(err)
@@ -26,6 +27,7 @@ func Error(err error) http.HandlerFunc {
 	}
 }
 
+// JSON is a shortcut for writing JSON api responses
 func JSON(obj interface{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -33,10 +35,28 @@ func JSON(obj interface{}) http.HandlerFunc {
 	}
 }
 
+// JSONorErr is a simple helper to handle the last `if err != nil` check in a handler
 func JSONorErr(obj interface{}, err error) http.HandlerFunc {
 	if err != nil {
 		return Error(err)
 	}
 
 	return JSON(obj)
+}
+
+// SuccessOrErr is a simple helper to handle the last `if err != nil` check in a handler
+func SuccessOrErr(err error) http.HandlerFunc {
+	if err != nil {
+		return Error(err)
+	}
+
+	return Success()
+}
+
+// Success writes a generic { success: true } response
+func Success() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(&map[string]bool{"success": true})
+	}
 }

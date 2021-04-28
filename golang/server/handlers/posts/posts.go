@@ -79,12 +79,5 @@ func updatePost(u *user.User, env env.Env, r *http.Request) http.HandlerFunc {
 }
 
 func deletePost(u *user.User, id int64, env env.Env) http.HandlerFunc {
-	err := env.PostRepo().DeleteForUser(u.ID, id)
-	if err != nil {
-		return write.Error(err)
-	}
-
-	return write.JSON(map[string]bool{
-		"success": true,
-	})
+	return write.SuccessOrErr(env.PostRepo().DeleteForUser(u.ID, id))
 }
