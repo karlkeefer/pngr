@@ -15,7 +15,7 @@ func TestMarshalJSON(t *testing.T) {
 		Email:        "test@test.com",
 		Salt:         "saltyboi",
 		Pass:         "myHashGoesHere",
-		Status:       StatusActive,
+		Status:       UserStatusActive,
 		Verification: "VerificationCode",
 		CreatedAt:    time.Unix(0, 0),
 	}
@@ -23,18 +23,4 @@ func TestMarshalJSON(t *testing.T) {
 	out, err := u.MarshalJSON()
 	assert.NoError(t, err)
 	assert.Equal(t, `{"id":2,"name":"","email":"test@test.com","status":1,"created_at":"1970-01-01T00:00:00Z"}`, string(out))
-}
-
-func TestHashPassword(t *testing.T) {
-	pass := "MyPassword"
-	salt := "MySalt"
-
-	hash, err := hashPassword(pass, salt)
-	assert.NoError(t, err)
-
-	result := checkPasswordHash("badPass", salt, hash)
-	assert.False(t, result)
-
-	result = checkPasswordHash(pass, salt, hash)
-	assert.True(t, result)
 }

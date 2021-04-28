@@ -11,7 +11,7 @@ type User struct {
 	Email        string
 	Salt         string
 	Pass         string
-	Status       Status
+	Status       UserStatus
 	Verification string
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
@@ -21,10 +21,10 @@ type User struct {
 type UserStatus int
 
 const (
-	UserStatusDisabled   Status = -1
-	UserStatusUnverified        = 0
-	UserStatusActive            = 1
-	UserStatusAdmin             = 10
+	UserStatusDisabled   UserStatus = -1
+	UserStatusUnverified UserStatus = 0
+	UserStatusActive     UserStatus = 1
+	UserStatusAdmin      UserStatus = 10
 )
 
 // MarshalJSON here protects "private" fields from ever being sent *out*
@@ -34,7 +34,7 @@ func (u User) MarshalJSON() ([]byte, error) {
 		ID        int64      `json:"id"`
 		Name      string     `json:"name"`
 		Email     string     `json:"email,omitempty"`
-		Status    Status     `json:"status"`
+		Status    UserStatus `json:"status"`
 		CreatedAt *time.Time `json:"created_at,omitempty"`
 	}
 
