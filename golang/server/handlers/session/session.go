@@ -6,7 +6,7 @@ import (
 
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models/user"
+	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
@@ -24,7 +24,7 @@ func Handler(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFu
 
 func login(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
-	u := &user.User{}
+	u := &models.User{}
 	err := decoder.Decode(u)
 	if err != nil || &u == nil {
 		return write.Error(errors.NoJSONBody)
@@ -44,7 +44,7 @@ type logoutResponse struct {
 }
 
 func logout(env env.Env, w http.ResponseWriter) http.HandlerFunc {
-	u := &user.User{}
+	u := &models.User{}
 	jwt.WriteUserCookie(w, u)
 	return write.JSON(&logoutResponse{true})
 }

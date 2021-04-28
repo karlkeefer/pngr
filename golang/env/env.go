@@ -3,8 +3,8 @@ package env
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/models/post"
-	"github.com/karlkeefer/pngr/golang/models/user"
+	"github.com/karlkeefer/pngr/golang/repos/post"
+	"github.com/karlkeefer/pngr/golang/repos/user"
 )
 
 type env struct {

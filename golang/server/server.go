@@ -9,6 +9,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/handlers/posts"
 	"github.com/karlkeefer/pngr/golang/server/handlers/session"
 	"github.com/karlkeefer/pngr/golang/server/handlers/user"
+	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/server/write"
 	"github.com/karlkeefer/pngr/golang/utils"
 )
@@ -50,13 +51,23 @@ func (srv *server) getHandler(w http.ResponseWriter, r *http.Request) http.Handl
 	// shift head and tail to get below "api/" part of the path
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 
+	// handle session routes before cookie parsing
 	switch head {
 	case "session":
 		return session.Handler(srv.env, w, r)
+	}
+
+	// read user off cookie
+	u, err := jwt.HandleUserCookie(srv.env, w, r)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	switch head {
 	case "user":
-		return user.Handler(srv.env, w, r)
+		return user.Handler(srv.env, w, r, u)
 	case "posts":
-		return posts.Handler(srv.env, w, r)
+		return posts.Handler(srv.env, w, r, u)
 	default:
 		return write.Error(errors.RouteNotFound)
 	}

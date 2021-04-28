@@ -6,32 +6,14 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/karlkeefer/pngr/golang/errors"
+	"github.com/karlkeefer/pngr/golang/models"
 )
 
-type Post struct {
-	ID        int64     `json:"id"`
-	AuthorID  int64     `json:"author_id"`
-	Title     string    `json:"title"`
-	Body      string    `json:"body"`
-	Status    Status    `json:"status"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-type Status int
-
-const (
-	StatusPrivate Status = 0
-	StatusPublic         = 1
-)
-
-// REPO stuff
-// TODO: consider moving repo to separate package
 type Repo interface {
-	Create(p *Post) (post *Post, err error)
-	Update(p *Post) (post *Post, err error)
-	GetForUser(author_id int64) (posts []*Post, err error)
-	GetForUserByID(author_id int64, id int64) (post *Post, err error)
+	Create(p *models.Post) (post *models.Post, err error)
+	Update(p *models.Post) (post *models.Post, err error)
+	GetForUser(author_id int64) (posts []*models.Post, err error)
+	GetForUserByID(author_id int64, id int64) (post *models.Post, err error)
 	DeleteForUser(author_id int64, id int64) error
 }
 
@@ -75,14 +57,14 @@ func NewRepo(db *sqlx.DB) Repo {
 	}
 }
 
-func (r *repo) GetForUser(author_id int64) (posts []*Post, err error) {
-	posts = []*Post{} // always at least return empty list
+func (r *repo) GetForUser(author_id int64) (posts []*models.Post, err error) {
+	posts = []*models.Post{} // always at least return empty list
 	err = r.getForUser.Select(&posts, author_id)
 	return
 }
 
-func (r *repo) GetForUserByID(author_id int64, id int64) (post *Post, err error) {
-	post = &Post{}
+func (r *repo) GetForUserByID(author_id int64, id int64) (post *models.Post, err error) {
+	post = &models.Post{}
 	err = r.getForUserByID.Get(post, author_id, id)
 	if err == sql.ErrNoRows {
 		err = errors.PostNotFound
@@ -90,14 +72,14 @@ func (r *repo) GetForUserByID(author_id int64, id int64) (post *Post, err error)
 	return
 }
 
-func (r *repo) Create(p *Post) (post *Post, err error) {
-	post = &Post{}
+func (r *repo) Create(p *models.Post) (post *models.Post, err error) {
+	post = &models.Post{}
 	err = r.create.Get(post, p)
 	return
 }
 
-func (r *repo) Update(in *Post) (out *Post, err error) {
-	out = &Post{}
+func (r *repo) Update(in *models.Post) (out *models.Post, err error) {
+	out = &models.Post{}
 	in.UpdatedAt = time.Now()
 	err = r.update.Get(out, in)
 	return

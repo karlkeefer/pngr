@@ -8,13 +8,13 @@ import (
 
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models/user"
+	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/server/write"
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
-func Handler(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Handler(env env.Env, w http.ResponseWriter, r *http.Request, u *models.User) http.HandlerFunc {
 	var head string
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
 	switch r.Method {
@@ -37,7 +37,7 @@ type signupResponse struct {
 
 func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
-	var u user.User
+	var u models.User
 	err := decoder.Decode(&u)
 	if err != nil || &u == nil {
 		return write.Error(errors.NoJSONBody)

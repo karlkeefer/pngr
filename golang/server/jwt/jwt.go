@@ -9,8 +9,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models/user"
-	"github.com/karlkeefer/pngr/golang/server/write"
+	"github.com/karlkeefer/pngr/golang/models"
 )
 
 // jwt-cookie building and parsing
@@ -30,25 +29,12 @@ func init() {
 }
 
 type claims struct {
-	User *user.User
+	User *models.User
 	jwt.StandardClaims
 }
 
-// RequireAuth middleware makes sure the user exists based on their JWT
-func RequireAuth(minStatus user.Status, e env.Env, w http.ResponseWriter, r *http.Request, fn func(*user.User) http.HandlerFunc) http.HandlerFunc {
-	u, err := HandleUserCookie(e, w, r)
-	if err != nil {
-		return write.Error(err)
-	}
-
-	if u.Status < minStatus {
-		return write.Error(errors.RouteUnauthorized)
-	}
-	return fn(u)
-}
-
 // WriteUserCookie encodes a user's JWT and sets it as an httpOnly & Secure cookie
-func WriteUserCookie(w http.ResponseWriter, u *user.User) {
+func WriteUserCookie(w http.ResponseWriter, u *models.User) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     cookieName,
 		Value:    encodeUser(u),
@@ -61,7 +47,7 @@ func WriteUserCookie(w http.ResponseWriter, u *user.User) {
 }
 
 // HandleUserCookie attempts to refresh an expired token if the user is still valid
-func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*user.User, error) {
+func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*models.User, error) {
 	u, err := userFromCookie(r)
 
 	// attempt refresh of expired token:
@@ -86,14 +72,14 @@ func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*user.
 	return u, err
 }
 
-func wipeCookie(e env.Env, w http.ResponseWriter) (*user.User, error) {
-	u := &user.User{}
+func wipeCookie(e env.Env, w http.ResponseWriter) (*models.User, error) {
+	u := &models.User{}
 	WriteUserCookie(w, u)
 	return u, nil
 }
 
 // userFromCookie builds a user object from a JWT, if it's valid
-func userFromCookie(r *http.Request) (*user.User, error) {
+func userFromCookie(r *http.Request) (*models.User, error) {
 	cookie, _ := r.Cookie(cookieName)
 	var tokenString string
 	if cookie != nil {
@@ -101,14 +87,14 @@ func userFromCookie(r *http.Request) (*user.User, error) {
 	}
 
 	if tokenString == "" {
-		return &user.User{}, nil
+		return &models.User{}, nil
 	}
 
 	return decodeUser(tokenString)
 }
 
 // encodeUser convert a user struct into a jwt
-func encodeUser(u *user.User) (tokenString string) {
+func encodeUser(u *models.User) (tokenString string) {
 	claims := claims{
 		u,
 		jwt.StandardClaims{
@@ -128,7 +114,7 @@ func encodeUser(u *user.User) (tokenString string) {
 }
 
 // decodeUser converts a jwt into a user struct (or returns a zero-value user)
-func decodeUser(tokenString string) (*user.User, error) {
+func decodeUser(tokenString string) (*models.User, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
@@ -149,10 +135,10 @@ func decodeUser(tokenString string) (*user.User, error) {
 	return getUserFromToken(token), nil
 }
 
-func getUserFromToken(token *jwt.Token) *user.User {
+func getUserFromToken(token *jwt.Token) *models.User {
 	if claims, ok := token.Claims.(*claims); ok {
 		return claims.User
 	}
 
-	return &user.User{}
+	return &models.User{}
 }

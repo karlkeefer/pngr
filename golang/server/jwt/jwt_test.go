@@ -24,7 +24,7 @@ func TestRequireAuth(t *testing.T) {
 		r := httptest.NewRequest(http.MethodGet, "/path", nil)
 		w := httptest.NewRecorder()
 
-		RequireAuth(user.StatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
+		RequireAuth(user.StatusActive, env, w, r, func(u *models.User) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {}
 		})(w, r)
 
@@ -38,13 +38,13 @@ func TestRequireAuth(t *testing.T) {
 		w := httptest.NewRecorder()
 		r.AddCookie(&http.Cookie{
 			Name: cookieName,
-			Value: encodeUser(&user.User{
+			Value: encodeUser(&models.User{
 				ID:     30,
 				Status: user.StatusActive,
 			}),
 		})
 
-		RequireAuth(user.StatusActive, env, w, r, func(u *user.User) http.HandlerFunc {
+		RequireAuth(user.StatusActive, env, w, r, func(u *models.User) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, int64(30), u.ID)
 				w.Write([]byte("hi"))
@@ -62,13 +62,13 @@ func TestRequireAuth(t *testing.T) {
 		w := httptest.NewRecorder()
 		r.AddCookie(&http.Cookie{
 			Name: cookieName,
-			Value: encodeUser(&user.User{
+			Value: encodeUser(&models.User{
 				ID:     30,
 				Status: user.StatusActive,
 			}),
 		})
 
-		RequireAuth(user.StatusAdmin, env, w, r, func(u *user.User) http.HandlerFunc {
+		RequireAuth(user.StatusAdmin, env, w, r, func(u *models.User) http.HandlerFunc {
 			return func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, int64(30), u.ID)
 				w.Write([]byte("hi"))
@@ -86,7 +86,7 @@ func TestHandleUserCookie(t *testing.T) {
 	tests := []struct {
 		// setup
 		name     string
-		mockUser *user.User // what will FindByEmail return?
+		mockUser *models.User // what will FindByEmail return?
 		token    string
 		// expectations
 		shouldSetCookie bool
@@ -95,7 +95,7 @@ func TestHandleUserCookie(t *testing.T) {
 	}{
 		{
 			"user marked disabled since token expired",
-			&user.User{
+			&models.User{
 				ID:     30,
 				Status: user.StatusDisabled,
 			},
@@ -107,7 +107,7 @@ func TestHandleUserCookie(t *testing.T) {
 		{
 			"token is not expired, no action",
 			nil,
-			encodeUser(&user.User{
+			encodeUser(&models.User{
 				ID:     30,
 				Status: user.StatusActive,
 			}),
@@ -117,7 +117,7 @@ func TestHandleUserCookie(t *testing.T) {
 		},
 		{
 			"token refresh when token is expired and user is still valid",
-			&user.User{
+			&models.User{
 				ID:     30,
 				Status: user.StatusActive,
 			},
@@ -172,7 +172,7 @@ func TestUserFromCookie(t *testing.T) {
 	// now give the request a valid cookie
 	r.AddCookie(&http.Cookie{
 		Name: cookieName,
-		Value: encodeUser(&user.User{
+		Value: encodeUser(&models.User{
 			ID:     30,
 			Status: user.StatusActive,
 		}),
@@ -186,7 +186,7 @@ func TestUserFromCookie(t *testing.T) {
 // Note: more thorough testing of encode/decode stuff requires us to mock out the
 // time package, which would be a big PITA
 func TestDecodeUser(t *testing.T) {
-	token := encodeUser(&user.User{
+	token := encodeUser(&models.User{
 		ID:     30,
 		Status: user.StatusActive,
 	})
