@@ -34,16 +34,14 @@ export default class Posts extends Component {
               My Posts
             </Header>
             <p>This page fetches some protected data that only the logged in user ({userContainer.state.user.email}) can see!</p>
-            {error ? <Message negative>{error}</Message> : ''}
-            {posts.length === 0 && !loading ? <Message warning>No posts to show</Message> : ''}
+            {error ? <Message negative>{error}</Message> : false }
+            {posts.length === 0 && !loading ? <Message warning>No posts to show</Message> : false }
             {posts.map(({id, title, body}, i) => (
               <Segment.Group key={id}>
                 <Header attached='top' as='h3'>
                   {title}
                   &nbsp;&nbsp;&nbsp;
-                  <Link to={`/post/${id}/edit`}>
-                    <Button compact basic>Edit</Button>
-                  </Link>
+                  <Button compact basic as={Link} to={`/post/${id}/edit`} content='Edit'/>
                 </Header>
                 <Segment attached='bottom'>
                   {body}
@@ -51,12 +49,7 @@ export default class Posts extends Component {
               </Segment.Group>
             ))}
             
-            <Link to='/post/create'>
-              <Button primary>
-                <Icon name='plus' />
-                New Post
-              </Button>
-            </Link>
+            <Button as={Link} to='/post/create' primary icon='plus' content='New post'/>
           </Container>
         )}
       </Subscribe>

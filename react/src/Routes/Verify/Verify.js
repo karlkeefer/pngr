@@ -41,9 +41,9 @@ export default class Verify extends Component {
           <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
             <h1>Verifying your account...</h1>
             <div>
-              {!success && !error ? <Message>Loading...</Message> : ''}
-              {error ? <Message negative>Error: {error}</Message> : ''}
-              {success ? <Message positive>Success! You have verified your email!</Message>: ''}
+              {!success && !error ? <Message>Loading...</Message> : false }
+              {error ? <Message negative>Error: {error}</Message> : false }
+              {success ? <Message positive>Success! You have verified your email!</Message>: false }
             </div>
           </Grid.Column>
         </Grid>

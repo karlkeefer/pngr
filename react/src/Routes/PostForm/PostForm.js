@@ -110,7 +110,7 @@ export default class PostForm extends Component {
       <Container className="page">
         <h1>{isUpdate ? `Edit Post #${id}` : 'Create a Post'}</h1>
         <Form name="createPost" loading={loading} onSubmit={this.handleSubmit}>
-          {error ? <Message negative>{error}</Message> : ''}
+          {error ? <Message negative>{error}</Message> : false }
           <Form.Input
             size="big"
             name="title"
@@ -127,7 +127,7 @@ export default class PostForm extends Component {
             value={body}
             onChange={this.handleChange} />
           <Button primary size="huge" type="submit">Save</Button>
-          {isUpdate ? <Button negative size="huge" type="button" onClick={this.handleDelete}>Delete</Button> : ''}
+          {isUpdate ? <Button negative size="huge" type="button" onClick={this.handleDelete}>Delete</Button> : false }
         </Form>
       </Container>
     );

@@ -59,7 +59,7 @@ export default class LogIn extends Component {
             <Segment.Group>
               <Segment>
                 <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
-                  {error ? <Message negative>{error}</Message> : ''}
+                  {error ? <Message negative>{error}</Message> : false }
                   <Form.Input
                     size="big"
                     name="email"
