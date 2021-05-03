@@ -31,17 +31,16 @@ export default class PostForm extends Component {
         .then(post => {
           this.setState(state => {
             state.fields = Object.assign({}, state.fields, post);
+            state.loading = false;
             return state;
           });
         })
         .catch(error => {
           this.setState({
             error,
-            isUpdate: false
+            isUpdate: false,
+            loading: false
           });
-        })
-        .finally(() => {
-          this.setState({loading: false});
         });
     }
   }

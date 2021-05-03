@@ -16,13 +16,10 @@ export default class Posts extends Component {
   componentDidMount() {
     API.getPosts()
       .then(posts => {
-        this.setState({posts: posts});
+        this.setState({posts: posts, loading: false});
       })
       .catch(error => {
-        this.setState({error: error});
-      })
-      .finally(() => {
-        this.setState({loading: false})
+        this.setState({error: error, loading: false});
       });
   }
 
