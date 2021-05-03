@@ -1,34 +1,33 @@
 import React, { Component } from 'react'
-import { Container, Grid, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
+import SimplePage from 'Shared/SimplePage'
 
 export default class Verify extends Component {
 
   state = {
-    success: false,
+    loading: false,
+    error: false,
     redirect: false,
-    error: ''
   }
 
   componentDidMount = () => {
     const { verification } = this.props.match.params;
-    
+    this.setState({loading: true});
     this.props.userContainer.verify({code: verification})
       .then((res) => {
-        this.setState({
-          success: true
-        });
+        this.setState({loading: false});
         setTimeout(() => {
           this.setState({redirect: true});
         }, 2500);
       })
-      .catch((e) => {
-        this.setState({error: e});
+      .catch((error) => {
+        this.setState({error, loading: false});
       });
   }
 
   render() {
-    const { success, error, redirect } = this.state;
+    const { loading, error, redirect } = this.state;
     if (redirect) {
       return (
         <Redirect to="/posts"/>
@@ -36,18 +35,9 @@ export default class Verify extends Component {
     }
 
     return (
-      <Container className="page">
-        <Grid centered>
-          <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
-            <h1>Verifying your account...</h1>
-            <div>
-              {!success && !error ? <Message>Loading...</Message> : false }
-              {error ? <Message negative>Error: {error}</Message> : false }
-              {success ? <Message positive>Success! You have verified your email!</Message>: false }
-            </div>
-          </Grid.Column>
-        </Grid>
-      </Container>
+      <SimplePage title='Account Verification' centered loading={loading} error={error}>
+        <Message positive>Success! You have verified your email!</Message>
+      </SimplePage>
     );
   }
 }

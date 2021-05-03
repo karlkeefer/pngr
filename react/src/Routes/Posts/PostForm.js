@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Form, Message, Button } from 'semantic-ui-react'
+import { Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
 import API from 'Api'
+import SimplePage from 'Shared/SimplePage';
 
 function defaultState(){
   return {
@@ -96,7 +97,6 @@ export default class PostForm extends Component {
           error: error
         });
       });
-    API.deletePost(this.state.fields.id);
   }
 
   render() {
@@ -107,10 +107,9 @@ export default class PostForm extends Component {
     }
 
     return (
-      <Container className="page">
-        <h1>{isUpdate ? `Edit Post #${id}` : 'Create a Post'}</h1>
-        <Form name="createPost" loading={loading} onSubmit={this.handleSubmit}>
-          {error ? <Message negative>{error}</Message> : false }
+      <SimplePage icon='edit outline' title={isUpdate ? `Edit Post #${id}` : 'Create a Post'}>
+        <Form error name="createPost" loading={loading} onSubmit={this.handleSubmit}>
+          <Message error>{error}</Message>
           <Form.Input
             size="big"
             name="title"
@@ -129,7 +128,7 @@ export default class PostForm extends Component {
           <Button primary size="huge" type="submit">Save</Button>
           {isUpdate ? <Button negative size="huge" type="button" onClick={this.handleDelete}>Delete</Button> : false }
         </Form>
-      </Container>
+      </SimplePage>
     );
   }
 }

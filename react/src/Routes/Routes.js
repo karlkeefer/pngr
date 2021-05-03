@@ -1,45 +1,41 @@
 import React from 'react'
 import { Subscribe } from 'unstated'
 import { Switch, Route } from 'react-router-dom'
-import { PrivateRoute, NoMatch } from './Helpers'
+import { PrivateRoute, NoMatch } from 'Routes/Helpers'
 
 import UserContainer from 'Containers/User'
 
-import Home from './Home/Home'
+import Home from 'Routes/Home/Home'
 
-import SignUp from './SignUp/SignUp'
-import LogIn from './LogIn/LogIn'
-import Verify from './Verify/Verify'
+import SignUp from 'Routes/SignUp/SignUp'
+import LogIn from 'Routes/LogIn/LogIn'
+import Verify from 'Routes/Verify/Verify'
 
-import Posts from './Posts/Posts'
-import PostForm from './PostForm/PostForm'
+import Posts from 'Routes/Posts/Posts'
+import PostForm from 'Routes/Posts/PostForm'
 
 const Routes = () => (
-  <Switch>
-    <Route exact path="/" component={Home} />
+  <Subscribe to={[UserContainer]}>
+    {userContainer => (
+      <Switch>
+        <Route exact path="/" component={Home} />
 
-    <Route exact path="/signup" component={SignUp} />
-    <Route exact path="/login" render={(props) => 
-      <Subscribe to={[UserContainer]}>
-        {userContainer => (
-          <LogIn {...props} userContainer={userContainer}/>
-        )}
-      </Subscribe>
-    } />
-    <Route exact path="/verify/:verification" render={(props) =>
-      <Subscribe to={[UserContainer]}>
-        {userContainer => (
+        <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/login" render={(props) => 
+          <LogIn {...props} userContainer={userContainer}/>  
+        } />
+        <Route exact path="/verify/:verification" render={(props) =>
           <Verify {...props} userContainer={userContainer}/>
-        )}
-      </Subscribe>
-    } />
+        } />
 
-    <PrivateRoute exact path="/posts" component={Posts}/>
-    <PrivateRoute exact path="/post/create" component={PostForm}/>
-    <PrivateRoute exact path="/post/:id/edit" component={PostForm}/>
+        <PrivateRoute exact path="/posts" component={Posts}/>
+        <PrivateRoute exact path="/post/create" component={PostForm}/>
+        <PrivateRoute exact path="/post/:id/edit" component={PostForm}/>
 
-    <Route component={NoMatch} />
-  </Switch>
+        <Route component={NoMatch} />
+      </Switch>
+    )}
+  </Subscribe>
 );
 
 export default Routes;

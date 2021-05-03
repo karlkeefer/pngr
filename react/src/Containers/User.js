@@ -46,4 +46,8 @@ export default class UserContainer extends Container {
     this.setState({user});
     return Promise.resolve(user);
   }
+
+  isLoggedIn = () => {
+    return this.state.user.status >= 1
+  }
 }

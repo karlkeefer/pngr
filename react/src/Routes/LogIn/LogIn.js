@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Button, Message, Container, Grid, Segment } from 'semantic-ui-react'
+import { Form, Button, Message, Segment } from 'semantic-ui-react'
 import { Redirect, Link } from 'react-router-dom'
+import SimplePage from 'Shared/SimplePage';
 
 function defaultState() {
   return {
@@ -52,40 +53,35 @@ export default class LogIn extends Component {
     }
 
     return (
-      <Container className="page">
-        <Grid centered>
-          <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
-            <h1>Log In to your account</h1>
-            <Segment.Group>
-              <Segment>
-                <Form name="login" loading={loading} onSubmit={this.handleSubmit}>
-                  {error ? <Message negative>{error}</Message> : false }
-                  <Form.Input
-                    size="big"
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={email}
-                    onChange={this.handleChange} />
-                  <Form.Input
-                    size="big"
-                    name="pass"
-                    type="password"
-                    placeholder="Password"
-                    required
-                    value={pass}
-                    onChange={this.handleChange} />
-                  <Button primary fluid size="huge" type="submit">Log In</Button>
-                </Form>
-              </Segment>
-              <Segment>
-                Don't have an account? <Link to="/signup">Sign Up</Link>.
-              </Segment>
-            </Segment.Group>
-          </Grid.Column>
-        </Grid>
-      </Container>
+      <SimplePage title='Log In to your account' centered>
+        <Segment.Group>
+          <Segment>
+            <Form error name="login" loading={loading} onSubmit={this.handleSubmit}>
+              <Message error>{error}</Message>
+              <Form.Input
+                size="big"
+                name="email"
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={this.handleChange} />
+              <Form.Input
+                size="big"
+                name="pass"
+                type="password"
+                placeholder="Password"
+                required
+                value={pass}
+                onChange={this.handleChange} />
+              <Button primary fluid size="huge" type="submit">Log In</Button>
+            </Form>
+          </Segment>
+          <Segment>
+            Don't have an account? <Link to="/signup">Sign Up</Link>.
+          </Segment>
+        </Segment.Group>
+      </SimplePage>
     );
   }
 }

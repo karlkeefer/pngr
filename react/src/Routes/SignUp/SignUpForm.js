@@ -60,8 +60,8 @@ export default class SignUpForm extends Component {
     }
 
     return (
-      <Form name="signup" loading={loading} onSubmit={this.handleSubmit}>
-        {error ? <Message negative>{error}</Message> : false }
+      <Form error name="signup" loading={loading} onSubmit={this.handleSubmit}>
+        <Message error>{error}</Message>
         <Form.Input
           size="big"
           name="email"

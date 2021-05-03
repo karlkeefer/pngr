@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Menu, Container } from 'semantic-ui-react'
 import { Subscribe } from 'unstated'
 import { NavLink } from 'react-router-dom'
@@ -13,50 +13,22 @@ const Link = props => (
   />
 );
 
-class Nav extends Component {
-  render() {
-    return (
+const Nav = () => (
+  <Subscribe to={[UserContainer]}>
+    {userContainer => (
       <Menu fixed="top" inverted>
-        <Subscribe to={[UserContainer]}>
-          {userContainer => (
-            <NavInner userContainer={userContainer}/>
-          )}
-        </Subscribe>
-      </Menu>
-    );
-  }
-}
-
-class NavInner extends Component {
-  render() {
-    const { status } = this.props.userContainer.state.user;
-    if (status === 0) {
-      return (
         <Container>
+          <Menu.Item as={Link} exact to="/" name="Home" />
+          { userContainer.isLoggedIn() ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
           <Menu.Menu position="right">
-            <Menu.Item as={Link} exact to="/login" name="Log In" />
-            <Menu.Item as={Link} exact to="/signup" name="Sign Up" />
+            { !userContainer.isLoggedIn() ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
+            { !userContainer.isLoggedIn() ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
+            { userContainer.isLoggedIn() ? <Menu.Item link={true} onClick={userContainer.logout} content="Log Out"/> : false }
           </Menu.Menu> 
         </Container>
-      );
-    }
-
-    return (
-      <Container>
-        <StatusCheckMenuItem status={status} minStatus={1} as={Link} to="/posts" name="Posts" />
-        <Menu.Menu position="right">
-          <Menu.Item link={true} onClick={this.props.userContainer.logout} content="Log Out"/>
-        </Menu.Menu>
-      </Container>
-    );
-  }
-}
-
-// This shows/hides menu items based on the user status
-// <StatusCheckMenuItem status={status} minStatus={1} as={Link} to="/posts" name="Posts" />
-const StatusCheckMenuItem = (props) => {
-  const {status, minStatus, ...rest} = props;
-  return status >= minStatus ? <Menu.Item {...rest}/> : false;
-}
+      </Menu>
+    )}
+  </Subscribe>
+)
 
 export default Nav;

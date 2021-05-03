@@ -11,10 +11,6 @@ body {
   min-height: 100vh;
 }
 
-.page {
-  padding-top: 7em;
-}
-
 a {
   text-decoration: underline;
 }

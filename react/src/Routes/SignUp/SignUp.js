@@ -1,27 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { Container, Grid, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
+import SimplePage from 'Shared/SimplePage';
 
 import SignUpForm from './SignUpForm'
 
-export default class LogIn extends Component {
-  render() {
-    return (
-      <Container className="page">
-        <Grid centered>
-          <Grid.Column textAlign="center" mobile={16} tablet={8} computer={6}>
-            <h1>Create a new account</h1>
-            <Segment.Group>
-              <Segment>
-                <SignUpForm/>
-              </Segment>
-              <Segment>
-                Already have an account? <Link to="/login">Log In</Link>.
-              </Segment>
-            </Segment.Group>
-          </Grid.Column>
-        </Grid>
-      </Container>
-    );
-  }
-}
+const LogIn = () => (
+  <SimplePage centered title='Create a new account'>
+    <Segment.Group>
+      <Segment>
+        <SignUpForm/>
+      </Segment>
+      <Segment>
+        Already have an account? <Link to="/login">Log In</Link>.
+      </Segment>
+    </Segment.Group>
+  </SimplePage>
+);
+
+export default LogIn;
