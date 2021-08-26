@@ -7,8 +7,8 @@ Only implements basic user signup, session management, and a toy `post` type to 
 - Hot-reload, front and back, including a test-runner for golang changes
 - JSON Web-Token cookies with automatic refresh: ready for horizontal scaling
 - Uses multi-stage builds for small production images
+- Includes a stubbed out worker container for async (non-API-driven) tasks
 - Feature development is up to you!
-- Includes a stubbed out worker container for non-API tasks
 
 ## Requirements
 - Install docker && docker-compose
@@ -23,29 +23,25 @@ Preview of the app:
 
 ![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
 
-## Rebuilding your dev environment
-Maybe your postgres went sideways from a wonky migration and you don't want to muck with fixing it.
-
-```bash
-docker-compose down -v && docker-compose up --build --force-recreate
-```
 
 ## Deploying to Production
-*Warning: Run in production at your own risk - this code is not security hardened!*
+*Warning: Run in production at your own risk!*
 
-You should install postgresql on the host.
-Then you can use `docker-compose.prod.yml` to build lean images to use in production.
-Don't forget to copy `.env.example` -> `.env` and setup your secrets/passwords.
+`docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized, as dockerizing the persistence layer makes it too easy to destroy your real data. Pulling images from a registry and/or using CI/CD is up to you.
+
+```bash
+# build lean images and run them in a detached state
+docker-compose -f docker-compose.prod.yml up --build -d
+```
+
+Don't forget to copy `.env.example` -> `.env` and setup your secrets/passwords for the new environment!
 
 --- 
 
 ## Postgres
-Some tips for working with your postgres docker instance
 
 ### Creating and running migrations
-Migrations are run using [go-migrate](https://github.com/golang-migrate/migrate).
-
-I put together little bash scripts to help you use [go-migrate](https://github.com/golang-migrate/migrate).
+Migrations are created and run using [go-migrate](https://github.com/golang-migrate/migrate).
 
 ```bash
 # create a template for the next migration
@@ -58,32 +54,26 @@ postgres/run-migrations.sh
 postgres/migrate.sh down 1
 ```
 
-You can do more advanced migrate commands 
-
 ### Opening a psql client
 ```bash
 docker-compose exec postgres psql -U postgres
 ```
 Remember to use `\q` to exit.
 
---- 
+### Rebuilding your dev environment, including database, from scratch
+Maybe your postgres went sideways from a wonky migration and it's easier to restart from scratch.
+```bash
+docker-compose down -v && docker-compose up --build --force-recreate
+```
 
 ## Nginx
-Nginx is simply used to route requests to the front-end and back-end based on path.
-It also terminates SSL so that we don't have to deal with certs in our app layer.
-
---- 
+Nginx is used to terminate SSL and route requests to the front-end and back-end based on path.
 
 ## Golang
-Almost-vanilla golang api:
-- Makes use of go modules for dependencies
 - [jwt-go](https://github.com/dgrijalva/jwt-go) for JSON Web Tokens
 - [sqlx](https://github.com/jmoiron/sqlx) for better postgres interface
 
---- 
-
 ## React
-The basic building blocks of the front-end are:
 - [Create React App](https://github.com/facebookincubator/create-react-app) (unejected!)
 - [React Router](https://github.com/ReactTraining/react-router)
 - [Unstated](https://github.com/jamiebuilds/unstated) for state management
