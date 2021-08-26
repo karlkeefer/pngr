@@ -50,9 +50,11 @@ I put together little bash scripts to help you use [go-migrate](https://github.c
 ```bash
 # create a template for the next migration
 postgres/new-migration.sh my_migration_name
+
 # execute any new migrations (this is used when the container is created)
 postgres/run-migrations.sh
-# go down 1 migrations
+
+# go down 1 migration
 postgres/migrate.sh down 1
 ```
 
