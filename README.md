@@ -33,7 +33,7 @@ Maybe your postgres went sideways from a wonky migration and you don't want to m
 
 You should install postgresql on the host.
 Then you can use `docker-compose.prod.yml` to build lean images to use in production.
-Don't forget to copy `.env.example -> .env` and setup your secrets/passwords.
+Don't forget to copy `.env.example` -> `.env` and setup your secrets/passwords.
 
 --- 
 
@@ -43,10 +43,15 @@ Some tips for working with your postgres docker instance
 ### Creating and running migrations
 Migrations are run using [go-migrate](https://github.com/golang-migrate/migrate).
 
-I put together little bash scripts to help you get stuff done.
-- `postgres/new-migration.sh my_migration_name` will create a template for the next migration
-- `postgres/run-migrations.sh` will execute any new migrations (this is used when the container is created)
-- `postgres/migrate.sh` makes it easy to run arbitrary [go-migrate](https://github.com/golang-migrate/migrate) commands (e.g. `postgres/migrate.sh down 1`)
+I put together little bash scripts to help you use [go-migrate](https://github.com/golang-migrate/migrate).
+```
+# create a template for the next migration
+postgres/new-migration.sh my_migration_name
+# execute any new migrations (this is used when the container is created)
+postgres/run-migrations.sh
+# go down 1 migrations
+postgres/migrate.sh down 1
+```
 
 You can do more advanced migrate commands 
 
