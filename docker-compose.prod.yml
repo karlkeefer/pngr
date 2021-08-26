@@ -10,6 +10,17 @@ services:
       - "5000:5000"
     env_file: .env
 
+  # worker
+  worker-prod:
+    network_mode: host
+    build:
+      context: golang
+      dockerfile: worker.Dockerfile
+      target: prod
+    volumes:
+      - ./secrets:/secrets
+    env_file: .env
+
   # front-end built with react
   react-prod:
     restart: always

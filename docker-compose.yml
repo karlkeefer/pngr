@@ -4,12 +4,24 @@ services:
   golang:
     build: 
       context: golang
+      dockerfile: server.Dockerfile
       target: dev
     volumes:
       - ./golang:/root
     ports:
       - "5000:5000"
-    env_file: .env.example
+    env_file: .env
+    depends_on:
+      - postgres
+
+  worker:
+    build:
+      context: golang
+      dockerfile: worker.Dockerfile
+      target: dev
+    volumes:
+      - ./golang:/root
+    env_file: .env
     depends_on:
       - postgres
 

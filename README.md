@@ -8,6 +8,7 @@ Only implements basic user signup, session management, and a toy `post` type to 
 - JSON Web-Token cookies with automatic refresh: ready for horizontal scaling
 - Uses multi-stage builds for small production images
 - Feature development is up to you!
+- Includes a stubbed out worker container for non-API tasks
 
 ## Requirements
 - Install docker && docker-compose
