@@ -26,7 +26,9 @@ Preview of the app:
 ## Rebuilding your dev environment
 Maybe your postgres went sideways from a wonky migration and you don't want to muck with fixing it.
 
-`docker-compose down -v && docker-compose up --build --force-recreate`
+```bash
+docker-compose down -v && docker-compose up --build --force-recreate
+```
 
 ## Deploying to Production
 *Warning: Run in production at your own risk - this code is not security hardened!*
@@ -44,7 +46,8 @@ Some tips for working with your postgres docker instance
 Migrations are run using [go-migrate](https://github.com/golang-migrate/migrate).
 
 I put together little bash scripts to help you use [go-migrate](https://github.com/golang-migrate/migrate).
-```
+
+```bash
 # create a template for the next migration
 postgres/new-migration.sh my_migration_name
 # execute any new migrations (this is used when the container is created)
@@ -56,7 +59,9 @@ postgres/migrate.sh down 1
 You can do more advanced migrate commands 
 
 ### Opening a psql client
-`docker-compose exec postgres psql -U postgres`
+```bash
+docker-compose exec postgres psql -U postgres
+```
 Remember to use `\q` to exit.
 
 --- 
