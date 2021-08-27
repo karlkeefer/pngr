@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -17,7 +16,6 @@ import (
 func getID(r *http.Request) (id int64, err error) {
 	params := httprouter.ParamsFromContext(r.Context())
 	arg := params.ByName("id")
-	log.Println("GETTING ID", arg)
 	id, err = strconv.ParseInt(arg, 10, 64)
 	return
 }
