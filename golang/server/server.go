@@ -3,14 +3,12 @@ package server
 import (
 	"net/http"
 	"os"
-	"time"
+
+	"github.com/julienschmidt/httprouter"
 
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/server/handlers/posts"
-	"github.com/karlkeefer/pngr/golang/server/handlers/session"
-	"github.com/karlkeefer/pngr/golang/server/handlers/user"
-	"github.com/karlkeefer/pngr/golang/server/jwt"
+	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/write"
 	"github.com/karlkeefer/pngr/golang/utils"
 )
@@ -26,7 +24,8 @@ func init() {
 }
 
 type server struct {
-	env env.Env
+	env    env.Env
+	router *httprouter.Router
 }
 
 // New initializes env (database connections and whatnot)
@@ -37,132 +36,55 @@ func New() (*server, error) {
 		return nil, err
 	}
 
-	return &server{
-		env: env,
-	}, nil
-}
-
-// ServeHTTP forks API traffic from static asset traffic
-func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	originalPath := r.URL.Path
-	handler := srv.getHandler(w, r)
-	// TODO: consider a middleware wrapper utility
-	wrappedHandler := lag(csrf(originalPath, cors(originalPath, handler)))
-	wrappedHandler(w, r)
-}
-
-// getHandler parses the request path to return a relevant handler
-// sub-sections of the API have their own Handler() func which handles route parsing for that piece of the API
-func (srv *server) getHandler(w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	var head string
-	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
-	if head != "api" {
-		return write.Error(errors.RouteNotFound)
+	srv := &server{
+		env:    env,
+		router: httprouter.New(),
 	}
 
+	// SESSION
+	srv.POST("/session", Login)
+	srv.DELETE("/session", Logout)
+
+	// USER
+	srv.POST("/user", Signup)
+	srv.GET("/user", Whoami)
+	srv.POST("/user/verify", Verify)
+
+	// POSTS
+	srv.GET("/posts", GetPosts)
+	srv.GET("/posts/:id", GetPost)
+	srv.POST("/posts", CreatePost)
+	srv.PUT("/posts", UpdatePost)
+	srv.DELETE("/posts/:id", DeletePost)
+
+	return srv, nil
+}
+
+// ServeHTTP handles routes that start with api
+func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var head string
 	// shift head and tail to get below "api/" part of the path
 	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
-
-	// handle session routes before cookie parsing
-	switch head {
-	case "session":
-		return session.Handler(srv.env, w, r)
+	if head != "api" {
+		write.Error(errors.RouteNotFound)
 	}
 
-	// read user off cookie
-	u, err := jwt.HandleUserCookie(srv.env, w, r)
-	if err != nil {
-		return write.Error(err)
-	}
-
-	switch head {
-	case "user":
-		return user.Handler(srv.env, w, r, u)
-	case "posts":
-		return posts.Handler(srv.env, w, r, u)
-	default:
-		return write.Error(errors.RouteNotFound)
-	}
+	srv.router.ServeHTTP(w, r)
 }
 
-// MIDDLEWARE
+// srvHandler is the extended handler function that our API routes use
+type srvHandler func(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc
 
-// lag allows you to simiulate API lag locally to test "loading" states
-func lag(fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if isDev {
-			// minimal lag so that we can see loading states at least briefly
-			time.Sleep(time.Millisecond * 500)
-		}
-		fn(w, r)
-	}
+// helpers for easily adding routes
+func (srv *server) GET(path string, handler srvHandler) {
+	srv.router.HandlerFunc(http.MethodGet, path, srv.wrap(handler))
 }
-
-// only returns an origin if it matches our list
-func validateOrigin(r *http.Request) string {
-	switch r.Header.Get("Origin") {
-	case appRoot:
-		return appRoot
-	case localDev:
-		return localDev
-	default:
-		return ""
-	}
+func (srv *server) PUT(path string, handler srvHandler) {
+	srv.router.HandlerFunc(http.MethodPut, path, srv.wrap(handler))
 }
-
-// csrf checks for the CSRF prevention header and compares the origin header
-func csrf(path string, fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if skipCorsAndCSRF(path) {
-			fn(w, r)
-			return
-		}
-
-		if r.Method != http.MethodOptions {
-			if r.Header.Get("Origin") != "" && validateOrigin(r) == "" {
-				// if an origin is provided, but didn't match our list
-				fn = write.Error(errors.BadOrigin)
-			} else if r.Header.Get("X-Requested-With") != "XMLHttpRequest" {
-				fn = write.Error(errors.BadCSRF)
-			}
-		}
-		fn(w, r)
-	}
+func (srv *server) POST(path string, handler srvHandler) {
+	srv.router.HandlerFunc(http.MethodPost, path, srv.wrap(handler))
 }
-
-// cors adds CORS headers to the response
-func cors(path string, fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if skipCorsAndCSRF(path) {
-			fn(w, r)
-			return
-		}
-
-		if origin := validateOrigin(r); origin != "" {
-			// if we were given an origin that matches our list
-			w.Header().Set("Access-Control-Allow-Origin", origin)
-		}
-
-		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Requested-With")
-
-		if r.Method == http.MethodOptions {
-			// simple response for the preflight check
-			fn = write.Success()
-		}
-		fn(w, r)
-	}
-}
-
-// a list of paths to bypass cors checks - this is useful for webhooks and stuff
-var bypassPaths = []string{}
-
-func skipCorsAndCSRF(path string) bool {
-	for _, c := range bypassPaths {
-		if path == c {
-			return true
-		}
-	}
-
-	return false
+func (srv *server) DELETE(path string, handler srvHandler) {
+	srv.router.HandlerFunc(http.MethodDelete, path, srv.wrap(handler))
 }

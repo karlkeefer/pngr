@@ -1,4 +1,4 @@
-package session
+package server
 
 import (
 	"encoding/json"
@@ -11,18 +11,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
-func Handler(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	switch r.Method {
-	case http.MethodPost:
-		return login(env, w, r)
-	case http.MethodDelete:
-		return logout(env, w)
-	default:
-		return write.Error(errors.BadRequestMethod)
-	}
-}
-
-func login(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Login(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	u := &models.User{}
 	err := decoder.Decode(u)
@@ -43,7 +32,7 @@ type logoutResponse struct {
 	success bool
 }
 
-func logout(env env.Env, w http.ResponseWriter) http.HandlerFunc {
+func Logout(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	u := &models.User{}
 	jwt.WriteUserCookie(w, u)
 	return write.JSON(&logoutResponse{true})
