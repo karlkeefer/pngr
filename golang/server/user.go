@@ -1,4 +1,4 @@
-package user
+package server
 
 import (
 	"encoding/json"
@@ -11,31 +11,13 @@ import (
 	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
 	"github.com/karlkeefer/pngr/golang/server/write"
-	"github.com/karlkeefer/pngr/golang/utils"
 )
-
-func Handler(env env.Env, w http.ResponseWriter, r *http.Request, u *models.User) http.HandlerFunc {
-	var head string
-	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
-	switch r.Method {
-	case http.MethodPost:
-		if head == "verify" {
-			return verify(env, w, r)
-		} else {
-			return signup(env, w, r)
-		}
-	case http.MethodGet:
-		return whoami(env, w, r)
-	default:
-		return write.Error(errors.BadRequestMethod)
-	}
-}
 
 type signupResponse struct {
 	URL string
 }
 
-func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Signup(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	var u models.User
 	err := decoder.Decode(&u)
@@ -55,15 +37,15 @@ func signup(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFun
 	})
 }
 
-func whoami(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return write.JSONorErr(jwt.HandleUserCookie(env, w, r))
+func Whoami(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	return write.JSON(user)
 }
 
 type verifyRequest struct {
 	Code string
 }
 
-func verify(env env.Env, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Verify(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	var req verifyRequest
 
