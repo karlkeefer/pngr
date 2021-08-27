@@ -39,7 +39,6 @@ func (srv *server) wrap(h srvHandler) http.HandlerFunc {
 func lag(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if isDev {
-			// minimal lag so that we can see loading states at least briefly
 			time.Sleep(time.Millisecond * 500)
 		}
 		fn(w, r)

@@ -1,8 +1,10 @@
 package server
 
 import (
+	"log"
 	"net/http"
 	"os"
+	"runtime/debug"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -36,9 +38,20 @@ func New() (*server, error) {
 		return nil, err
 	}
 
+	router := httprouter.New()
+
+	// setup error handlers for our router
+	router.MethodNotAllowed = write.Error(errors.BadRequestMethod)
+	router.NotFound = write.Error(errors.RouteNotFound)
+	router.PanicHandler = func(w http.ResponseWriter, r *http.Request, err interface{}) {
+		log.Println("Panic on", r.URL.Path)
+		debug.PrintStack()
+		write.Error(errors.InternalError)(w, r)
+	}
+
 	srv := &server{
 		env:    env,
-		router: httprouter.New(),
+		router: router,
 	}
 
 	// SESSION
