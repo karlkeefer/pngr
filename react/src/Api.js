@@ -11,12 +11,12 @@ function _delete(url, body) {
   return _fetch('DELETE', url, body);
 }
 
-function _put(endpoint, body) {
-  return _fetch('PUT', endpoint, body);
+function _put(url, body) {
+  return _fetch('PUT', url, body);
 }
 
 function _fetch(method, url, body) {
-  return fetch(url, {
+  return fetch(`/api/${url}`, {
     method: method,
     body: JSON.stringify(body),
     headers: {
@@ -40,41 +40,41 @@ function _fetch(method, url, body) {
 export default class API {
   // User stuff
   static signup = (body) => {
-    return _post('/api/user', body);
+    return _post('/user', body);
   }
 
   static verify = (body) => {
-    return _post('/api/user/verify', body);
+    return _post('/user/verify', body);
   }
 
   static whoami = () => {
     // validates existing jwt from cookies
     // and sends back parsed user data from that token
-    return _get('/api/user');
+    return _get('/user');
   }
 
   static logout = () => {
-    return _delete('/api/session');
+    return _delete('/session');
   }
 
   static login = (body) => {
-    return _post('/api/session', body);
+    return _post('/session', body);
   }
 
   // Post stuff
   static getPosts = () => {
-    return _get('/api/posts');
+    return _get('/posts');
   }
   static createPost = (body) => {
-    return _post('/api/posts', body); 
+    return _post('/posts', body);
   }
   static getPost = (id) => {
-    return _get(`/api/posts/${id}`);
+    return _get(`/posts/${id}`);
   }
   static updatePost = (body) => {
-    return _put('/api/posts', body);
+    return _put('/posts', body);
   }
   static deletePost = (id) => {
-    return _delete(`/api/posts/${id}`);
+    return _delete(`/posts/${id}`);
   }
 }
