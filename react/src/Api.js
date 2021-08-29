@@ -16,7 +16,7 @@ function _put(url, body) {
 }
 
 function _fetch(method, url, body) {
-  return fetch(`/api/${url}`, {
+  return fetch(`/api${url}`, {
     method: method,
     body: JSON.stringify(body),
     headers: {
