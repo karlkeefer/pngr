@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
+	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -100,4 +101,21 @@ func (srv *server) POST(path string, handler srvHandler) {
 }
 func (srv *server) DELETE(path string, handler srvHandler) {
 	srv.router.HandlerFunc(http.MethodDelete, path, srv.wrap(handler))
+}
+
+// helpers for easily parsing params
+func getInt64(name string, r *http.Request) (out int64, err error) {
+	params := httprouter.ParamsFromContext(r.Context())
+	arg := params.ByName(name)
+	out, err = strconv.ParseInt(arg, 10, 64)
+	return
+}
+
+func getID(r *http.Request) (out int64, err error) {
+	return getInt64("id", r)
+}
+
+func getString(name string, r *http.Request) (param string) {
+	params := httprouter.ParamsFromContext(r.Context())
+	return params.ByName(name)
 }

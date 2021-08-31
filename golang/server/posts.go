@@ -3,22 +3,12 @@ package server
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
-
-// helpers for easily parsing params
-func getID(r *http.Request) (id int64, err error) {
-	params := httprouter.ParamsFromContext(r.Context())
-	arg := params.ByName("id")
-	id, err = strconv.ParseInt(arg, 10, 64)
-	return
-}
 
 func CreatePost(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	if user.Status < models.UserStatusActive {
@@ -83,7 +73,7 @@ func DeletePost(env env.Env, user *models.User, w http.ResponseWriter, r *http.R
 		return write.Error(errors.RouteUnauthorized)
 	}
 
-	id, err := getID(r)
+	id, err := getInt64(r)
 	if err != nil {
 		return write.Error(errors.RouteNotFound)
 	}
