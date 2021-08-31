@@ -17,8 +17,6 @@ services:
       context: golang
       dockerfile: worker.Dockerfile
       target: prod
-    volumes:
-      - ./secrets:/secrets
     env_file: .env
 
   # front-end built with react
