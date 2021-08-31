@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/server/jwt"
@@ -11,28 +12,34 @@ import (
 	"github.com/karlkeefer/pngr/golang/utils"
 )
 
-// wrap does all the middleware together, and parses the user cookie if it's not a session route
+// wrap does all the middleware together, and
 func (srv *server) wrap(h srvHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		head, _ := utils.ShiftPath(r.URL.Path)
-		var user *models.User
-
-		// don't parse user cookie on session routes!
-		if head != "session" {
-			var err error
-			user, err = jwt.HandleUserCookie(srv.env, w, r)
-			if err != nil {
-				write.Error(err)
-			}
-		}
-
-		// wrap it all up!
-		wrapped := lag(csrf(cors(h(srv.env, user, w, r))))
-
+		// convert our fancy handler to a normal handlerFunc
+		fn := withUserAndEnv(srv.env, h, w, r)
+		// wrap it with middlwares
+		wrapped := lag(csrf(cors(fn)))
 		// execute the wrapped handler
 		wrapped(w, r)
 	}
+}
+
+// withUserAndEnv populates our custom srvHandler args for our route handlers
+func withUserAndEnv(env env.Env, h srvHandler, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	head, _ := utils.ShiftPath(r.URL.Path)
+
+	var user *models.User
+
+	// don't parse user cookie on session routes!
+	if head != "session" {
+		var err error
+		user, err = jwt.HandleUserCookie(env, w, r)
+		if err != nil {
+			write.Error(err)
+		}
+	}
+
+	return h(env, user, w, r)
 }
 
 // lag allows you to simiulate API lag locally to test "loading" states
