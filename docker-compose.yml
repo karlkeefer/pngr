@@ -27,7 +27,8 @@ services:
 
   # front-end built with react
   react:
-    build: 
+    stdin_open: true
+    build:
       context: react
       target: dev
     volumes:
