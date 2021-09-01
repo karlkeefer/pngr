@@ -33,7 +33,7 @@ const CheckAndRedirect = ({location}) => {
     return (
       <Container>
         <Dimmer active inverted>
-          <Loader size="big">Loading</Loader>
+          <Loader size="big"/>
         </Dimmer>
       </Container>
     );
