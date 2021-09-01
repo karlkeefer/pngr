@@ -2,15 +2,16 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Segment, Message, Header, Button } from 'semantic-ui-react'
 
-import { useAPI } from 'Shared/Hooks'
+import API from 'Api'
+import { useRequest } from 'Shared/Hooks'
 import SimplePage from 'Shared/SimplePage'
 
 const Posts = ({userContainer}) => {
-  const [posts, loading, error, run, API] = useAPI([])
+  const [loading, error, run, posts] = useRequest([])
 
   useEffect(()=>{
-    run(API.getPosts);
-  }, [run, API])
+    run(API.getPosts())
+  }, [run])
 
   return (
     <SimplePage icon='file' title='My Posts' loading={loading} error={error}>
