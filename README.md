@@ -6,8 +6,8 @@ Only implements basic user signup, session management, and a toy `post` type to 
 ## Features
 - Hot-reload, front and back, including a test-runner for golang changes
 - JSON Web-Token cookies with automatic refresh: ready for horizontal scaling
-- Uses multi-stage builds for small production images
-- Includes a stubbed out worker container for async (non-API-driven) tasks
+- Multi-stage builds for small production images
+- A worker container for async (non-API) tasks
 - Feature development is up to you!
 
 ## Requirements
@@ -20,9 +20,7 @@ Install `docker` && `docker-compose`
 4) Make changes to either golang or react code, and enjoy hot-reload goodness!
 
 Preview of the app:
-
 ![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
-
 
 ## Deploying to Production
 *Warning: Run in production at your own risk!*
