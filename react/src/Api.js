@@ -1,21 +1,21 @@
 // internal utils
-function _get(url, body) {
+const _get = (url, body) => {
   return _fetch('GET', url, body);
 }
 
-function _post(url, body) {
+const _post = (url, body) => {
   return _fetch('POST', url, body);
 }
 
-function _delete(url, body) {
+const _delete = (url, body) => {
   return _fetch('DELETE', url, body);
 }
 
-function _put(url, body) {
+const _put = (url, body) => {
   return _fetch('PUT', url, body);
 }
 
-function _fetch(method, url, body) {
+const _fetch = async (method, url, body) => {
   return fetch(`/api${url}`, {
     method: method,
     body: JSON.stringify(body),
