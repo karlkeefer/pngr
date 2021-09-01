@@ -1,2 +1,0 @@
-DROP SCHEMA posts;
-DROP TABLE posts;

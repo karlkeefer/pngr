@@ -1,6 +1,7 @@
 FROM golang:1.16 as dev
 WORKDIR /root
-RUN GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
+RUN go get github.com/cortesi/modd/cmd/modd
+RUN go get github.com/kyleconroy/sqlc/cmd/sqlc
 COPY . .
 CMD modd -f server.modd.conf
 
