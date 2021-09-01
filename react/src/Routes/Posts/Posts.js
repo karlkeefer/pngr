@@ -16,7 +16,7 @@ const Posts = () => {
   }, [run])
 
   return (
-    <SimplePage icon='file' title='My Posts' loading={loading} error={error}>
+    <SimplePage icon='copy' title='My Posts' loading={loading} error={error}>
       <p>This page fetches some protected data that only the logged in user ({user.email}) can see!</p>
       {posts.length === 0 ? <Message warning>No data to show</Message> : false }
       {posts.map(Post)}
@@ -30,7 +30,7 @@ export default Posts;
 const Post = ({id, title, body}, i) => (
   <Segment.Group key={id}>
     <Header attached='top' as='h3'>
-      {title} <Button compact basic as={Link} to={`/post/${id}/edit`} content='Edit' style={{marginLeft:'1em'}}/>
+      <Link to={`/post/${id}`}>{title}</Link>
     </Header>
     <Segment attached='bottom' content={body}/>
   </Segment.Group>
