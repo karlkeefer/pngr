@@ -40,7 +40,7 @@ services:
   postgres:
     build: postgres
     volumes:
-      - ./postgres/schema:/docker-entrypoint-initdb.d/schema
+      - ./golang/sql/schema:/docker-entrypoint-initdb.d/schema
 
   # nginx is used for ssl termination
   nginx:

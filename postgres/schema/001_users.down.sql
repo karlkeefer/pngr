@@ -1,2 +1,0 @@
-DROP SCHEMA users;
-DROP TABLE users;

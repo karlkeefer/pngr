@@ -7,7 +7,7 @@ DIR=$(dirname "$0")
 
 function usage() {
 	echo "You must supply a migration description as an argument"
-	echo "e.g. ./new-migration.sh add_unique_constraint_to_user_email"
+	echo "e.g. ./new add_unique_constraint_to_user_email"
 }
 
 function die() {

@@ -2,7 +2,6 @@ package env
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/repos/post"
 	"github.com/karlkeefer/pngr/golang/repos/user"
 )
@@ -20,7 +19,7 @@ type Env interface {
 }
 
 func New() (Env, error) {
-	db, err := db.New()
+	db, err := NewDB()
 	if err != nil {
 		return nil, err
 	}
