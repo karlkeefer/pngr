@@ -6,9 +6,7 @@ import (
 	"testing"
 
 	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/repos/user"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -66,8 +64,6 @@ func TestHandleUserCookie(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 
 			// setup mock
-			ur := user.Mock(test.mockUser, nil)
-			env := env.Mock(nil, ur, nil)
 
 			// build a fake request with an expired token
 			r := httptest.NewRequest(http.MethodGet, "/path", nil)
