@@ -12,7 +12,7 @@ import (
 )
 
 func CreatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	if user.Status < db.UserStatusActive {
+	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 
@@ -35,7 +35,7 @@ func CreatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Reque
 }
 
 func GetPost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	if user.Status < db.UserStatusActive {
+	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 
@@ -50,7 +50,7 @@ func GetPost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request)
 }
 
 func GetPosts(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	if user.Status < db.UserStatusActive {
+	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 
@@ -58,7 +58,7 @@ func GetPosts(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request
 }
 
 func UpdatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	if user.Status < db.UserStatusActive {
+	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 
@@ -84,7 +84,7 @@ func UpdatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Reque
 }
 
 func DeletePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	if user.Status < db.UserStatusActive {
+	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 

@@ -3,7 +3,6 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
 )
@@ -58,13 +57,12 @@ type Post struct {
 }
 
 type User struct {
-	ID           int64          `json:"id"`
-	Name         sql.NullString `json:"name"`
-	Email        string         `json:"email"`
-	Pass         string         `json:"pass"`
-	Salt         string         `json:"salt"`
-	Status       UserStatus     `json:"status"`
-	Verification string         `json:"verification"`
-	CreatedAt    time.Time      `json:"created_at"`
-	UpdatedAt    time.Time      `json:"updated_at"`
+	ID           int64      `json:"id"`
+	Email        string     `json:"email"`
+	Pass         string     `json:"pass"`
+	Salt         string     `json:"salt"`
+	Status       UserStatus `json:"status"`
+	Verification string     `json:"verification"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
 }
