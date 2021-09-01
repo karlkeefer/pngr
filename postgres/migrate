@@ -1,17 +1,23 @@
 #!/bin/bash
 
+# Usage here is the same as the normal go-migrate tool
+# e.g. 
+# postgres/migrate up
+# postgres/migrate down 1
+# postgres/migrate up
+# postgres/migrate force 123
+
 DIR=$(dirname "$0")
 
 if [ -f /.dockerenv ]; then
-	echo "Attempting to run migrations from within the container"
 	cd /docker-entrypoint-initdb.d
 	echo ""
 	echo "*** MIGRATIONS ***"
 	# note that we are connecting via UNIX socket here, instead of normal localhost
 	# this is because the docker postgres container doesn't expose postgres "ports" during the entrypoint script phase
-	migrate -path="/docker-entrypoint-initdb.d/migrations/" -database="postgres://postgres@/postgres?host=/var/run/postgresql/" up
+	migrate -path="/docker-entrypoint-initdb.d/schema/" -database="postgres://postgres@/postgres?host=/var/run/postgresql/" $@
 	echo "*** DONE ***"
 else
 	echo "Run migrations via docker-compose..."
-	docker-compose -f $DIR/../docker-compose.yml exec postgres /docker-entrypoint-initdb.d/run-migrations.sh
+	docker-compose -f $DIR/../docker-compose.yml exec postgres migrate $@
 fi

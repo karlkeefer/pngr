@@ -10,4 +10,4 @@ RUN wget -nv https://github.com/golang-migrate/migrate/releases/download/v4.13.0
   && cp migrate.linux-amd64 /bin/migrate
 
 # copy migration script to be run at startup
-COPY run-migrations.sh /docker-entrypoint-initdb.d
+COPY init.sh /docker-entrypoint-initdb.d
