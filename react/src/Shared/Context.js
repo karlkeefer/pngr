@@ -18,7 +18,7 @@ export const User = React.createContext({
 
 export const WithUser = ({children}) => {
   const [user, setUser] = useState(emptyUser)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const handleLogout = useCallback(()=>{
     API.logout()
@@ -29,7 +29,12 @@ export const WithUser = ({children}) => {
 
   useEffect(()=>{
     API.whoami()
-      .then(setUser)
+      .then(user => {
+        setUser(user)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [setUser])
   
   return (
