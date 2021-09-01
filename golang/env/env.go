@@ -10,7 +10,7 @@ type env struct {
 
 // helpful interface for testing
 type Env interface {
-	DB() *db.Queries
+	DB() db.Querier
 }
 
 func New() (Env, error) {
@@ -24,6 +24,6 @@ func New() (Env, error) {
 	}, nil
 }
 
-func (e *env) DB() *db.Queries {
+func (e *env) DB() db.Querier {
 	return e.db
 }
