@@ -17,4 +17,4 @@ function die() {
 
 [ "$#" -eq 1 ] || die 
 
-docker-compose -f $DIR/../docker-compose.yml exec postgres migrate create -dir="/docker-entrypoint-initdb.d/migrations" -ext="sql" $1
+docker-compose -f $DIR/../docker-compose.yml exec --user "$( id -u ):$( id -g )"  postgres migrate create -seq=true -digits=3 -dir="/docker-entrypoint-initdb.d/schema" -ext="sql" $1

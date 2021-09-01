@@ -40,7 +40,7 @@ services:
   postgres:
     build: postgres
     volumes:
-      - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations
+      - ./postgres/schema:/docker-entrypoint-initdb.d/schema
 
   # nginx is used for ssl termination
   nginx:

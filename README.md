@@ -43,13 +43,13 @@ Migrations are created and run using [go-migrate](https://github.com/golang-migr
 
 ```bash
 # create a template for the next migration
-postgres/new-migration.sh my_migration_name
+postgres/new my_migration_name
 
-# execute any new migrations (this is used when the container is created)
-postgres/run-migrations.sh
+# execute any new migrations (this is also run automatically the container is created)
+postgres/migrate up
 
 # go down 1 migration
-postgres/migrate.sh down 1
+postgres/migrate down 1
 ```
 
 ### Opening a psql client
