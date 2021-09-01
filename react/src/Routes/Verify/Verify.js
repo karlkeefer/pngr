@@ -1,43 +1,33 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
+
+import { useRequest } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage'
 
-export default class Verify extends Component {
+const Verify = ({match, userContainer}) => {
+  const { verification } = match.params;
+  const [loading, error, run, result] = useRequest({})
+  const [redirect, setRedirect] = useState(false)
 
-  state = {
-    loading: false,
-    error: false,
-    redirect: false,
-  }
-
-  componentDidMount = () => {
-    const { verification } = this.props.match.params;
-    this.setState({loading: true});
-    this.props.userContainer.verify({code: verification})
-      .then((res) => {
-        this.setState({loading: false});
+  useEffect(() => {
+    run(userContainer.verify({code: verification}))
+      .then(() => {
         setTimeout(() => {
-          this.setState({redirect: true});
+          setRedirect(true);
         }, 2500);
       })
-      .catch((error) => {
-        this.setState({error, loading: false});
-      });
+  }, [run, userContainer, setRedirect, verification])
+
+  if (redirect) {
+    return <Redirect to="/posts"/>
   }
 
-  render() {
-    const { loading, error, redirect } = this.state;
-    if (redirect) {
-      return (
-        <Redirect to="/posts"/>
-      );
-    }
-
-    return (
-      <SimplePage title='Account Verification' centered loading={loading} error={error}>
-        <Message positive>Success! You have verified your email!</Message>
-      </SimplePage>
-    );
-  }
+  return (
+    <SimplePage title='Account Verification' centered loading={loading} error={error}>
+      {result && result.id ? <Message positive>Success! You have verified your email!</Message> : false}
+    </SimplePage>
+  );
 }
+
+export default Verify;

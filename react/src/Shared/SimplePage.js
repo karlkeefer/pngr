@@ -11,11 +11,9 @@ const SimplePage = ({title, icon, centered, loading, error, children}) => (
       : false}
 
     <Content centered={centered}>
-      { !loading ?
-        <Header as='h1'>
-          {icon ? <Icon name={icon}/> : false }{title}
-        </Header>
-        : false }
+      <Header as='h1'>
+        {icon ? <Icon name={icon}/> : false }{title}
+      </Header>
 
       {error ? <Message negative>{error}</Message> : false}
 

@@ -1,44 +1,42 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
 
-import { useAPI, useFields } from 'Shared/Hooks';
-
+import API from 'Api'
+import { useRequest, useFields } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage';
 
 const PostForm = ({match}) => {
-  const [post, loading, error, run, API] = useAPI({})
-  const [fields, setFields, handleChange] = useFields({title: '', body: ''})
-  const [isUpdate, setIsUpdate] = useState(false)
+  const postID = Number(match.params.id);
+  const [loading, error, run] = useRequest({})
+  const [fields, handleChange, setFields] = useFields({title: '', body: ''})
   const [redirectTo, setRedirectTo] = useState('');
 
   const handleSubmit = useCallback(() => {
-    run(isUpdate ? API.updatePost : API.createPost, fields)
+    run(postID ? API.updatePost(fields) : API.createPost(fields))
       .then(()=>{
         setRedirectTo('/posts')
       });
-  }, [API, isUpdate, fields, run])
+  }, [postID, fields, run])
 
   const handleDelete = useCallback(() => {
-    run(API.deletePost, post.id)
+    run(API.deletePost(postID))
       .then(()=>{
         setRedirectTo('/posts')
       });
-  }, [API, run, post.id])
+  }, [run, postID])
 
   // if we have a post ID, fetch it
   useEffect(()=>{
-    const postID = Number(match.params.id);
     if (postID) {
-      run(API.getPost, postID)
+      run(API.getPost(postID))
         .then(post => {
           if (post) {
             setFields(post);
-            setIsUpdate(true);
           }
         });
     }
-  }, [match, run, API, setFields])
+  }, [postID, run, setFields])
 
   if (redirectTo) {
     return <Redirect to={redirectTo}/>
@@ -47,7 +45,7 @@ const PostForm = ({match}) => {
   const {title, body} = fields;
 
   return (
-    <SimplePage icon='edit outline' title={isUpdate ? `Edit Post #${post.id}` : 'Create a Post'}>
+    <SimplePage icon='edit outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
       <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input
@@ -66,7 +64,7 @@ const PostForm = ({match}) => {
           value={body}
           onChange={handleChange} />
         <Button primary size="huge" type="submit">Save</Button>
-        {isUpdate ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false }
+        {postID ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false }
       </Form>
     </SimplePage>
   )

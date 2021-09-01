@@ -1,85 +1,51 @@
-import React, { Component } from 'react'
+import React, { useCallback } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 
+import { useRequest, useFields } from 'Shared/Hooks';
 import API from 'Api'
 
-function defaultState() {
-  return {
-    loading: false,
-    error: '',
-    success: false,
-    verifyURL: '',
-    fields: {
-      email: '',
-      pass: '',
-    }
-  };
-}
+const SignUpForm = () => {
+  const [loading, error, run, result] = useRequest({})
+  const [fields, handleChange] = useFields({email: '', pass: ''})
 
-export default class SignUpForm extends Component {
-  state = defaultState()
+  const handleSubmit = useCallback(() => {
+    run(API.signup(fields))
+  }, [run, fields])
 
-  handleChange = (e, {name, value}) => {
-    this.setState(state => {
-      state.fields = Object.assign(state.fields, {[name]: value });
-      return state;
-    });
-  }
-
-  handleSubmit = (e, val) => {
-    e.preventDefault();
-    this.setState({
-      loading: true,
-      error: ''
-    });
-
-    API.signup(this.state.fields)
-    .then((res) => {
-      this.setState({
-        loading: false,
-        success: true,
-        verifyURL: res.URL
-      });
-    })
-    .catch((error) => {
-      this.setState({
-        loading: false,
-        error: error
-      });
-    });
-  }
-
-  render() {
-    const { loading, error, success, verifyURL } = this.state;
-    const { email, pass } = this.state.fields;
-
-    if (success) {
-      // TODO: this should be a message saying to check your email
-      // and the verificationURL should be sent via email instead of passed in response
-      return <Message positive><a href={verifyURL}>Click to confirm your email</a></Message>
-    }
-
+  if (result && result.URL) {
+    // TODO: this should be a message saying to check your email
+    // and the verificationURL should be sent via email instead of passed in response
     return (
-      <Form error name="signup" loading={loading} onSubmit={this.handleSubmit}>
-        <Message error>{error}</Message>
-        <Form.Input
-          size="big"
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={this.handleChange} />
-        <Form.Input
-          size="big"
-          name="pass"
-          type="password"
-          placeholder="Password"
-          required
-          value={pass}
-          onChange={this.handleChange} />
-        <Button positive fluid size="huge" type="submit">Create Account</Button>
-      </Form>
-    );
+      <Message positive>
+        <a href={result.URL}>Click to confirm your email</a>
+      </Message>
+    )
   }
+
+  const {email, pass} = fields;
+
+  return (
+    <Form error name="signup" loading={loading} onSubmit={handleSubmit}>
+      <Message error>{error}</Message>
+      <Form.Input
+        size="big"
+        name="email"
+        type="email"
+        placeholder="Email"
+        required
+        value={email}
+        onChange={handleChange} />
+      <Form.Input
+        size="big"
+        name="pass"
+        type="password"
+        placeholder="Password"
+        required
+        value={pass}
+        onChange={handleChange} />
+      <Button positive fluid size="huge" type="submit">Create Account</Button>
+    </Form>
+  )
 }
+
+export default SignUpForm;

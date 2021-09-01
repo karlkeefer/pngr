@@ -1,16 +1,15 @@
 import { useState, useCallback } from 'react';
-import API from 'Api'
 
-export const useAPI = (init) => {
-  const [data, setData] = useState(init);
+export const useRequest = (initData) => {
+  const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const run = useCallback((promiseFn, args) => {
+  const run = useCallback((promise) => {
     setLoading(true);
     setError('');
 
-    return promiseFn(args)
+    return promise
       .then(data => {
         setData(data);
         setLoading(false);
@@ -23,11 +22,11 @@ export const useAPI = (init) => {
       });
   }, [])
 
-  return [data, loading, error, run, API];
+  return [loading, error, run, data];
 }
 
-export const useFields = (init) => {
-  const [fields, setFields] = useState(init)
+export const useFields = (initFields) => {
+  const [fields, setFields] = useState(initFields)
   const handleChange = useCallback((e, {name, type, value, checked}) => {
       setFields(f => {
         f = {...f, [name]: type === 'checkbox' ? checked : value };
@@ -35,5 +34,5 @@ export const useFields = (init) => {
       });
     }, [setFields])
 
-  return [fields, setFields, handleChange];
+  return [fields, handleChange, setFields];
 }
