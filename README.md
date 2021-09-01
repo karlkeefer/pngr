@@ -11,7 +11,7 @@ Only implements basic user signup, session management, and a toy `post` type to 
 - Feature development is up to you!
 
 ## Requirements
-- Install docker && docker-compose
+Install `docker` && `docker-compose`
 
 ## Quick Start
 1) `docker-compose up`
@@ -75,6 +75,6 @@ Nginx is used to terminate SSL and route requests to the front-end and back-end 
 
 ## React
 - [Create React App](https://github.com/facebookincubator/create-react-app) (unejected!)
+- [React Context](https://reactjs.org/docs/context.html) for global state
 - [React Router](https://github.com/ReactTraining/react-router)
-- [Unstated](https://github.com/jamiebuilds/unstated) for state management
 - [Semantic UI React](https://react.semantic-ui.com/) for component library

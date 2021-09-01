@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 
+import API from 'Api'
+import { User } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage'
 
-const Verify = ({match, userContainer}) => {
+const Verify = ({match}) => {
   const { verification } = match.params;
   const [loading, error, run, result] = useRequest({})
   const [redirect, setRedirect] = useState(false)
+  const { setUser } = useContext(User)
 
   useEffect(() => {
-    run(userContainer.verify({code: verification}))
-      .then(() => {
+    run(API.verify({code: verification}))
+      .then(user => {
+        setUser(user);
         setTimeout(() => {
           setRedirect(true);
         }, 2500);
       })
-  }, [run, userContainer, setRedirect, verification])
+  }, [run, setUser, setRedirect, verification])
 
   if (redirect) {
     return <Redirect to="/posts"/>
