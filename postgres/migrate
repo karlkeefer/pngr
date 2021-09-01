@@ -9,15 +9,4 @@
 
 DIR=$(dirname "$0")
 
-if [ -f /.dockerenv ]; then
-	cd /docker-entrypoint-initdb.d
-	echo ""
-	echo "*** MIGRATIONS ***"
-	# note that we are connecting via UNIX socket here, instead of normal localhost
-	# this is because the docker postgres container doesn't expose postgres "ports" during the entrypoint script phase
-	migrate -path="/docker-entrypoint-initdb.d/schema/" -database="postgres://postgres@/postgres?host=/var/run/postgresql/" $@
-	echo "*** DONE ***"
-else
-	echo "Run migrations via docker-compose..."
-	docker-compose -f $DIR/../docker-compose.yml exec postgres migrate $@
-fi
+docker-compose -f $DIR/../docker-compose.yml exec postgres migrate -path="/docker-entrypoint-initdb.d/schema/" -database="postgres://postgres@/postgres?host=/var/run/postgresql/" $@
