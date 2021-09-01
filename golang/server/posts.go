@@ -73,7 +73,7 @@ func DeletePost(env env.Env, user *models.User, w http.ResponseWriter, r *http.R
 		return write.Error(errors.RouteUnauthorized)
 	}
 
-	id, err := getInt64(r)
+	id, err := getID(r)
 	if err != nil {
 		return write.Error(errors.RouteNotFound)
 	}

@@ -1,134 +1,75 @@
-import React, { Component } from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import { Form, Message, Button } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
-import API from 'Api'
+
+import { useAPI, useFields } from 'Shared/Hooks';
+
 import SimplePage from 'Shared/SimplePage';
 
-function defaultState(){
-  return {
-    loading: false,
-    isUpdate: false,
-    error: '',
-    redirectTo: '',
-    fields: {
-      title: '',
-      body: '',
-    }
-  };
-}
+const PostForm = ({match}) => {
+  const [post, loading, error, run, API] = useAPI({})
+  const [fields, setFields, handleChange] = useFields({title: '', body: ''})
+  const [isUpdate, setIsUpdate] = useState(false)
+  const [redirectTo, setRedirectTo] = useState('');
 
-export default class PostForm extends Component {
-  state = defaultState()
-
-  componentDidMount = () => {
-    const post_id = Number(this.props.match.params.id);
-    if (post_id) {
-      this.setState({
-        loading: true,
-        isUpdate: true
+  const handleSubmit = useCallback(() => {
+    run(isUpdate ? API.updatePost : API.createPost, fields)
+      .then(()=>{
+        setRedirectTo('/posts')
       });
+  }, [API, isUpdate, fields, run])
 
-      API.getPost(post_id)
+  const handleDelete = useCallback(() => {
+    run(API.deletePost, post.id)
+      .then(()=>{
+        setRedirectTo('/posts')
+      });
+  }, [API, run, post.id])
+
+  // if we have a post ID, fetch it
+  useEffect(()=>{
+    const postID = Number(match.params.id);
+    if (postID) {
+      run(API.getPost, postID)
         .then(post => {
-          this.setState(state => {
-            state.fields = Object.assign({}, state.fields, post);
-            state.loading = false;
-            return state;
-          });
-        })
-        .catch(error => {
-          this.setState({
-            error,
-            isUpdate: false,
-            loading: false
-          });
+          if (post) {
+            setFields(post);
+            setIsUpdate(true);
+          }
         });
     }
+  }, [match, run, API, setFields])
+
+  if (redirectTo) {
+    return <Redirect to={redirectTo}/>
   }
 
-  handleChange = (e, {name, value}) => {
-    this.setState(state => {
-      state.fields = Object.assign(state.fields, {[name]: value });
-      return state;
-    });
-  }
+  const {title, body} = fields;
 
-  handleSubmit = (e, val) => {
-    e.preventDefault();
-    this.setState({
-      loading: true,
-      error: ''
-    });
-
-    let action = this.state.isUpdate ? API.updatePost : API.createPost;
-
-    action(this.state.fields)
-      .then((post) => {
-        this.setState({
-          loading: false,
-          redirectTo: `/posts`
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          error: error
-        });
-      });
-  }
-
-  handleDelete = (e, val) => {
-    e.preventDefault();
-    this.setState({
-      loading: true,
-      error: ''
-    });
-
-    API.deletePost(this.state.fields.id)
-      .then((post) => {
-        this.setState({
-          loading: false,
-          redirectTo: `/posts`
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          error: error
-        });
-      });
-  }
-
-  render() {
-    const { loading, isUpdate, error, redirectTo } = this.state;
-    const { id, title, body } = this.state.fields;
-    if (redirectTo) {
-      return <Redirect to={redirectTo}/>
-    }
-
-    return (
-      <SimplePage icon='edit outline' title={isUpdate ? `Edit Post #${id}` : 'Create a Post'}>
-        <Form error name="createPost" loading={loading} onSubmit={this.handleSubmit}>
-          <Message error>{error}</Message>
-          <Form.Input
-            size="big"
-            name="title"
-            type="text"
-            placeholder="Post Title"
-            required
-            value={title}
-            onChange={this.handleChange} />
-          <Form.TextArea
-            name="body"
-            rows={4}
-            placeholder="Post content"
-            required
-            value={body}
-            onChange={this.handleChange} />
-          <Button primary size="huge" type="submit">Save</Button>
-          {isUpdate ? <Button negative size="huge" type="button" onClick={this.handleDelete}>Delete</Button> : false }
-        </Form>
-      </SimplePage>
-    );
-  }
+  return (
+    <SimplePage icon='edit outline' title={isUpdate ? `Edit Post #${post.id}` : 'Create a Post'}>
+      <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
+        <Message error>{error}</Message>
+        <Form.Input
+          size="big"
+          name="title"
+          type="text"
+          placeholder="Post Title"
+          required
+          value={title}
+          onChange={handleChange} />
+        <Form.TextArea
+          name="body"
+          rows={4}
+          placeholder="Post content"
+          required
+          value={body}
+          onChange={handleChange} />
+        <Button primary size="huge" type="submit">Save</Button>
+        {isUpdate ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false }
+      </Form>
+    </SimplePage>
+  )
 }
+
+export default PostForm;
