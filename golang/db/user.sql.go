@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-const create = `-- name: Create :one
+const createUser = `-- name: CreateUser :one
 INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER($1), $2, $3, $4, $5) RETURNING id, name, email, pass, salt, status, verification, created_at, updated_at
 `
 
-type CreateParams struct {
+type CreateUserParams struct {
 	Lower        string     `json:"lower"`
 	Salt         string     `json:"salt"`
 	Pass         string     `json:"pass"`
@@ -20,8 +20,8 @@ type CreateParams struct {
 	Verification string     `json:"verification"`
 }
 
-func (q *Queries) Create(ctx context.Context, arg CreateParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, create,
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, createUser,
 		arg.Lower,
 		arg.Salt,
 		arg.Pass,
@@ -43,12 +43,12 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (User, error) {
 	return i, err
 }
 
-const findByEmail = `-- name: FindByEmail :one
+const findUserByEmail = `-- name: FindUserByEmail :one
 SELECT id, name, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE email = LOWER($1) LIMIT 1
 `
 
-func (q *Queries) FindByEmail(ctx context.Context, lower string) (User, error) {
-	row := q.db.QueryRowContext(ctx, findByEmail, lower)
+func (q *Queries) FindUserByEmail(ctx context.Context, lower string) (User, error) {
+	row := q.db.QueryRowContext(ctx, findUserByEmail, lower)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -64,12 +64,12 @@ func (q *Queries) FindByEmail(ctx context.Context, lower string) (User, error) {
 	return i, err
 }
 
-const findByVerificationCode = `-- name: FindByVerificationCode :one
+const findUserByVerificationCode = `-- name: FindUserByVerificationCode :one
 SELECT id, name, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE verification = $1 LIMIT 1
 `
 
-func (q *Queries) FindByVerificationCode(ctx context.Context, verification string) (User, error) {
-	row := q.db.QueryRowContext(ctx, findByVerificationCode, verification)
+func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification string) (User, error) {
+	row := q.db.QueryRowContext(ctx, findUserByVerificationCode, verification)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -85,17 +85,17 @@ func (q *Queries) FindByVerificationCode(ctx context.Context, verification strin
 	return i, err
 }
 
-const updateStatus = `-- name: UpdateStatus :exec
-UPDATE users SET status = $1, updated_at = $2 WHERE id = $3
+const updateUserStatus = `-- name: UpdateUserStatus :exec
+UPDATE users SET status = $2, updated_at = $3 WHERE id = $1
 `
 
-type UpdateStatusParams struct {
+type UpdateUserStatusParams struct {
+	ID        int64      `json:"id"`
 	Status    UserStatus `json:"status"`
 	UpdatedAt time.Time  `json:"updated_at"`
-	ID        int64      `json:"id"`
 }
 
-func (q *Queries) UpdateStatus(ctx context.Context, arg UpdateStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateStatus, arg.Status, arg.UpdatedAt, arg.ID)
+func (q *Queries) UpdateUserStatus(ctx context.Context, arg UpdateUserStatusParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserStatus, arg.ID, arg.Status, arg.UpdatedAt)
 	return err
 }

@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/karlkeefer/pngr/golang/server"
+	"github.com/karlkeefer/pngr/golang/handlers"
 )
 
 const port = ":5000"
@@ -15,7 +15,7 @@ const port = ":5000"
 func main() {
 	go handleSignals()
 
-	srv, err := server.New()
+	srv, err := handlers.NewServer()
 	if err != nil {
 		log.Fatalln("Unable to initialize server", err)
 	}

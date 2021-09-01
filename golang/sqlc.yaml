@@ -6,3 +6,4 @@ packages:
     schema: "./sql/schema/"
     queries: "./sql/queries/"
     emit_json_tags: true
+    emit_empty_slices: true

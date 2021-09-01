@@ -1,19 +1,20 @@
-package server
+package handlers
 
 import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"runtime/debug"
 	"strconv"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 
+	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models"
-	"github.com/karlkeefer/pngr/golang/server/write"
-	"github.com/karlkeefer/pngr/golang/utils"
+	"github.com/karlkeefer/pngr/golang/handlers/write"
 )
 
 var isDev = false
@@ -33,7 +34,7 @@ type server struct {
 
 // New initializes env (database connections and whatnot)
 // and creates a server that implements ServeHTTP
-func New() (*server, error) {
+func NewServer() (*server, error) {
 	env, err := env.New()
 	if err != nil {
 		return nil, err
@@ -78,7 +79,7 @@ func New() (*server, error) {
 func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var head string
 	// shift head and tail to get below "api/" part of the path
-	head, r.URL.Path = utils.ShiftPath(r.URL.Path)
+	head, r.URL.Path = shiftPath(r.URL.Path)
 	if head != "api" {
 		write.Error(errors.RouteNotFound)
 	}
@@ -86,8 +87,17 @@ func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	srv.router.ServeHTTP(w, r)
 }
 
+func shiftPath(p string) (head, tail string) {
+	p = path.Clean("/" + p)
+	i := strings.Index(p[1:], "/") + 1
+	if i <= 0 {
+		return p[1:], "/"
+	}
+	return p[1:i], p[i:]
+}
+
 // srvHandler is the extended handler function that our API routes use
-type srvHandler func(env env.Env, user *models.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc
+type srvHandler func(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc
 
 // helpers for easily adding routes
 func (srv *server) GET(path string, handler srvHandler) {

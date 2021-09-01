@@ -5,9 +5,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models"
 	"github.com/karlkeefer/pngr/golang/repos/user"
 	"github.com/stretchr/testify/assert"
 )
@@ -19,7 +19,7 @@ func TestHandleUserCookie(t *testing.T) {
 	tests := []struct {
 		// setup
 		name     string
-		mockUser *models.User // what will FindByEmail return?
+		mockUser *db.User // what will FindByEmail return?
 		token    string
 		// expectations
 		shouldSetCookie bool
@@ -28,9 +28,9 @@ func TestHandleUserCookie(t *testing.T) {
 	}{
 		{
 			"user marked disabled since token expired (should log them out)",
-			&models.User{
+			&db.User{
 				ID:     30,
-				Status: models.UserStatusDisabled,
+				Status: db.UserStatusDisabled,
 			},
 			expiredToken,
 			true,
@@ -40,9 +40,9 @@ func TestHandleUserCookie(t *testing.T) {
 		{
 			"token is not expired, no action",
 			nil,
-			encodeUser(&models.User{
+			encodeUser(&db.User{
 				ID:     30,
-				Status: models.UserStatusActive,
+				Status: db.UserStatusActive,
 			}),
 			false,
 			nil,
@@ -50,9 +50,9 @@ func TestHandleUserCookie(t *testing.T) {
 		},
 		{
 			"token refresh when token is expired and user is still valid",
-			&models.User{
+			&db.User{
 				ID:     30,
-				Status: models.UserStatusActive,
+				Status: db.UserStatusActive,
 			},
 			expiredToken,
 			true,
@@ -105,9 +105,9 @@ func TestUserFromCookie(t *testing.T) {
 	// now give the request a valid cookie
 	r.AddCookie(&http.Cookie{
 		Name: cookieName,
-		Value: encodeUser(&models.User{
+		Value: encodeUser(&db.User{
 			ID:     30,
-			Status: models.UserStatusActive,
+			Status: db.UserStatusActive,
 		}),
 	})
 
@@ -119,16 +119,16 @@ func TestUserFromCookie(t *testing.T) {
 // Note: more thorough testing of encode/decode stuff requires us to mock out the
 // time package, which would be a big PITA
 func TestDecodeUser(t *testing.T) {
-	token := encodeUser(&models.User{
+	token := encodeUser(&db.User{
 		ID:     30,
-		Status: models.UserStatusActive,
+		Status: db.UserStatusActive,
 	})
 	assert.NotEmpty(t, token)
 
 	du, err := decodeUser(token)
 	assert.NoError(t, err)
 	assert.Equal(t, int64(30), du.ID)
-	assert.Equal(t, models.UserStatusActive, du.Status)
+	assert.Equal(t, db.UserStatusActive, du.Status)
 
 	// test old token
 	_, err = decodeUser(expiredToken)

@@ -1,33 +1,27 @@
 package env
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
-	"github.com/jmoiron/sqlx"
-	"github.com/jmoiron/sqlx/reflectx"
+	"github.com/karlkeefer/pngr/golang/db"
 	_ "github.com/lib/pq"
 )
 
-func NewDB() (database *sqlx.DB, err error) {
-	str := buildConnectionString()
-
-	database, err = sqlx.Open("postgres", str)
+func Connect() (q *db.Queries, err error) {
+	conn, err := sql.Open("postgres", buildConnectionString())
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = database.Ping()
+	err = conn.Ping()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	// this lets us use the json tags for finding postgres column names
-	database.Mapper = reflectx.NewMapperFunc("json", strings.ToLower)
-
-	return
+	return db.New(conn), nil
 }
 
 func buildConnectionString() string {
