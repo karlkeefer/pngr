@@ -9,7 +9,7 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER($1), $2, $3, $4, $5) RETURNING id, name, email, pass, salt, status, verification, created_at, updated_at
+INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER($1), $2, $3, $4, $5) RETURNING id, email, pass, salt, status, verification, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -31,7 +31,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Name,
 		&i.Email,
 		&i.Pass,
 		&i.Salt,
@@ -44,7 +43,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const findUserByEmail = `-- name: FindUserByEmail :one
-SELECT id, name, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE email = LOWER($1) LIMIT 1
+SELECT id, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE email = LOWER($1) LIMIT 1
 `
 
 func (q *Queries) FindUserByEmail(ctx context.Context, lower string) (User, error) {
@@ -52,7 +51,6 @@ func (q *Queries) FindUserByEmail(ctx context.Context, lower string) (User, erro
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Name,
 		&i.Email,
 		&i.Pass,
 		&i.Salt,
@@ -65,7 +63,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, lower string) (User, erro
 }
 
 const findUserByVerificationCode = `-- name: FindUserByVerificationCode :one
-SELECT id, name, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE verification = $1 LIMIT 1
+SELECT id, email, pass, salt, status, verification, created_at, updated_at FROM users WHERE verification = $1 LIMIT 1
 `
 
 func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification string) (User, error) {
@@ -73,7 +71,6 @@ func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification s
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Name,
 		&i.Email,
 		&i.Pass,
 		&i.Salt,

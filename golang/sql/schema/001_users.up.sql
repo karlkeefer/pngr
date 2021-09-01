@@ -8,7 +8,6 @@ CREATE TYPE user_status AS ENUM (
 
 CREATE TABLE users (
   id bigserial PRIMARY KEY,
-  name varchar(60) UNIQUE,
   email varchar(254) NOT NULL UNIQUE,
   pass varchar(60) NOT NULL,
   salt varchar(60) NOT NULL,

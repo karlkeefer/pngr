@@ -18,11 +18,11 @@ const Nav = () => {
   return <Menu fixed="top" inverted>
     <Container>
       <Menu.Item as={Link} exact to="/" name="Home" />
-      { user.status >= 1 ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
+      { user.status === 'active' ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
       <Menu.Menu position="right">
-        { !user.status >= 1 ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
-        { !user.status >= 1 ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
-        { user.status >= 1 ? <Menu.Item link={true} onClick={handleLogout} content="Log Out"/> : false }
+        { user.status !== 'active' ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
+        { user.status !== 'active' ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
+        { user.status === 'active' ? <Menu.Item link={true} onClick={handleLogout} content="Log Out"/> : false }
       </Menu.Menu> 
     </Container>
   </Menu>

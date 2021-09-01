@@ -14,17 +14,17 @@ import (
 func Login(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	u := db.User{}
-	err := decoder.Decode(u)
+	err := decoder.Decode(&u)
 	if err != nil || &u == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 
-	u, err = env.DB().FindUserByEmail(r.Context(), u.Email)
+	fromDB, err := env.DB().FindUserByEmail(r.Context(), u.Email)
 	if err != nil {
 		return write.Error(err)
 	}
 
-	if !checkPasswordHash(u.Pass, u.Salt, u.Pass) {
+	if !checkPasswordHash(u.Pass, u.Salt, fromDB.Pass) {
 		return write.Error(errors.FailedLogin)
 	}
 
