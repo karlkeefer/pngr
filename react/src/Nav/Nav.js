@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Menu, Container } from 'semantic-ui-react'
-import { Subscribe } from 'unstated'
 import { NavLink } from 'react-router-dom'
 
-import UserContainer from 'Containers/User'
+import { User } from 'Shared/Context'
 
 // helper for semanticUI + react-router
 const Link = props => (
@@ -13,22 +12,20 @@ const Link = props => (
   />
 );
 
-const Nav = () => (
-  <Subscribe to={[UserContainer]}>
-    {userContainer => (
-      <Menu fixed="top" inverted>
-        <Container>
-          <Menu.Item as={Link} exact to="/" name="Home" />
-          { userContainer.isLoggedIn() ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
-          <Menu.Menu position="right">
-            { !userContainer.isLoggedIn() ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
-            { !userContainer.isLoggedIn() ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
-            { userContainer.isLoggedIn() ? <Menu.Item link={true} onClick={userContainer.logout} content="Log Out"/> : false }
-          </Menu.Menu> 
-        </Container>
-      </Menu>
-    )}
-  </Subscribe>
-)
+const Nav = () => {
+  const {user, handleLogout} = useContext(User)
+
+  return <Menu fixed="top" inverted>
+    <Container>
+      <Menu.Item as={Link} exact to="/" name="Home" />
+      { user.status >= 1 ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
+      <Menu.Menu position="right">
+        { !user.status >= 1 ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
+        { !user.status >= 1 ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
+        { user.status >= 1 ? <Menu.Item link={true} onClick={handleLogout} content="Log Out"/> : false }
+      </Menu.Menu> 
+    </Container>
+  </Menu>
+}
 
 export default Nav;

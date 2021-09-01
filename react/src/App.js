@@ -1,15 +1,14 @@
 import React from 'react'
-import { Provider } from 'unstated'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import UserContainer from 'Containers/User'
+import { WithUser } from 'Shared/Context'
 
 import Nav from 'Nav/Nav'
 import Routes from 'Routes/Routes'
 
 const App = () => (
-  <Provider inject={[UserContainer]}>
+  <WithUser>
     <Helmet
       defaultTitle="PNGR"
       titleTemplate="%s | PNGR"
@@ -22,7 +21,7 @@ const App = () => (
         <Routes/>
       </div>
     </Router>
-  </Provider>
-)
+  </WithUser>
+);
 
 export default App;

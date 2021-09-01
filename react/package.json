@@ -7,11 +7,10 @@
     "react-cookie": "^3.1.2",
     "react-dom": "^16.14.0",
     "react-helmet": "^6.1.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^5.2.1",
     "react-scripts": "^4.0.3",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "0.88.1",
-    "unstated": "^2.1.1"
+    "semantic-ui-react": "0.88.1"
   },
   "scripts": {
     "start": "react-scripts start",
