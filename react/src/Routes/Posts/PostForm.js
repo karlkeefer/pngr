@@ -45,7 +45,7 @@ const PostForm = ({match}) => {
   const {title, body} = fields;
 
   return (
-    <SimplePage icon='edit outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
+    <SimplePage icon='file alternate outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
       <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input

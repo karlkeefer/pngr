@@ -8,6 +8,7 @@ import SignUp from 'Routes/SignUp/SignUp'
 import LogIn from 'Routes/LogIn/LogIn'
 import Verify from 'Routes/Verify/Verify'
 import Posts from 'Routes/Posts/Posts'
+import Post from 'Routes/Posts/Post'
 import PostForm from 'Routes/Posts/PostForm'
 
 const Routes = () => (
@@ -19,6 +20,7 @@ const Routes = () => (
     <PrivateRoute exact path="/posts" component={Posts}/>
     <PrivateRoute exact path="/post/create" component={PostForm}/>
     <PrivateRoute exact path="/post/:id/edit" component={PostForm}/>
+    <PrivateRoute exact path="/post/:id" component={Post}/>
     <Route component={NoMatch} />
   </Switch>
 )
