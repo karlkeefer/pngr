@@ -1,15 +1,14 @@
-package server
+package handlers
 
 import (
 	"net/http"
 	"time"
 
+	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/models"
-	"github.com/karlkeefer/pngr/golang/server/jwt"
-	"github.com/karlkeefer/pngr/golang/server/write"
-	"github.com/karlkeefer/pngr/golang/utils"
+	"github.com/karlkeefer/pngr/golang/handlers/jwt"
+	"github.com/karlkeefer/pngr/golang/handlers/write"
 )
 
 // wrap does all the middleware together, and
@@ -26,9 +25,9 @@ func (srv *server) wrap(h srvHandler) http.HandlerFunc {
 
 // withUserAndEnv populates our custom srvHandler args for our route handlers
 func withUserAndEnv(env env.Env, h srvHandler, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	head, _ := utils.ShiftPath(r.URL.Path)
+	head, _ := shiftPath(r.URL.Path)
 
-	var user *models.User
+	var user *db.User
 
 	// don't parse user cookie on session routes!
 	if head != "session" {
