@@ -26,7 +26,7 @@ export const PrivateRoute = ({ component: C, ...rest }) => {
 }
 
 export const NoMatch = () => (
-  <SimplePage title='Page not found'>
+  <SimplePage icon='cancel' title='Not Found'>
     <p>The page you are trying to view does not exist!</p>
   </SimplePage>
 );

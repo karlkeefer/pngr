@@ -3,6 +3,7 @@ import { Menu, Container } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom'
 
 import { User } from 'Shared/Context'
+import { LoggedIn, Anon } from 'Shared/Roles';
 
 // helper for semanticUI + react-router
 const Link = props => (
@@ -13,16 +14,22 @@ const Link = props => (
 );
 
 const Nav = () => {
-  const {user, handleLogout} = useContext(User)
+  const {handleLogout} = useContext(User)
 
   return <Menu fixed="top" inverted>
     <Container>
       <Menu.Item as={Link} exact to="/" name="Home" />
-      { user.status === 'active' ? <Menu.Item as={Link} to="/posts" name="Posts" /> : false }
+      <LoggedIn>
+        <Menu.Item as={Link} to="/posts" name="Posts" />
+      </LoggedIn>
       <Menu.Menu position="right">
-        { user.status !== 'active' ? <Menu.Item as={Link} exact to="/login" name="Log In" /> : false }
-        { user.status !== 'active' ? <Menu.Item as={Link} exact to="/signup" name="Sign Up" /> : false }
-        { user.status === 'active' ? <Menu.Item link={true} onClick={handleLogout} content="Log Out"/> : false }
+        <Anon>
+          <Menu.Item as={Link} exact to="/login" name="Log In" />
+          <Menu.Item as={Link} exact to="/signup" name="Sign Up" />
+        </Anon>
+        <LoggedIn>
+          <Menu.Item link={true} onClick={handleLogout} content="Log Out"/>
+        </LoggedIn>
       </Menu.Menu> 
     </Container>
   </Menu>
