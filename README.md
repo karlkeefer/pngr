@@ -27,13 +27,13 @@ Install `docker` && `docker-compose`
 Preview of the app:
 ![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
 
-## Working with the database
+## Database Helpers
 
-### Creating and running migrations
-Migrations are created and run using [go-migrate](https://github.com/golang-migrate/migrate).
+### Migrations
+Migrations are created and run using simple wrappers around [go-migrate](https://github.com/golang-migrate/migrate).
 
 ```bash
-# create a template for the next migration
+# create files for a new migration
 postgres/new my_migration_name
 
 # execute any new migrations (this is also run automatically the container is created)
@@ -43,19 +43,19 @@ postgres/migrate up
 postgres/migrate down 1
 ```
 
-### Opening a psql client
+### Open a psql client
 ```bash
 # remember to use \q to exit
-docker-compose exec postgres psql -U postgres
+postgres/psql
 ```
 
-## Rebuilding everything, including database, from scratch
+## Rebuild everything, including database(!), from scratch
 Maybe your postgres went sideways from a wonky migration and it's easier to restart from scratch.
 ```bash
 docker-compose down -v && docker-compose up --build --force-recreate
 ```
 
-## Deploying to Production
+## Deploy to Production
 *Warning: Run in production at your own risk!*
 
 `docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized. Pulling images from a registry and/or using CI/CD is up to you.
