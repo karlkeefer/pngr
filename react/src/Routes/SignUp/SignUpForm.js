@@ -12,14 +12,8 @@ const SignUpForm = () => {
     run(API.signup(fields))
   }, [run, fields])
 
-  if (result && result.URL) {
-    // TODO: this should be a message saying to check your email
-    // and the verificationURL should be sent via email instead of passed in response
-    return (
-      <Message positive>
-        <a href={result.URL}>Click to confirm your email</a>
-      </Message>
-    )
+  if (result && result.success) {
+    return <Message positive>Check the developer console to see your verification link!</Message>
   }
 
   const {email, pass} = fields;

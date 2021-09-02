@@ -10,7 +10,7 @@ export const emptyUser = {
 export const User = React.createContext({
   user: emptyUser,
   setUser: () => {},
-  loading: false,
+  userLoading: false,
   setLoading: ()=> {},
   handleLogout: () => {}
 });
@@ -18,7 +18,7 @@ export const User = React.createContext({
 
 export const WithUser = ({children}) => {
   const [user, setUser] = useState(emptyUser)
-  const [loading, setLoading] = useState(true)
+  const [userLoading, setLoading] = useState(true)
 
   const handleLogout = useCallback(()=>{
     API.logout()
@@ -38,7 +38,7 @@ export const WithUser = ({children}) => {
   }, [setUser])
   
   return (
-    <User.Provider value={{user, setUser, loading, setLoading, handleLogout}}>
+    <User.Provider value={{user, setUser, userLoading, setLoading, handleLogout}}>
       {children}
     </User.Provider >
   );

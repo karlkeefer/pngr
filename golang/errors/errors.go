@@ -44,6 +44,7 @@ func codeMap() map[error]int {
 		VerificationExpired:  http.StatusGone,
 		UserNotFound:         http.StatusNotFound,
 		PostNotFound:         http.StatusNotFound,
+		ResetNotFound:        http.StatusNotFound,
 
 		BadCSRF:           http.StatusUnauthorized,
 		BadOrigin:         http.StatusUnauthorized,

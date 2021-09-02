@@ -8,11 +8,11 @@ import { User } from 'Shared/Context'
 
 // check the user is logged in, and redirect to login screen if still not auth'd
 export const PrivateRoute = ({ component: C, ...rest }) => {
-  const {user, loading} = useContext(User)
+  const {user, userLoading} = useContext(User)
 
   return (
     <Route {...rest} render={(props) => {
-      if (loading) {
+      if (userLoading) {
         return <BigLoader/>
       }
 

@@ -9,7 +9,7 @@ import (
 )
 
 type errorResponse struct {
-	Error string
+	Error string `json:"error"`
 }
 
 // Error is a shortcut for converting custom error types into appropriate response codes and JSON

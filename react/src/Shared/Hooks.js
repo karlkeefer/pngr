@@ -5,7 +5,7 @@ export const useRequest = (initData) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const run = useCallback((promise) => {
+  const run = useCallback((promise, onSuccess) => {
     setLoading(true);
     setError('');
 
@@ -13,12 +13,14 @@ export const useRequest = (initData) => {
       .then(data => {
         setData(data);
         setLoading(false);
+        if (onSuccess) {
+          onSuccess(data);
+        }
         return Promise.resolve(data);
       })
       .catch(error => {
         setError(error);
         setLoading(false);
-        return Promise.reject(error);
       });
   }, [])
 
