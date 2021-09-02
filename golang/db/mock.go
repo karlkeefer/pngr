@@ -167,6 +167,21 @@ func (mr *MockQuerierMockRecorder) FindUserByEmail(ctx, lower interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByEmail", reflect.TypeOf((*MockQuerier)(nil).FindUserByEmail), ctx, lower)
 }
 
+// FindUserByID mocks base method.
+func (m *MockQuerier) FindUserByID(ctx context.Context, id int64) (User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindUserByID", ctx, id)
+	ret0, _ := ret[0].(User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindUserByID indicates an expected call of FindUserByID.
+func (mr *MockQuerierMockRecorder) FindUserByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByID", reflect.TypeOf((*MockQuerier)(nil).FindUserByID), ctx, id)
+}
+
 // FindUserByVerificationCode mocks base method.
 func (m *MockQuerier) FindUserByVerificationCode(ctx context.Context, verification string) (User, error) {
 	m.ctrl.T.Helper()
