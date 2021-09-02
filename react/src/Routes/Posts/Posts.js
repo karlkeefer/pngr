@@ -26,7 +26,7 @@ const Posts = () => {
           <Placeholder.Line />
         </Placeholder.Paragraph>
       </Placeholder> : false }
-      {posts.length === 0 && !loading ? <Message warning>No data to show</Message> : false }
+      {posts.length === 0 && !loading ? <Message warning>No posts found...</Message> : false }
       {posts.map(Post)}
       <Button as={Link} to='/post/create' primary icon='plus' content='New post'/>
     </SimplePage>
