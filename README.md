@@ -43,12 +43,6 @@ postgres/migrate up
 postgres/migrate down 1
 ```
 
-### Generate db code
-```bash
-# Create or modify any queries in `golang/sql/queries/*.sql`, then...
-docker-compose exec golang sqlc generate
-```
-
 ### Opening a psql client
 ```bash
 # remember to use \q to exit
