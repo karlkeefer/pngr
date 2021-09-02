@@ -1,7 +1,7 @@
 # PNGR Stack
 Dockerized (postgres + nginx + golang + react) starter kit
 
-Only implements basic user signup, session management, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
+Only implements basic users (signup, login, logout, password reset) and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
 ## Requirements
 Install `docker` && `docker-compose`
