@@ -2,11 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/karlkeefer/pngr/golang/db"
@@ -56,10 +53,6 @@ func checkPasswordHash(password, salt, hash string) bool {
 	return err == nil
 }
 
-type signupResponse struct {
-	URL string
-}
-
 func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	var u db.User
@@ -90,9 +83,10 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 		return write.Error(err)
 	}
 
-	// TODO: wrap this in a mailer thing
-	link := fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), dbUser.Verification)
-	log.Printf("\n\nHere is the account verification link:\n%s\n\n", link)
+	err = env.Mailer().VerifyEmail(dbUser.Email, dbUser.Verification)
+	if err != nil {
+		return write.Error(err)
+	}
 
 	return write.Success()
 }

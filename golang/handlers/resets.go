@@ -2,10 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
@@ -42,9 +39,10 @@ func CreateReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Requ
 		return write.Error(err)
 	}
 
-	// TODO: wrap this in a mailer thing
-	link := fmt.Sprintf("%s/reset/%s", os.Getenv("APP_ROOT"), reset.Code)
-	log.Printf("\n\nHere is the password reset link:\n%s\n\n", link)
+	err = env.Mailer().ResetPassword(u.Email, reset.Code)
+	if err != nil {
+		return write.Error(err)
+	}
 
 	return write.Success()
 }
