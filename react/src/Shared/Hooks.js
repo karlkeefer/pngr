@@ -16,7 +16,6 @@ export const useRequest = (initData) => {
         if (onSuccess) {
           onSuccess(data);
         }
-        return Promise.resolve(data);
       })
       .catch(error => {
         setError(error);
