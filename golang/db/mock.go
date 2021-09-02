@@ -49,6 +49,21 @@ func (mr *MockQuerierMockRecorder) CreatePost(ctx, arg interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePost", reflect.TypeOf((*MockQuerier)(nil).CreatePost), ctx, arg)
 }
 
+// CreateReset mocks base method.
+func (m *MockQuerier) CreateReset(ctx context.Context, arg CreateResetParams) (Reset, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateReset", ctx, arg)
+	ret0, _ := ret[0].(Reset)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateReset indicates an expected call of CreateReset.
+func (mr *MockQuerierMockRecorder) CreateReset(ctx, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReset", reflect.TypeOf((*MockQuerier)(nil).CreateReset), ctx, arg)
+}
+
 // CreateUser mocks base method.
 func (m *MockQuerier) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	m.ctrl.T.Helper()
@@ -76,6 +91,20 @@ func (m *MockQuerier) DeletePostByIDs(ctx context.Context, arg DeletePostByIDsPa
 func (mr *MockQuerierMockRecorder) DeletePostByIDs(ctx, arg interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePostByIDs", reflect.TypeOf((*MockQuerier)(nil).DeletePostByIDs), ctx, arg)
+}
+
+// DeleteResetsForUser mocks base method.
+func (m *MockQuerier) DeleteResetsForUser(ctx context.Context, userID int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteResetsForUser", ctx, userID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteResetsForUser indicates an expected call of DeleteResetsForUser.
+func (mr *MockQuerierMockRecorder) DeleteResetsForUser(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteResetsForUser", reflect.TypeOf((*MockQuerier)(nil).DeleteResetsForUser), ctx, userID)
 }
 
 // FindPostByIDs mocks base method.
@@ -106,6 +135,21 @@ func (m *MockQuerier) FindPostsByAuthor(ctx context.Context, authorID int64) ([]
 func (mr *MockQuerierMockRecorder) FindPostsByAuthor(ctx, authorID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindPostsByAuthor", reflect.TypeOf((*MockQuerier)(nil).FindPostsByAuthor), ctx, authorID)
+}
+
+// FindResetByCode mocks base method.
+func (m *MockQuerier) FindResetByCode(ctx context.Context, code string) (Reset, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindResetByCode", ctx, code)
+	ret0, _ := ret[0].(Reset)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindResetByCode indicates an expected call of FindResetByCode.
+func (mr *MockQuerierMockRecorder) FindResetByCode(ctx, code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindResetByCode", reflect.TypeOf((*MockQuerier)(nil).FindResetByCode), ctx, code)
 }
 
 // FindUserByEmail mocks base method.
