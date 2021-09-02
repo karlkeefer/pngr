@@ -22,7 +22,7 @@ const Post = ({match}) => {
   return (
     <SimplePage icon='file' title={title} loading={loading} error={error}>
       <p>{body}</p>
-      <Button as={Link} to={`/post/${id}/edit`} content='Edit'/>
+      {id ? <Button as={Link} to={`/post/${id}/edit`} content='Edit'/> : false}
     </SimplePage>
   )
 }

@@ -43,10 +43,19 @@ func GetPost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		return write.Error(errors.RouteNotFound)
 	}
-	return write.JSONorErr(env.DB().FindPostByIDs(r.Context(), db.FindPostByIDsParams{
+
+	post, err := env.DB().FindPostByIDs(r.Context(), db.FindPostByIDsParams{
 		AuthorID: user.ID,
 		ID:       id,
-	}))
+	})
+	if err != nil {
+		if isNotFound(err) {
+			return write.Error(errors.PostNotFound)
+		}
+		return write.Error(err)
+	}
+
+	return write.JSON(post)
 }
 
 func GetPosts(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
