@@ -107,7 +107,7 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 }
 
 func Whoami(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	return write.JSON(user)
+	return write.JSON(cleanUser(user))
 }
 
 type verifyRequest struct {
@@ -145,5 +145,5 @@ func Verify(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 	}
 
 	jwt.WriteUserCookie(w, &u)
-	return write.JSON(u)
+	return write.JSON(cleanUser(&u))
 }
