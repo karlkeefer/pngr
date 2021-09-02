@@ -37,7 +37,7 @@ func Login(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) h
 	}
 
 	jwt.WriteUserCookie(w, &u)
-	return write.JSON(cleanUser(&u))
+	return write.JSON(&u)
 }
 
 func Logout(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {

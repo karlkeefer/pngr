@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Segment, Message, Header, Button } from 'semantic-ui-react'
+import { Segment, Message, Header, Button, Placeholder } from 'semantic-ui-react'
 
 import API from 'Api'
 import { useRequest } from 'Shared/Hooks'
@@ -16,9 +16,17 @@ const Posts = () => {
   }, [run])
 
   return (
-    <SimplePage icon='copy' title='My Posts' loading={loading} error={error}>
+    <SimplePage icon='copy' title='My Posts' error={error}>
       <p>This page fetches some protected data that only the logged in user ({user.email}) can see!</p>
-      {posts.length === 0 ? <Message warning>No data to show</Message> : false }
+      {loading ? <Placeholder style={{marginBottom:'1em'}}>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+      </Placeholder> : false }
+      {posts.length === 0 && !loading ? <Message warning>No data to show</Message> : false }
       {posts.map(Post)}
       <Button as={Link} to='/post/create' primary icon='plus' content='New post'/>
     </SimplePage>
