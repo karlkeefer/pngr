@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -89,10 +90,44 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 		return write.Error(err)
 	}
 
-	// TODO: once this is sent via email, you shouldn't return it to the client
-	return write.JSON(&signupResponse{
-		URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), dbUser.Verification),
+	// TODO: wrap this in a mailer thing
+	link := fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), dbUser.Verification)
+	log.Printf("\n\nHere is the account verification link:\n%s\n\n", link)
+
+	return write.Success()
+}
+
+func UpdatePassword(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	if user.Status != db.UserStatusActive {
+		return write.Error(errors.RouteUnauthorized)
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	var u db.User
+	err := decoder.Decode(&u)
+	if err != nil || &u == nil {
+		return write.Error(errors.NoJSONBody)
+	}
+
+	// salt and hash it
+	u.Salt = generateRandomString(32)
+	u.Pass, err = hashPassword(u.Pass, u.Salt)
+	if err != nil {
+		return write.Error(err)
+	}
+
+	err = env.DB().UpdateUserPassword(r.Context(), db.UpdateUserPasswordParams{
+		ID:        user.ID,
+		Pass:      u.Pass,
+		Salt:      u.Salt,
+		UpdatedAt: time.Now(),
 	})
+
+	if err != nil {
+		return write.Error(err)
+	}
+
+	return write.Success()
 }
 
 func Whoami(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {

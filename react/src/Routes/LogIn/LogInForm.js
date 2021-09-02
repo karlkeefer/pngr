@@ -8,17 +8,16 @@ import { useRequest, useFields } from 'Shared/Hooks';
 
 const empty = {email: '', pass: ''};
 
-const LogIn = ({location}) => {
+const LogInForm = ({location}) => {
   const {user, setUser} = useContext(User)
   const [loading, error, run] = useRequest({})
   const [fields, handleChange, setFields] = useFields(empty)
 
   const handleSubmit = useCallback(() => {
-    run(API.login(fields))
-      .then(user=>{
-        setUser(user);
-        setFields(empty)
-      });
+    run(API.login(fields), user=>{
+      setUser(user);
+      setFields(empty)
+    });
   }, [run, fields, setFields, setUser])
 
   if (user.id > 0 && !loading) {
@@ -52,4 +51,4 @@ const LogIn = ({location}) => {
   )
 }
 
-export default LogIn;
+export default LogInForm;

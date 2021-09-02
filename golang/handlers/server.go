@@ -68,6 +68,7 @@ func NewServer() (*server, error) {
 	srv.POST("/user", Signup)
 	srv.GET("/user", Whoami)
 	srv.POST("/user/verify", Verify)
+	srv.PUT("/user/password", UpdatePassword)
 
 	// POSTS
 	srv.GET("/posts", GetPosts)

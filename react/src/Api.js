@@ -15,7 +15,7 @@ const _put = (url, body) => {
   return _fetch('PUT', url, body);
 }
 
-const _fetch = async (method, url, body) => {
+const _fetch = (method, url, body) => {
   return fetch(`/api${url}`, {
     method: method,
     body: JSON.stringify(body),
@@ -27,8 +27,8 @@ const _fetch = async (method, url, body) => {
   })
   .then(resp => resp.json())
   .then(result => {
-    if (result.Error) {
-      return Promise.reject(result.Error);
+    if (result.error) {
+      return Promise.reject(result.error);
     }
     return Promise.resolve(result);
   })
@@ -42,23 +42,30 @@ export default class API {
   static signup = (body) => {
     return _post('/user', body);
   }
-
   static verify = (body) => {
     return _post('/user/verify', body);
   }
+  static updatePassword = (body) => {
+    return _put('/user/password', body)
+  }
 
+  // Session stuff
   static whoami = () => {
     // validates existing jwt from cookies
     // and sends back parsed user data from that token
     return _get('/user');
   }
-
   static logout = () => {
     return _delete('/session');
   }
-
   static login = (body) => {
     return _post('/session', body);
+  }
+  static reset = (body) => {
+    return _post('/reset', body);
+  }
+  static checkReset = (code) => {
+    return _get(`/reset/${code}`);
   }
 
   // Post stuff

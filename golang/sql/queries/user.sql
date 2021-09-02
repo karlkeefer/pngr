@@ -4,6 +4,9 @@ INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER($1), $
 -- name: UpdateUserStatus :exec
 UPDATE users SET status = $2, updated_at = $3 WHERE id = $1;
 
+-- name: UpdateUserPassword :exec
+UPDATE users SET salt = $2, pass = $3, updated_at = $4 WHERE id = $1;
+
 -- name: FindUserByID :one
 SELECT * FROM users WHERE id = $1 LIMIT 1;
 

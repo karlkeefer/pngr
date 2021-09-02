@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
@@ -31,11 +34,19 @@ func CreateReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Requ
 		return write.Error(err)
 	}
 
-	// TODO: once this is sent via email, you shouldn't return it to the client
-	return write.JSONorErr(env.DB().CreateReset(r.Context(), db.CreateResetParams{
+	reset, err := env.DB().CreateReset(r.Context(), db.CreateResetParams{
 		UserID: u.ID,
 		Code:   generateRandomString(32),
-	}))
+	})
+	if err != nil {
+		return write.Error(err)
+	}
+
+	// TODO: wrap this in a mailer thing
+	link := fmt.Sprintf("%s/reset/%s", os.Getenv("APP_ROOT"), reset.Code)
+	log.Printf("\n\nHere is the password reset link:\n%s\n\n", link)
+
+	return write.Success()
 }
 
 func DoReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
@@ -61,5 +72,5 @@ func DoReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request)
 	}
 
 	jwt.WriteUserCookie(w, &u)
-	return write.Success()
+	return write.JSON(&u)
 }

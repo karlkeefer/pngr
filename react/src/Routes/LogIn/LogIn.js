@@ -12,7 +12,8 @@ const LogIn = (props) => (
         <LogInForm {...props}/>
       </Segment>
       <Segment>
-        Don't have an account? <Link to="/signup">Sign Up</Link>.
+        Don't have an account? <Link to="/signup">Sign Up</Link>.<br/>
+        <Link to="/reset">I forgot my password</Link>.
       </Segment>
     </Segment.Group>
   </SimplePage>

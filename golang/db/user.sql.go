@@ -102,6 +102,27 @@ func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification s
 	return i, err
 }
 
+const updateUserPassword = `-- name: UpdateUserPassword :exec
+UPDATE users SET salt = $2, pass = $3, updated_at = $4 WHERE id = $1
+`
+
+type UpdateUserPasswordParams struct {
+	ID        int64     `json:"id"`
+	Salt      string    `json:"salt"`
+	Pass      string    `json:"pass"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserPassword,
+		arg.ID,
+		arg.Salt,
+		arg.Pass,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
 const updateUserStatus = `-- name: UpdateUserStatus :exec
 UPDATE users SET status = $2, updated_at = $3 WHERE id = $1
 `
