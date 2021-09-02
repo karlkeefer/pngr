@@ -9,7 +9,7 @@ Install `docker` && `docker-compose`
 ## Features
 - Hot-reload, front and back, including a test-runner for golang changes
 - [golang-migrate](https://github.com/golang-migrate/migrate) already configured for easy migrations
-- [sqlc](https://github.com/kyleconroy/sqlc) for minimal boilerplate when adding queries
+- [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and mocks (also rigged with hot-reload!)
 - [jwt-go](https://github.com/dgrijalva/jwt-go) cookies with automatic refresh: ready for horizontal scaling
 - A golang worker container stubbed out for async (non-API) tasks
 - Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
