@@ -21,7 +21,7 @@ const Routes = () => (
     <Route exact path="/login" component={LogIn}/>
     <Route exact path="/reset" component={Reset}/>
     <Route exact path="/reset/:code" component={CheckReset}/>
-    <Route exact path="/verify/:verification" component={Verify}/>
+    <Route exact path="/verify/:code" component={Verify}/>
     <PrivateRoute exact path="/account/password" component={ChangePassword}/>
     <PrivateRoute exact path="/posts" component={Posts}/>
     <PrivateRoute exact path="/post/create" component={PostForm}/>
