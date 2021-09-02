@@ -37,7 +37,7 @@ type claims struct {
 func WriteUserCookie(w http.ResponseWriter, u *db.User) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     cookieName,
-		Value:    encodeUser(u),
+		Value:    encodeUser(u, time.Now()),
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true,
@@ -94,12 +94,12 @@ func userFromCookie(r *http.Request) (*db.User, error) {
 }
 
 // encodeUser convert a user struct into a jwt
-func encodeUser(u *db.User) (tokenString string) {
+func encodeUser(u *db.User, t time.Time) (tokenString string) {
 	claims := claims{
 		u,
 		jwt.StandardClaims{
-			IssuedAt:  time.Now().Add(-time.Second).Unix(),
-			ExpiresAt: time.Now().Add(tokenLifetime).Unix(),
+			IssuedAt:  t.Add(-time.Second).Unix(),
+			ExpiresAt: t.Add(tokenLifetime).Unix(),
 		},
 	}
 
