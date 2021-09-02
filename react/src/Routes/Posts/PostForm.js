@@ -13,28 +13,24 @@ const PostForm = ({match}) => {
   const [redirectTo, setRedirectTo] = useState('');
 
   const handleSubmit = useCallback(() => {
-    run(postID ? API.updatePost(fields) : API.createPost(fields))
-      .then(()=>{
-        setRedirectTo('/posts')
-      });
+    const action = postID ? API.updatePost(fields) : API.createPost(fields);
+    run(action, ()=>{
+      setRedirectTo('/posts')
+    })
   }, [postID, fields, run])
 
   const handleDelete = useCallback(() => {
-    run(API.deletePost(postID))
-      .then(()=>{
-        setRedirectTo('/posts')
-      });
+    run(API.deletePost(postID), ()=>{
+      setRedirectTo('/posts')
+    })
   }, [run, postID])
 
   // if we have a post ID, fetch it
   useEffect(()=>{
     if (postID) {
-      run(API.getPost(postID))
-        .then(post => {
-          if (post) {
-            setFields(post);
-          }
-        });
+      run(API.getPost(postID), post => {
+        setFields(post);
+      });
     }
   }, [postID, run, setFields])
 

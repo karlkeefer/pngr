@@ -8,20 +8,19 @@ import { useRequest } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage'
 
 const Verify = ({match}) => {
-  const { verification } = match.params;
+  const { code } = match.params;
   const [loading, error, run, result] = useRequest({})
   const [redirect, setRedirect] = useState(false)
   const { setUser } = useContext(User)
 
   useEffect(() => {
-    run(API.verify({code: verification}))
-      .then(user => {
-        setUser(user);
-        setTimeout(() => {
-          setRedirect(true);
-        }, 2500);
-      })
-  }, [run, setUser, setRedirect, verification])
+    run(API.verify({code}), user => {
+      setUser(user);
+      setTimeout(() => {
+        setRedirect(true);
+      }, 2500);
+    })
+  }, [run, setUser, setRedirect, code])
 
   if (redirect) {
     return <Redirect to="/posts"/>
