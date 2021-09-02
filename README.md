@@ -22,7 +22,7 @@ Install `docker` && `docker-compose`
 1) `docker-compose up`
 2) Visit `https://localhost` (*note **https***)
 3) Approve the self-signed cert
-4) Make changes to either golang or react code, and enjoy hot-reload goodness!
+4) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
 
 Preview of the app:
 ![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
