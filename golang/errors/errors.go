@@ -13,6 +13,7 @@ var (
 	InvalidEmail = errors.New("Invalid Email")
 
 	FailedLogin          = errors.New("Invalid Email or Password")
+	AlreadyRegistered    = errors.New("An account already exists for this email")
 	VerificationNotFound = errors.New("Invalid Verification Code")
 	VerificationExpired  = errors.New("Verification Code Was Already Used")
 
@@ -33,8 +34,9 @@ func codeMap() map[error]int {
 		BadRequestMethod: http.StatusMethodNotAllowed,
 		InternalError:    http.StatusInternalServerError,
 
-		NoJSONBody:   http.StatusBadRequest,
-		InvalidEmail: http.StatusBadRequest,
+		NoJSONBody:        http.StatusBadRequest,
+		InvalidEmail:      http.StatusBadRequest,
+		AlreadyRegistered: http.StatusBadRequest,
 
 		FailedLogin:          http.StatusUnauthorized,
 		VerificationNotFound: http.StatusNotFound,
