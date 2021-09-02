@@ -4,13 +4,17 @@ import (
 	"github.com/karlkeefer/pngr/golang/db"
 )
 
+type Env interface {
+	DB() db.Querier
+}
+
+// default impl
 type env struct {
 	db *db.Queries
 }
 
-// helpful interface for testing
-type Env interface {
-	DB() db.Querier
+func (e *env) DB() db.Querier {
+	return e.db
 }
 
 func New() (Env, error) {
@@ -24,6 +28,17 @@ func New() (Env, error) {
 	}, nil
 }
 
-func (e *env) DB() db.Querier {
+// Mock impl
+func Mock(db db.Querier) Env {
+	return &mock{
+		db: db,
+	}
+}
+
+type mock struct {
+	db db.Querier
+}
+
+func (e *mock) DB() db.Querier {
 	return e.db
 }

@@ -2,6 +2,7 @@ module github.com/karlkeefer/pngr/golang
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang/mock v1.6.0
 	github.com/jmoiron/sqlx v0.0.0-20150110152746-69738bd20981
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/kyleconroy/sqlc v1.9.0 // indirect
