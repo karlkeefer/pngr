@@ -13,7 +13,6 @@ import (
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/karlkeefer/pngr/golang/handlers/jwt"
 	"github.com/karlkeefer/pngr/golang/handlers/write"
-	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -58,15 +57,6 @@ func checkPasswordHash(password, salt, hash string) bool {
 
 type signupResponse struct {
 	URL string
-}
-
-func isDupe(err error) bool {
-	if err, ok := err.(*pq.Error); ok && err.Code.Class() == "23" {
-		// integrity violation
-		return true
-	}
-
-	return false
 }
 
 func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
