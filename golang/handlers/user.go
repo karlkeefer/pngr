@@ -89,8 +89,7 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 		return write.Error(err)
 	}
 
-	// TODO: this is where we should actually email the code with mailgun or something
-	// for now we just pass verification code back in the response...
+	// TODO: once this is sent via email, you shouldn't return it to the client
 	return write.JSON(&signupResponse{
 		URL: fmt.Sprintf("%s/verify/%s", os.Getenv("APP_ROOT"), dbUser.Verification),
 	})

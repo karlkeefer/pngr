@@ -60,6 +60,10 @@ func NewServer() (*server, error) {
 	srv.POST("/session", Login)
 	srv.DELETE("/session", Logout)
 
+	// RESETS
+	srv.POST("/reset", CreateReset)
+	srv.GET("/reset/:code", DoReset)
+
 	// USER
 	srv.POST("/user", Signup)
 	srv.GET("/user", Whoami)

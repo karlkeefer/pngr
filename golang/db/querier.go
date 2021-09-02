@@ -16,6 +16,7 @@ type Querier interface {
 	FindPostsByAuthor(ctx context.Context, authorID int64) ([]Post, error)
 	FindResetByCode(ctx context.Context, code string) (Reset, error)
 	FindUserByEmail(ctx context.Context, lower string) (User, error)
+	FindUserByID(ctx context.Context, id int64) (User, error)
 	FindUserByVerificationCode(ctx context.Context, verification string) (User, error)
 	UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error)
 	UpdateUserStatus(ctx context.Context, arg UpdateUserStatusParams) error
