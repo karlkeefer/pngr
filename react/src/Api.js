@@ -1,3 +1,52 @@
+export default class API {
+  // SESSION
+  static logout = () => (
+    _delete('/session')
+  )
+  static login = body => (
+    _post('/session', body)
+  )
+
+  // RESETS
+  static reset = body => (
+    _post('/reset', body)
+  )
+  static checkReset = (code) => (
+    _get(`/reset/${code}`)
+  )
+
+  // USER
+  static signup = body => (
+    _post('/user', body)
+  )
+  static whoami = () => (
+    _get('/user')
+  )
+  static verify = body => (
+    _post('/user/verify', body)
+  )
+  static updatePassword = body => (
+    _put('/user/password', body)
+  )
+
+  // POSTS
+  static getPosts = () => (
+    _get('/posts')
+  )
+  static getPost = (id) => (
+    _get(`/posts/${id}`)
+  )
+  static createPost = body => (
+    _post('/posts', body)
+  )
+  static updatePost = body => (
+    _put('/posts', body)
+  )
+  static deletePost = id => (
+    _delete(`/posts/${id}`)
+  )
+}
+
 // internal utils
 const _get = (url, body) => {
   return _fetch('GET', url, body);
@@ -35,53 +84,4 @@ const _fetch = (method, url, body) => {
   .catch(error => {
     return Promise.reject(error.toString());
   });
-}
-
-export default class API {
-  // User stuff
-  static signup = (body) => {
-    return _post('/user', body);
-  }
-  static verify = (body) => {
-    return _post('/user/verify', body);
-  }
-  static updatePassword = (body) => {
-    return _put('/user/password', body)
-  }
-
-  // Session stuff
-  static whoami = () => {
-    // validates existing jwt from cookies
-    // and sends back parsed user data from that token
-    return _get('/user');
-  }
-  static logout = () => {
-    return _delete('/session');
-  }
-  static login = (body) => {
-    return _post('/session', body);
-  }
-  static reset = (body) => {
-    return _post('/reset', body);
-  }
-  static checkReset = (code) => {
-    return _get(`/reset/${code}`);
-  }
-
-  // Post stuff
-  static getPosts = () => {
-    return _get('/posts');
-  }
-  static createPost = (body) => {
-    return _post('/posts', body);
-  }
-  static getPost = (id) => {
-    return _get(`/posts/${id}`);
-  }
-  static updatePost = (body) => {
-    return _put('/posts', body);
-  }
-  static deletePost = (id) => {
-    return _delete(`/posts/${id}`);
-  }
 }
