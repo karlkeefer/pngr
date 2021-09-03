@@ -7,7 +7,7 @@ I've finally upstreamed various upgrades I made on forked projects:
 4) Added password reset functionality (and stubbed out a transactional email interface)
 5) Standardized handler type for the API, with improved default middlewares
 6) Simplified migrations and postgres helper scripts
-7) Altered the Semantic UI integration to allow altering [theme variables](https://react.semantic-ui.com/theming/)
+7) Upgraded the Semantic UI integration to allow altering [theme variables](https://react.semantic-ui.com/theming/)
 8) Various other improvements/tweaks/bugfixes
 9) Added a ping-pong emoji to calcify my preferred pronunciation 😅
 
