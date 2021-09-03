@@ -11,16 +11,19 @@ const Verify = ({match}) => {
   const { code } = match.params;
   const [loading, error, run, result] = useRequest({})
   const [redirect, setRedirect] = useState(false)
-  const { setUser } = useContext(User)
+  const { userLoading, setUser } = useContext(User)
 
   useEffect(() => {
-    run(API.verify({code}), user => {
-      setUser(user);
-      setTimeout(() => {
-        setRedirect(true);
-      }, 2500);
-    })
-  }, [run, setUser, setRedirect, code])
+    if (!userLoading) {
+      // wait until defailt whoami returns before attempting reset
+      run(API.verify({code}), user => {
+        setUser(user);
+        setTimeout(() => {
+          setRedirect(true);
+        }, 2500);
+      })
+    }
+  }, [run, setUser, setRedirect, code, userLoading])
 
   if (redirect) {
     return <Redirect to="/posts"/>
