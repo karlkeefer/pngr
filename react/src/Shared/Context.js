@@ -35,7 +35,7 @@ export const WithUser = ({children}) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [setUser])
+  }, [])
   
   return (
     <User.Provider value={{user, setUser, userLoading, setLoading, handleLogout}}>
