@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# this janky script attempts to automatically create a new migration for you
-# it takes a single argument which is used to describe the migration
+# this scripthas helpful args to help you create a new migration
+# it takes a single argument which is thie migration name
 
 DIR=$(dirname "$0")
 

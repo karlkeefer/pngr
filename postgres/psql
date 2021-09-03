@@ -1,2 +1,4 @@
 #!/bin/bash
+
+# just a shortcut for opening up a psql client
 docker-compose exec postgres psql -U postgres
