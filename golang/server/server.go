@@ -11,10 +11,10 @@ import (
 	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
+// isDev is used in the lag middleware... we don't want to read from env on every request
 var isDev = false
 
 func init() {
-	// used in the lag middleware... we don't want to read from env on every request
 	isDev = os.Getenv("ENV") == "dev"
 }
 
