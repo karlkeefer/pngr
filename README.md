@@ -34,7 +34,7 @@ Install `docker` && `docker-compose`
 ## Quick Start
 ```bash
 # clone the repo
-git clone https://github.com/karlkeefer/pngr.git my_project_name`
+git clone https://github.com/karlkeefer/pngr.git my_project_name
 
 # copy the .env template for your local version
 cp .env.example .env
