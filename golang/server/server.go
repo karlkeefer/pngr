@@ -14,6 +14,7 @@ import (
 var isDev = false
 
 func init() {
+	// used in the lag middleware... we don't want to read from env on every request
 	isDev = os.Getenv("ENV") == "dev"
 }
 
