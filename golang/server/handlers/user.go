@@ -9,8 +9,8 @@ import (
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/handlers/jwt"
-	"github.com/karlkeefer/pngr/golang/handlers/write"
+	"github.com/karlkeefer/pngr/golang/server/jwt"
+	"github.com/karlkeefer/pngr/golang/server/write"
 	"golang.org/x/crypto/bcrypt"
 )
 

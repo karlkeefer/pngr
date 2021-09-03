@@ -8,7 +8,7 @@ import (
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/handlers/write"
+	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
 func CreatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {

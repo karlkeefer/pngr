@@ -2,7 +2,7 @@
 I've finally upstreamed various upgrades I made on forked projects:
 
 1) Auto-generated database code and mocks with the amazing [sqlc](https://github.com/kyleconroy/sqlc) and [gomock](https://github.com/golang/mock) packages 🙇‍♂️
-2) Vastly simplified routing on front- and back-end... thanks [httprouter](github.com/julienschmidt/httprouter)!
+2) Vastly simplified routing on [front-end](./react/src/Routes/Routes.js) and [back-end](./golang/server/routes.go)... thanks [httprouter](github.com/julienschmidt/httprouter)!
 3) Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
 4) Added password reset functionality (and stubbed out a transactional email interface)
 5) Standardized handler type for the API, with improved default middlewares

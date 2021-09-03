@@ -1,27 +1,16 @@
-package handlers
+package server
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/handlers/jwt"
-	"github.com/karlkeefer/pngr/golang/handlers/write"
+	"github.com/karlkeefer/pngr/golang/server/jwt"
+	"github.com/karlkeefer/pngr/golang/server/write"
 )
-
-// wrap does all the middleware together, and
-func (srv *server) wrap(h srvHandler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// convert our fancy handler to a normal handlerFunc
-		fn := withUserAndEnv(srv.env, h, w, r)
-		// wrap it with middlwares
-		wrapped := lag(csrf(cors(fn)))
-		// execute the wrapped handler
-		wrapped(w, r)
-	}
-}
 
 // withUserAndEnv populates our custom srvHandler args for our route handlers
 func withUserAndEnv(env env.Env, h srvHandler, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
@@ -51,8 +40,11 @@ func lag(fn http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+const localDev = "https://localhost"
+
 // only returns an origin if it matches our list
 func validateOrigin(r *http.Request) string {
+	appRoot := os.Getenv("APP_ROOT")
 	switch r.Header.Get("Origin") {
 	case appRoot:
 		return appRoot
