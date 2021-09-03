@@ -1,10 +1,22 @@
-# PNGR Stack
+## New in September 2021
+I've finally upstreamed various upgrades I made on forked projects:
+
+1) Started using React context for shared state
+2) Integrated React Helmet for modifying `<head>`
+3) Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
+4) Vastly simplified routing on front- and back-end... thanks [httprouter](github.com/julienschmidt/httprouter)!
+5) Auto-generated database code and mocks with the amazing [sqlc](https://github.com/kyleconroy/sqlc) and [gomock](https://github.com/golang/mock) packages 🙇‍♂️
+6) Added password reset functionality (and stubbed out a transactional email interface)
+7) Standardized handler type for the API, with improved default middlewares
+8) Simplified migrations and postgres helper scripts
+9) Altered the Semantic UI integration to allow altering [theme variables](https://react.semantic-ui.com/theming/)
+10) Refactored the golang dir to allow multiple binaries, and stubbed out a worker container 
+11) Added a ping-pong emoji to calcify my preferred pronunciation of this stack 😅
+
+# PNGR Stack 🏓
 Dockerized (postgres + nginx + golang + react) starter kit
 
-Only implements basic users (signup, login, logout, password reset) and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
-
-## Requirements
-Install `docker` && `docker-compose`
+Only implements `users`, `sessions`, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
 ## Features
 - Hot-reload, front and back, including a test-runner for golang changes
@@ -18,14 +30,25 @@ Install `docker` && `docker-compose`
 - [Semantic UI React](https://react.semantic-ui.com/) for component library
 - Feature development is up to you!
 
-## Quick Start
-1) `docker-compose up`
-2) Visit `https://localhost` (*note **https***)
-3) Approve the self-signed cert
-4) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
+## Requirements
+Install `docker` && `docker-compose`
 
-Preview of the app:
-![Screenshot of the app](docs/demo.png?raw=true "Screenshot")
+## Quick Start
+```bash
+# clone the repo
+git clone https://github.com/karlkeefer/pngr.git my_project_name`
+
+# copy the .env template for your local version
+cp .env.example .env
+
+# build and start the containers
+docker-compose up
+```
+1) Visit `https://localhost` (*note **https***)
+2) Approve the self-signed cert
+3) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
+
+<img src="./docs/demo.png" width="400"/>
 
 ## Database Helpers
 
@@ -61,6 +84,7 @@ docker-compose down -v && docker-compose up --build --force-recreate
 `docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized. Pulling images from a registry and/or using CI/CD is up to you.
 
 Don't forget to copy `.env.example` -> `.env` and setup your secrets/passwords for the new environment!
+At minimum you'll need to change `ENV`, `APP_ROOT`, and `TOKEN_SECRET`!
 
 ```bash
 # build production images, and run them in a detached state
