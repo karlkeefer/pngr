@@ -9,7 +9,7 @@ import { LoggedIn, Anon } from 'Shared/Roles';
 import './responsive.css'
 
 // helper for semanticUI + react-router
-const Link = props => (
+const MenuLink = props => (
   <NavLink
     {...props}
     activeClassName="active"
@@ -31,15 +31,15 @@ const Nav = () => {
     <Container>
       <Button id="toggler" fluid color='black' icon='sidebar' onClick={() => setOpen(!open)}/>
       <Menu.Menu className={menuClass} position="left" id="override">
-        <Menu.Item as={Link} exact to="/" name="Home" />
+        <Menu.Item as={MenuLink} exact to="/" name="Home" />
         <LoggedIn>
-          <Menu.Item as={Link} to="/posts" name="Posts" />
+          <Menu.Item as={MenuLink} to="/posts" name="Posts" />
         </LoggedIn>
       </Menu.Menu>
       <Menu.Menu className={menuClass} position="right">
         <Anon>
-          <Menu.Item as={Link} exact to={{pathname:"/login", state:{from:location}}} name="Log In" />
-          <Menu.Item as={Link} exact to="/signup" name="Sign Up" />
+          <Menu.Item as={MenuLink} exact to={{pathname:"/login", state:{from:location}}} name="Log In" />
+          <Menu.Item as={MenuLink} exact to="/signup" name="Sign Up" />
         </Anon>
         <LoggedIn>
           <Menu.Item link={true} onClick={handleLogout} content="Log Out"/>
