@@ -2,10 +2,10 @@ import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import { WithUser } from 'Shared/Context'
-
 import Nav from 'Nav/Nav'
 import Routes from 'Routes/Routes'
+
+import { WithUser } from 'Shared/Context'
 
 const App = () => (
   <WithUser>
@@ -16,7 +16,7 @@ const App = () => (
       {/* put meta tags here for opengraph and stuff */}
     </Helmet>
     <Router>
-      <div className="wrapper">
+      <div id="wrapper">
         <Nav/>
         <Routes/>
       </div>

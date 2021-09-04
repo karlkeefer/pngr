@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useLocation } from 'react-router-dom'
 
 import API from 'Api'
 import { User } from 'Shared/Context'
@@ -8,7 +8,8 @@ import { useRequest, useFields } from 'Shared/Hooks';
 
 const empty = {email: '', pass: ''};
 
-const LogInForm = ({location}) => {
+const LogInForm = () => {
+  const location = useLocation()
   const {user, setUser} = useContext(User)
   const [loading, error, run] = useRequest({})
   const [fields, handleChange, setFields] = useFields(empty)

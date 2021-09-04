@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router'
 import { Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 
@@ -7,8 +8,8 @@ import { User } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage'
 
-const Verify = ({match}) => {
-  const { code } = match.params;
+const Verify = () => {
+  const { code } = useParams();
   const [loading, error, run, result] = useRequest({})
   const [redirect, setRedirect] = useState(false)
   const { userLoading, setUser } = useContext(User)

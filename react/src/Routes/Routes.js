@@ -1,6 +1,6 @@
 import React from 'react'
-
 import { Switch, Route } from 'react-router-dom'
+
 import { PrivateRoute, NoMatch } from 'Routes/Helpers'
 
 import Home from 'Routes/Home/Home'
@@ -14,7 +14,7 @@ import Posts from 'Routes/Posts/Posts'
 import Post from 'Routes/Posts/Post'
 import PostForm from 'Routes/Posts/PostForm'
 
-const Routes = () => (
+const Routes = (props) => (
   <Switch>
     <Route exact path="/" component={Home} />
     <Route exact path="/signup" component={SignUp}/>

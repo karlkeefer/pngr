@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router'
 import { Redirect } from 'react-router-dom'
 
 import API from 'Api'
@@ -6,8 +7,8 @@ import { User } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage';
 
-const CheckReset = ({match}) => {
-  const { code } = match.params;
+const CheckReset = () => {
+  const { code } = useParams();
   const [loading, error, run] = useRequest({})
   const [redirect, setRedirect] = useState('/posts')
   const { user, userLoading, setUser } = useContext(User)

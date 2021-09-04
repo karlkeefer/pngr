@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Form, Message, Button } from 'semantic-ui-react'
+import { useParams } from 'react-router'
 import { Redirect } from 'react-router'
 
 import API from 'Api'
 import { useRequest, useFields } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage';
 
-const PostForm = ({match}) => {
-  const postID = Number(match.params.id);
+const PostForm = () => {
+  const params = useParams();
+  const postID = Number(params.id);
   const [loading, error, run] = useRequest({})
   const [fields, handleChange, setFields] = useFields({title: '', body: ''})
   const [redirectTo, setRedirectTo] = useState('');

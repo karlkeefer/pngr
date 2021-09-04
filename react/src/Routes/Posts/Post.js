@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Button } from 'semantic-ui-react'
 
@@ -6,8 +7,9 @@ import API from 'Api'
 import { useRequest } from 'Shared/Hooks'
 import SimplePage from 'Shared/SimplePage'
 
-const Post = ({match}) => {
-  const postID = Number(match.params.id);
+const Post = () => {
+  const params = useParams();
+  const postID = Number(params.id);
   const [loading, error, run, post] = useRequest({})
 
   // if we have a post ID, fetch it

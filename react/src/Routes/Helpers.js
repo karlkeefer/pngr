@@ -20,7 +20,7 @@ export const PrivateRoute = ({ component: C, ...rest }) => {
         return <Redirect to={{pathname: '/login', state: { from: rest.location }}} />
       }
 
-      return <C {...props}/>
+      return <C/>
     }} />
   );
 }

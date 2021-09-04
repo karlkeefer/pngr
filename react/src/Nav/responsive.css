@@ -1,0 +1,19 @@
+#override {
+  margin-right: 0 !important;
+}
+
+#toggler {
+  display: none;
+  text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+  #toggler {
+    display: block;
+  }
+
+  #override.hidden,
+  .ui.menu:not(.vertical) .menu.hidden{
+    display: none;
+  }
+}
