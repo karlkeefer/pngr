@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom'
 import SimplePage from 'Shared/SimplePage';
 import LogInForm from './LogInForm'
 
-const LogIn = (props) => (
+const LogIn = () => (
   <SimplePage title='Log In to your account' centered>
     <Segment.Group>
       <Segment>
-        <LogInForm {...props}/>
+        <LogInForm/>
       </Segment>
       <Segment>
         Don't have an account? <Link to="/signup">Sign Up</Link>.<br/>

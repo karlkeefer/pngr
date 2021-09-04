@@ -4,11 +4,11 @@ import { Segment } from 'semantic-ui-react'
 import SimplePage from 'Shared/SimplePage';
 import ResetForm from './ResetForm'
 
-const Reset = (props) => (
+const Reset = () => (
   <SimplePage title='Reset your password' centered>
     <Segment.Group>
       <Segment>
-        <ResetForm {...props}/>
+        <ResetForm/>
       </Segment>
     </Segment.Group>
   </SimplePage>
