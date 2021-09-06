@@ -6,6 +6,9 @@ export const useRequest = (initData) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // we could just return the promise from run(), but using onSuccess and onFailure callbacks 
+  // allows us to react before the loading/errors states change - this is mostly useful if 
+  // we want to redirect before the not-loading layout can show itself
   const run = useCallback((promise, onSuccess, onFailure) => {
     setLoading(true);
     setError('');
