@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 const createPost = `-- name: CreatePost :one
@@ -113,15 +112,14 @@ func (q *Queries) FindPostsByAuthor(ctx context.Context, authorID int64) ([]Post
 }
 
 const updatePost = `-- name: UpdatePost :one
-UPDATE posts SET title = $3, body = $4, updated_at = $5 WHERE id = $1 AND author_id = $2 RETURNING id, author_id, title, body, status, created_at, updated_at
+UPDATE posts SET title = $3, body = $4, updated_at = NOW() WHERE id = $1 AND author_id = $2 RETURNING id, author_id, title, body, status, created_at, updated_at
 `
 
 type UpdatePostParams struct {
-	ID        int64     `json:"id"`
-	AuthorID  int64     `json:"author_id"`
-	Title     string    `json:"title"`
-	Body      string    `json:"body"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID       int64  `json:"id"`
+	AuthorID int64  `json:"author_id"`
+	Title    string `json:"title"`
+	Body     string `json:"body"`
 }
 
 func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error) {
@@ -130,7 +128,6 @@ func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, e
 		arg.AuthorID,
 		arg.Title,
 		arg.Body,
-		arg.UpdatedAt,
 	)
 	var i Post
 	err := row.Scan(

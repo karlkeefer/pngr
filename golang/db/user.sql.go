@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -103,37 +102,30 @@ func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification s
 }
 
 const updateUserPassword = `-- name: UpdateUserPassword :exec
-UPDATE users SET salt = $2, pass = $3, updated_at = $4 WHERE id = $1
+UPDATE users SET salt = $2, pass = $3, updated_at = NOW() WHERE id = $1
 `
 
 type UpdateUserPasswordParams struct {
-	ID        int64     `json:"id"`
-	Salt      string    `json:"salt"`
-	Pass      string    `json:"pass"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID   int64  `json:"id"`
+	Salt string `json:"salt"`
+	Pass string `json:"pass"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserPassword,
-		arg.ID,
-		arg.Salt,
-		arg.Pass,
-		arg.UpdatedAt,
-	)
+	_, err := q.db.ExecContext(ctx, updateUserPassword, arg.ID, arg.Salt, arg.Pass)
 	return err
 }
 
 const updateUserStatus = `-- name: UpdateUserStatus :exec
-UPDATE users SET status = $2, updated_at = $3 WHERE id = $1
+UPDATE users SET status = $2, updated_at = NOW() WHERE id = $1
 `
 
 type UpdateUserStatusParams struct {
-	ID        int64      `json:"id"`
-	Status    UserStatus `json:"status"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	ID     int64      `json:"id"`
+	Status UserStatus `json:"status"`
 }
 
 func (q *Queries) UpdateUserStatus(ctx context.Context, arg UpdateUserStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserStatus, arg.ID, arg.Status, arg.UpdatedAt)
+	_, err := q.db.ExecContext(ctx, updateUserStatus, arg.ID, arg.Status)
 	return err
 }

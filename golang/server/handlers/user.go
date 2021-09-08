@@ -111,10 +111,9 @@ func UpdatePassword(env env.Env, user *db.User, w http.ResponseWriter, r *http.R
 	}
 
 	err = env.DB().UpdateUserPassword(r.Context(), db.UpdateUserPasswordParams{
-		ID:        user.ID,
-		Pass:      u.Pass,
-		Salt:      u.Salt,
-		UpdatedAt: time.Now(),
+		ID:   user.ID,
+		Pass: u.Pass,
+		Salt: u.Salt,
 	})
 
 	if err != nil {
@@ -153,9 +152,8 @@ func Verify(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 	u.Status = db.UserStatusActive
 
 	err = env.DB().UpdateUserStatus(r.Context(), db.UpdateUserStatusParams{
-		ID:        u.ID,
-		Status:    u.Status,
-		UpdatedAt: time.Now(),
+		ID:     u.ID,
+		Status: u.Status,
 	})
 
 	if err != nil {

@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/karlkeefer/pngr/golang/db"
 	"github.com/karlkeefer/pngr/golang/env"
@@ -84,11 +83,10 @@ func UpdatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Reque
 	}
 
 	return write.JSONorErr(env.DB().UpdatePost(r.Context(), db.UpdatePostParams{
-		ID:        p.ID,
-		AuthorID:  p.AuthorID,
-		Title:     p.Title,
-		Body:      p.Body,
-		UpdatedAt: time.Now(),
+		ID:       p.ID,
+		AuthorID: p.AuthorID,
+		Title:    p.Title,
+		Body:     p.Body,
 	}))
 }
 
