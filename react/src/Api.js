@@ -31,19 +31,19 @@ export default class API {
 
   // POSTS
   static getPosts = () => (
-    _get('/posts')
+    _get('/post')
   )
   static getPost = (id) => (
-    _get(`/posts/${id}`)
+    _get(`/post/${id}`)
   )
   static createPost = body => (
-    _post('/posts', body)
+    _post('/post', body)
   )
   static updatePost = body => (
-    _put('/posts', body)
+    _put('/post', body)
   )
   static deletePost = id => (
-    _delete(`/posts/${id}`)
+    _delete(`/post/${id}`)
   )
 }
 
