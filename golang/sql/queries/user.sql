@@ -1,5 +1,6 @@
 -- name: CreateUser :one
-INSERT INTO users (email, salt, pass, status, verification) VALUES (LOWER($1), $2, $3, $4, $5) RETURNING *;
+INSERT INTO users (email, salt, pass, status, verification)
+  VALUES (LOWER(@email::varchar), @salt::varchar, @pass::varchar, @status::user_status, @verification::varchar) RETURNING *;
 
 -- name: UpdateUserStatus :exec
 UPDATE users SET status = $2, updated_at = NOW() WHERE id = $1;

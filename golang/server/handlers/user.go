@@ -69,7 +69,7 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 	}
 
 	dbUser, err := env.DB().CreateUser(r.Context(), db.CreateUserParams{
-		Lower:        u.Email,
+		Email:        u.Email,
 		Pass:         u.Pass,
 		Salt:         u.Salt,
 		Status:       db.UserStatusUnverified,
