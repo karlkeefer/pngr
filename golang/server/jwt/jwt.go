@@ -14,7 +14,7 @@ import (
 
 // jwt-cookie building and parsing
 const cookieName = "pngr-jwt"
-const defaultSecret = "asd973hkalkjhx97asdh"
+const insecureSecret = "asd973hkalkjhx97asdh"
 
 // tokens auto-refresh at the end of their lifetime,
 // so long as the user hasn't been disabled in the interim
@@ -27,7 +27,7 @@ func init() {
 	if hmacSecret == nil {
 		panic("No TOKEN_SECRET environment variable was found")
 	}
-	if string(hmacSecret) == defaultSecret {
+	if string(hmacSecret) == insecureSecret {
 		log.Print("\n\n*** WARNING ***\nYour JWT isn't secure!\nYou need to change your TOKEN_SECRET variable in .env (and restart your containers).\n\n")
 	}
 }
