@@ -1,22 +1,22 @@
 package env
 
 import (
-	"github.com/karlkeefer/pngr/golang/db"
+	"github.com/karlkeefer/pngr/golang/db/wrapper"
 	"github.com/karlkeefer/pngr/golang/mail"
 )
 
 type Env interface {
-	DB() db.Querier
+	DB() wrapper.Querier
 	Mailer() *mail.Mailer
 }
 
 // default impl
 type env struct {
-	db   *db.Queries
+	db   wrapper.Querier
 	mail *mail.Mailer
 }
 
-func (e *env) DB() db.Querier {
+func (e *env) DB() wrapper.Querier {
 	return e.db
 }
 
@@ -31,23 +31,23 @@ func New() (Env, error) {
 	}
 
 	return &env{
-		db:   db,
+		db:   wrapper.NewQuerier(db),
 		mail: mail.New(),
 	}, nil
 }
 
 // Mock impl
-func Mock(db db.Querier) Env {
+func Mock(db wrapper.Querier) Env {
 	return &mock{
 		db: db,
 	}
 }
 
 type mock struct {
-	db db.Querier
+	db wrapper.Querier
 }
 
-func (e *mock) DB() db.Querier {
+func (e *mock) DB() wrapper.Querier {
 	return e.db
 }
 

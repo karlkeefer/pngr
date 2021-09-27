@@ -6,12 +6,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/karlkeefer/pngr/golang/db"
 	_ "github.com/lib/pq"
 )
 
-func Connect() (q *db.Queries, err error) {
-	conn, err := sql.Open("postgres", buildConnectionString())
+func Connect() (conn *sql.DB, err error) {
+	conn, err = sql.Open("postgres", buildConnectionString())
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +20,7 @@ func Connect() (q *db.Queries, err error) {
 		return nil, err
 	}
 
-	return db.New(conn), nil
+	return conn, nil
 }
 
 func buildConnectionString() string {

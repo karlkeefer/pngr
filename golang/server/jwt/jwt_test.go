@@ -8,6 +8,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/karlkeefer/pngr/golang/db"
+	"github.com/karlkeefer/pngr/golang/db/wrapper"
 	"github.com/karlkeefer/pngr/golang/env"
 	"github.com/karlkeefer/pngr/golang/errors"
 	"github.com/stretchr/testify/assert"
@@ -83,10 +84,10 @@ func TestHandleUserCookie(t *testing.T) {
 
 			// setup mock
 			ctrl := gomock.NewController(t)
-			db := db.NewMockQuerier(ctrl)
-			env := env.Mock(db)
+			mockDB := wrapper.NewMockQuerier(ctrl)
+			env := env.Mock(mockDB)
 
-			db.EXPECT().FindUserByEmail(gomock.Any(), gomock.Any()).Return(test.mockUser, test.mockErr).AnyTimes()
+			mockDB.EXPECT().FindUserByEmail(gomock.Any(), gomock.Any()).Return(test.mockUser, test.mockErr).AnyTimes()
 
 			// build a fake request with an expired token
 			r := httptest.NewRequest(http.MethodGet, "/path", nil)
