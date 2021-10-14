@@ -16,7 +16,7 @@ Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to
 - [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
 - [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
 - [React Context](https://reactjs.org/docs/context.html) for global state
-- [Semantic UI React](https://react.semantic-ui.com/) for component library - allows changing [theme variables](https://react.semantic-ui.com/theming/) with hot-reload
+- [Semantic UI React](https://react.semantic-ui.com/) for component library - allows changing [theme variables](https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables) with hot-reload
 - Feature development is up to you!
 
 ## Requirements
