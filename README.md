@@ -1,4 +1,4 @@
-## New in September 2021
+## New in 2021
 I've finally upstreamed various upgrades I made on forked projects:
 
 1) Auto-generated database code and mocks with the amazing [sqlc](https://github.com/kyleconroy/sqlc) and [gomock](https://github.com/golang/mock) packages 🙇‍♂️
@@ -9,7 +9,7 @@ I've finally upstreamed various upgrades I made on forked projects:
 6) Simplified migrations and postgres helper scripts
 7) Upgraded the Semantic UI integration to allow altering [theme variables](https://react.semantic-ui.com/theming/)
 8) Various other improvements/tweaks/bugfixes
-9) Added a **ping**-pong emoji to calcify my preferred pronunciation 😅
+9) Added a **ping**-pong emoji to calcify the pronunciation 😅
 
 # PNGR Stack 🏓
 Dockerized (postgres + nginx + golang + react) starter kit
@@ -22,6 +22,7 @@ Only implements `users`, `sessions`, and a toy `post` type to demonstrate basic 
 - [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and mocks (also rigged with hot-reload!)
 - [jwt-go](https://github.com/dgrijalva/jwt-go) cookies with automatic refresh: ready for horizontal scaling
 - A golang worker container stubbed out for async (non-API) tasks
+- "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
 - Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
 - [React Router](https://github.com/ReactTraining/react-router) for simple front-end routing
 - [React Context](https://reactjs.org/docs/context.html) for global state
@@ -62,6 +63,9 @@ postgres/migrate up
 
 # go down 1 migration
 postgres/migrate down 1
+
+# goto a migration by index
+postgres/migrate goto 3
 ```
 
 ### Open a psql client
