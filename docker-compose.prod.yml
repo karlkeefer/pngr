@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  # prerender container
+  prerender-prod:
+    restart: always
+    build:
+      context: prerender
+    ports:
+      - "4000:3000"
+
   # back-end api built with golang
   golang-prod:
     restart: always
@@ -29,14 +37,12 @@ services:
       - "3000:3000"
 
   # nginx is used for ssl termination
+  # you may opt to install nginx _on the host_ for greater resilience
   nginx-prod:
     restart: always
     build: 
       context: nginx
       target: prod
-    # volumes:
-    #  - ../certs-data:/data/letsencrypt
-    #  - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - "80:80"
       - "443:443"
