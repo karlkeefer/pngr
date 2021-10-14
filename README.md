@@ -12,10 +12,10 @@ Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to
 - A golang worker container stubbed out for async (non-API) tasks
 - "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
 - Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
-- Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
 - [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
 - [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
-- [React Context](https://reactjs.org/docs/context.html) for global state
+- Uses [React Context](https://reactjs.org/docs/context.html) for global user state
+- Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
 - [Semantic UI React](https://react.semantic-ui.com/) for component library - allows changing [theme variables](https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables) with hot-reload
 - Feature development is up to you!
 
