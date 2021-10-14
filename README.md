@@ -1,32 +1,22 @@
-## New in 2021
-I've finally upstreamed various upgrades I made on forked projects:
-
-1) Auto-generated database code and mocks with the amazing [sqlc](https://github.com/kyleconroy/sqlc) and [gomock](https://github.com/golang/mock) packages 🙇‍♂️
-2) Vastly simplified routing on [front-end](./react/src/Routes/Routes.js) and [back-end](./golang/server/routes.go)... thanks [httprouter](github.com/julienschmidt/httprouter)!
-3) Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
-4) Added password reset functionality (and stubbed out a transactional email interface)
-5) Standardized handler type for the API, with improved default middlewares
-6) Simplified migrations and postgres helper scripts
-7) Upgraded the Semantic UI integration to allow altering [theme variables](https://react.semantic-ui.com/theming/)
-8) Various other improvements/tweaks/bugfixes
-9) Added a **ping**-pong emoji to calcify the pronunciation 😅
-
 # PNGR Stack 🏓
 Dockerized (postgres + nginx + golang + react) starter kit
 
-Only implements `users`, `sessions`, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
+Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
 ## Features
 - Hot-reload, front and back, including a test-runner for golang changes
 - [golang-migrate](https://github.com/golang-migrate/migrate) already configured for easy migrations
-- [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and mocks (also rigged with hot-reload!)
+- [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and [gomock](https://github.com/golang/mock) for auto-generated mocks (also rigged with hot-reload!)
 - [jwt-go](https://github.com/dgrijalva/jwt-go) cookies with automatic refresh: ready for horizontal scaling
+- Simple [default middleware for CORS, CSRF, cookie parsing, etc](./golang/server/middleware.go).
 - A golang worker container stubbed out for async (non-API) tasks
 - "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
 - Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
-- [React Router](https://github.com/ReactTraining/react-router) for simple front-end routing
+- Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
+- [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
+- [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
 - [React Context](https://reactjs.org/docs/context.html) for global state
-- [Semantic UI React](https://react.semantic-ui.com/) for component library
+- [Semantic UI React](https://react.semantic-ui.com/) for component library - allows changing [theme variables](https://react.semantic-ui.com/theming/) with hot-reload
 - Feature development is up to you!
 
 ## Requirements
