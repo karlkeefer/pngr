@@ -72,7 +72,7 @@ Maybe your postgres went sideways from a wonky migration and it's easier to rest
 docker-compose down -v && docker-compose up --build --force-recreate
 ```
 
-## Deploy to Production
+## Run in Production
 *Warning: Run in production at your own risk!*
 
 `docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized.
@@ -93,6 +93,6 @@ You can modify the github action to push built containers to a container registr
 You will also need to update `docker-compose.prod.yml` to point to your container registry.
 
 ```bash
-# deploy from a registry using a tag
+# pull containers from a registry using a tag, then run them in a detached state
 SHA=2c25e862e0f36e0fc17c1703e4f319f0d9d04520 docker-compose -f docker-compose.prod.yml up -d
 ```
