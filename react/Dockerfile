@@ -7,8 +7,8 @@ CMD echo "getting latest npm modules" \
 
 FROM node:10.13-alpine as build
 WORKDIR /root
-COPY ./package.json ./package.json
-RUN npm install
+COPY ./package*.json ./
+RUN npm ci --cache .npm
 COPY . . 
 RUN npm run build -o app
 
