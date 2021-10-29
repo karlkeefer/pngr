@@ -1,4 +1,6 @@
 # PNGR Stack 🏓
+[![Build](https://github.com/karlkeefer/pngr/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/karlkeefer/pngr/actions/workflows/build.yml)
+
 Dockerized (postgres + nginx + golang + react) starter kit
 
 Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
