@@ -73,12 +73,24 @@ docker-compose down -v && docker-compose up --build --force-recreate
 ## Deploy to Production
 *Warning: Run in production at your own risk!*
 
-`docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized. Pulling images from a registry and/or using CI/CD is up to you.
+`docker-compose.prod.yml` is designed for a setup where postgresql is _not_ dockerized.
 
 Don't forget to copy `.env.example` -> `.env` and setup your secrets/passwords for the new environment!
-At minimum you'll need to change `ENV`, `APP_ROOT`, and `TOKEN_SECRET`!
+At minimum, you'll need to change `ENV`, `APP_ROOT`, and `TOKEN_SECRET`!
 
 ```bash
 # build production images, and run them in a detached state
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose -f docker-compose.prod-build.yml up --build -d
+```
+
+Note: using your production server as your build server is a bad idea, so you should consider using a registry...
+
+### Using CI
+You can modify the github action to push built containers to a container registry. The containers are tagged with the commit SHA by default.
+
+You will also need to update `docker-compose.prod.yml` to point to your container registry.
+
+```bash
+# deploy from a registry using a tag
+SHA=2c25e862e0f36e0fc17c1703e4f319f0d9d04520 docker-compose -f docker-compose.prod.yml up -d
 ```

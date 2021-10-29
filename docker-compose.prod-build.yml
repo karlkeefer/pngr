@@ -1,0 +1,52 @@
+version: '3.4'
+services:
+  # prerender container
+  prerender-prod:
+    restart: always
+    build:
+      context: prerender
+    ports:
+      - "4000:3000"
+
+  # back-end api built with golang
+  golang-prod:
+    restart: always
+    build: 
+      context: golang
+      dockerfile: server.Dockerfile
+      target: prod
+    ports:
+      - "5000:5000"
+    env_file: .env
+
+  # worker
+  worker-prod:
+    network_mode: host
+    build:
+      context: golang
+      dockerfile: worker.Dockerfile
+      target: prod
+    env_file: .env
+
+  # front-end built with react
+  react-prod:
+    restart: always
+    build: 
+      context: react
+      target: prod
+    ports:
+      - "3000:3000"
+
+  # nginx is used for ssl termination
+  # you may opt to install nginx _on the host_ for greater resilience
+  nginx-prod:
+    restart: always
+    build: 
+      context: nginx
+      target: prod
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - golang-prod
+      - react-prod
