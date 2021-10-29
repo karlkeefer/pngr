@@ -1,6 +1,8 @@
 FROM golang:1.16 as dev
 WORKDIR /root
 RUN GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
+COPY go.* ./
+RUN go mod download
 COPY . .
 CMD modd -f worker.modd.conf
 

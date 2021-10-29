@@ -3,6 +3,8 @@ WORKDIR /root
 RUN go get github.com/cortesi/modd/cmd/modd
 RUN go get github.com/kyleconroy/sqlc/cmd/sqlc
 RUN go install github.com/golang/mock/mockgen@v1.6.0
+COPY go.* ./
+RUN go mod download
 COPY . .
 CMD modd -f server.modd.conf
 
