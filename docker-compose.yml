@@ -1,8 +1,8 @@
-version: '3.4'
+version: '3.9'
 services:
   # back-end api built with golang
   golang:
-    build: 
+    build:
       context: golang
       dockerfile: server.Dockerfile
       target: dev
@@ -42,9 +42,14 @@ services:
     volumes:
       - ./golang/sql/schema:/docker-entrypoint-initdb.d/schema
 
+  # mongo:
+  #   build: mongo
+  #   volumes:
+  #     - ./golang/
+
   # nginx is used for ssl termination
   nginx:
-    build: 
+    build:
       context: nginx
       target: dev
     ports:

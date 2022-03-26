@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 services:
   # API server
   golang-prod:
@@ -7,8 +7,8 @@ services:
       dockerfile: server.Dockerfile
       target: prod
     # image: registry-host:5000/pngr/golang-prod:${GITHUB_SHA}
-  
-  # worker
+
+    # worker
   worker-prod:
     build:
       context: golang
@@ -16,11 +16,11 @@ services:
       target: prod
     # image: registry-host:5000/pngr/worker-prod:${GITHUB_SHA}
 
-  # front-end built with react
+    # front-end built with react
   react-prod:
     build:
       context: react
       target: prod
     # image: registry-host:5000/pngr/react-prod:${GITHUB_SHA}
     volumes:
-    - ./.npm:/.npm
+      - ./.npm:/.npm

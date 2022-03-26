@@ -33,7 +33,13 @@ git clone https://github.com/karlkeefer/pngr.git my_project_name
 cp .env.example .env
 
 # build and start the containers
-docker-compose up
+docker-compose up # или используй ту-же комманду с флагом --build, чтобы изменения в коде вызывали ребилды (нужно при девелопе короче)
+
+
+# To start the stack, defined by the Compose file in detached mode, run:
+ docker-compose up --build -d
+# Then, you can use docker-compose stop to stop the containers and docker-compose down to remove them.
+
 ```
 1) Visit `https://localhost` (*note **https***)
 2) Approve the self-signed cert
@@ -96,3 +102,308 @@ You will also need to update `docker-compose.prod.yml` to point to your containe
 # pull containers from a registry using a tag, then run them in a detached state
 SHA=2c25e862e0f36e0fc17c1703e4f319f0d9d04520 docker-compose -f docker-compose.prod.yml up -d
 ```
+### Project Tree
+
+```
+pngr
+├─ .git
+│  ├─ config
+│  ├─ description
+│  ├─ FETCH_HEAD
+│  ├─ fsmonitor--daemon
+│  │  └─ cookies
+│  ├─ HEAD
+│  ├─ hooks
+│  │  ├─ applypatch-msg.sample
+│  │  ├─ commit-msg.sample
+│  │  ├─ fsmonitor-watchman.sample
+│  │  ├─ post-update.sample
+│  │  ├─ pre-applypatch.sample
+│  │  ├─ pre-commit.sample
+│  │  ├─ pre-merge-commit.sample
+│  │  ├─ pre-push.sample
+│  │  ├─ pre-rebase.sample
+│  │  ├─ pre-receive.sample
+│  │  ├─ prepare-commit-msg.sample
+│  │  ├─ push-to-checkout.sample
+│  │  └─ update.sample
+│  ├─ index
+│  ├─ info
+│  │  └─ exclude
+│  ├─ logs
+│  │  ├─ HEAD
+│  │  └─ refs
+│  │     ├─ heads
+│  │     │  └─ master
+│  │     └─ remotes
+│  │        └─ origin
+│  │           └─ HEAD
+│  ├─ objects
+│  │  ├─ info
+│  │  └─ pack
+│  │     ├─ pack-6cd532cb0f8623bd45b152a89cd6251d070656f0.idx
+│  │     └─ pack-6cd532cb0f8623bd45b152a89cd6251d070656f0.pack
+│  ├─ packed-refs
+│  └─ refs
+│     ├─ heads
+│     │  └─ master
+│     ├─ remotes
+│     │  └─ origin
+│     │     └─ HEAD
+│     └─ tags
+├─ .github
+│  └─ workflows
+│     └─ build.yml
+├─ .gitignore
+├─ docker-compose.ci.yml
+├─ docker-compose.prod-build.yml
+├─ docker-compose.prod.yml
+├─ docker-compose.yml
+├─ docs
+│  └─ demo.png
+├─ golang
+│  ├─ .gitignore
+│  ├─ cmd
+│  │  ├─ server
+│  │  │  └─ server.go
+│  │  └─ worker
+│  │     ├─ worker.go
+│  │     └─ worker_test.go
+│  ├─ db
+│  │  ├─ db.go
+│  │  ├─ mock.go
+│  │  ├─ models.go
+│  │  ├─ post.sql.go
+│  │  ├─ querier.go
+│  │  ├─ reset.sql.go
+│  │  ├─ user.marshal.go
+│  │  ├─ user.sql.go
+│  │  └─ wrapper
+│  │     ├─ mock.go
+│  │     └─ wrapper.go
+│  ├─ env
+│  │  ├─ db.go
+│  │  └─ env.go
+│  ├─ errors
+│  │  └─ errors.go
+│  ├─ go.mod
+│  ├─ go.sum
+│  ├─ mail
+│  │  ├─ html.go
+│  │  ├─ html_test.go
+│  │  ├─ logger.go
+│  │  └─ mail.go
+│  ├─ server
+│  │  ├─ handlers
+│  │  │  ├─ helpers.go
+│  │  │  ├─ posts.go
+│  │  │  ├─ resets.go
+│  │  │  ├─ session.go
+│  │  │  └─ user.go
+│  │  ├─ helpers.go
+│  │  ├─ jwt
+│  │  │  ├─ jwt.go
+│  │  │  └─ jwt_test.go
+│  │  ├─ middleware.go
+│  │  ├─ routes.go
+│  │  ├─ server.go
+│  │  └─ write
+│  │     └─ write.go
+│  ├─ server.Dockerfile
+│  ├─ server.modd.conf
+│  ├─ sql
+│  │  ├─ queries
+│  │  │  ├─ post.sql
+│  │  │  ├─ reset.sql
+│  │  │  └─ user.sql
+│  │  └─ schema
+│  │     ├─ 001_users.down.sql
+│  │     ├─ 001_users.up.sql
+│  │     ├─ 002_reset_password.down.sql
+│  │     ├─ 002_reset_password.up.sql
+│  │     ├─ 003_posts.down.sql
+│  │     └─ 003_posts.up.sql
+│  ├─ sqlc.yaml
+│  ├─ worker.Dockerfile
+│  └─ worker.modd.conf
+├─ LICENSE
+├─ nginx
+│  ├─ cert.pem
+│  ├─ Dockerfile
+│  ├─ key.pem
+│  ├─ nginx.conf
+│  └─ nginx.prod.conf
+├─ postgres
+│  ├─ Dockerfile
+│  ├─ init.sh
+│  ├─ migrate
+│  ├─ new
+│  └─ psql
+├─ prerender
+│  ├─ Dockerfile
+│  ├─ package.json
+│  └─ server.js
+├─ react
+│  ├─ .dockerignore
+│  ├─ .eslintrc
+│  ├─ .gitignore
+│  ├─ craco.config.js
+│  ├─ Dockerfile
+│  ├─ jsconfig.json
+│  ├─ nginx.conf
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ public
+│  │  ├─ favicon.ico
+│  │  ├─ index.html
+│  │  └─ manifest.json
+│  ├─ src
+│  │  ├─ Api.js
+│  │  ├─ App.js
+│  │  ├─ index.css
+│  │  ├─ index.js
+│  │  ├─ Nav
+│  │  │  ├─ Nav.js
+│  │  │  └─ responsive.css
+│  │  ├─ registerServiceWorker.js
+│  │  ├─ Routes
+│  │  │  ├─ Account
+│  │  │  │  ├─ ChangePassword.js
+│  │  │  │  └─ ChangePasswordForm.js
+│  │  │  ├─ Helpers.js
+│  │  │  ├─ Home
+│  │  │  │  └─ Home.js
+│  │  │  ├─ LogIn
+│  │  │  │  ├─ LogIn.js
+│  │  │  │  └─ LogInForm.js
+│  │  │  ├─ Posts
+│  │  │  │  ├─ Post.js
+│  │  │  │  ├─ PostForm.js
+│  │  │  │  └─ Posts.js
+│  │  │  ├─ Reset
+│  │  │  │  ├─ CheckReset.js
+│  │  │  │  ├─ Reset.js
+│  │  │  │  └─ ResetForm.js
+│  │  │  ├─ Routes.js
+│  │  │  ├─ SignUp
+│  │  │  │  ├─ SignUp.js
+│  │  │  │  └─ SignUpForm.js
+│  │  │  └─ Verify
+│  │  │     └─ Verify.js
+│  │  ├─ semantic-ui
+│  │  │  ├─ site
+│  │  │  │  ├─ collections
+│  │  │  │  │  ├─ breadcrumb.overrides
+│  │  │  │  │  ├─ breadcrumb.variables
+│  │  │  │  │  ├─ form.overrides
+│  │  │  │  │  ├─ form.variables
+│  │  │  │  │  ├─ grid.overrides
+│  │  │  │  │  ├─ grid.variables
+│  │  │  │  │  ├─ menu.overrides
+│  │  │  │  │  ├─ menu.variables
+│  │  │  │  │  ├─ message.overrides
+│  │  │  │  │  ├─ message.variables
+│  │  │  │  │  ├─ table.overrides
+│  │  │  │  │  └─ table.variables
+│  │  │  │  ├─ elements
+│  │  │  │  │  ├─ button.overrides
+│  │  │  │  │  ├─ button.variables
+│  │  │  │  │  ├─ container.overrides
+│  │  │  │  │  ├─ container.variables
+│  │  │  │  │  ├─ divider.overrides
+│  │  │  │  │  ├─ divider.variables
+│  │  │  │  │  ├─ flag.overrides
+│  │  │  │  │  ├─ flag.variables
+│  │  │  │  │  ├─ header.overrides
+│  │  │  │  │  ├─ header.variables
+│  │  │  │  │  ├─ icon.overrides
+│  │  │  │  │  ├─ icon.variables
+│  │  │  │  │  ├─ image.overrides
+│  │  │  │  │  ├─ image.variables
+│  │  │  │  │  ├─ input.overrides
+│  │  │  │  │  ├─ input.variables
+│  │  │  │  │  ├─ label.overrides
+│  │  │  │  │  ├─ label.variables
+│  │  │  │  │  ├─ list.overrides
+│  │  │  │  │  ├─ list.variables
+│  │  │  │  │  ├─ loader.overrides
+│  │  │  │  │  ├─ loader.variables
+│  │  │  │  │  ├─ rail.overrides
+│  │  │  │  │  ├─ rail.variables
+│  │  │  │  │  ├─ reveal.overrides
+│  │  │  │  │  ├─ reveal.variables
+│  │  │  │  │  ├─ segment.overrides
+│  │  │  │  │  ├─ segment.variables
+│  │  │  │  │  ├─ step.overrides
+│  │  │  │  │  └─ step.variables
+│  │  │  │  ├─ globals
+│  │  │  │  │  ├─ reset.overrides
+│  │  │  │  │  ├─ reset.variables
+│  │  │  │  │  ├─ site.overrides
+│  │  │  │  │  └─ site.variables
+│  │  │  │  ├─ modules
+│  │  │  │  │  ├─ accordion.overrides
+│  │  │  │  │  ├─ accordion.variables
+│  │  │  │  │  ├─ chatroom.overrides
+│  │  │  │  │  ├─ chatroom.variables
+│  │  │  │  │  ├─ checkbox.overrides
+│  │  │  │  │  ├─ checkbox.variables
+│  │  │  │  │  ├─ dimmer.overrides
+│  │  │  │  │  ├─ dimmer.variables
+│  │  │  │  │  ├─ dropdown.overrides
+│  │  │  │  │  ├─ dropdown.variables
+│  │  │  │  │  ├─ embed.overrides
+│  │  │  │  │  ├─ embed.variables
+│  │  │  │  │  ├─ modal.overrides
+│  │  │  │  │  ├─ modal.variables
+│  │  │  │  │  ├─ nag.overrides
+│  │  │  │  │  ├─ nag.variables
+│  │  │  │  │  ├─ popup.overrides
+│  │  │  │  │  ├─ popup.variables
+│  │  │  │  │  ├─ progress.overrides
+│  │  │  │  │  ├─ progress.variables
+│  │  │  │  │  ├─ rating.overrides
+│  │  │  │  │  ├─ rating.variables
+│  │  │  │  │  ├─ search.overrides
+│  │  │  │  │  ├─ search.variables
+│  │  │  │  │  ├─ shape.overrides
+│  │  │  │  │  ├─ shape.variables
+│  │  │  │  │  ├─ sidebar.overrides
+│  │  │  │  │  ├─ sidebar.variables
+│  │  │  │  │  ├─ sticky.overrides
+│  │  │  │  │  ├─ sticky.variables
+│  │  │  │  │  ├─ tab.overrides
+│  │  │  │  │  ├─ tab.variables
+│  │  │  │  │  ├─ transition.overrides
+│  │  │  │  │  └─ transition.variables
+│  │  │  │  └─ views
+│  │  │  │     ├─ ad.overrides
+│  │  │  │     ├─ ad.variables
+│  │  │  │     ├─ card.overrides
+│  │  │  │     ├─ card.variables
+│  │  │  │     ├─ comment.overrides
+│  │  │  │     ├─ comment.variables
+│  │  │  │     ├─ feed.overrides
+│  │  │  │     ├─ feed.variables
+│  │  │  │     ├─ item.overrides
+│  │  │  │     ├─ item.variables
+│  │  │  │     ├─ statistic.overrides
+│  │  │  │     └─ statistic.variables
+│  │  │  └─ theme.config
+│  │  └─ Shared
+│  │     ├─ Context.js
+│  │     ├─ Hooks.js
+│  │     ├─ Roles.js
+│  │     └─ SimplePage.js
+│  └─ webpack.config.js
+├─ README.md
+└─ __goInteract_basics
+
+```
+
+
+TODO
+
+1. Добавить MongoDB (вместе или вместо PSQL, лучше вместе на всякий случай) в структуру и в API сервера
+2. добавить реактовые версии старых страниц
+3. добавить админку типа как-то?

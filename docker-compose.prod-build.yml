@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 services:
   # prerender container
   prerender-prod:
@@ -11,7 +11,7 @@ services:
   # back-end api built with golang
   golang-prod:
     restart: always
-    build: 
+    build:
       context: golang
       dockerfile: server.Dockerfile
       target: prod
@@ -31,7 +31,7 @@ services:
   # front-end built with react
   react-prod:
     restart: always
-    build: 
+    build:
       context: react
       target: prod
     ports:
@@ -41,7 +41,7 @@ services:
   # you may opt to install nginx _on the host_ for greater resilience
   nginx-prod:
     restart: always
-    build: 
+    build:
       context: nginx
       target: prod
     ports:
