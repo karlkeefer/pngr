@@ -1,1 +1,6 @@
 /.env
+/.vscode
+/.vscode/
+/golang/.vscode-server
+/**/.vscode-server/
+/react/.cache

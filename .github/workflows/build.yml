@@ -1,7 +1,7 @@
 name: Build
 on:
   pull_request:
-  push: { branches: master }
+  push: { branches: [master] }
 
 jobs:
   build:
@@ -9,11 +9,11 @@ jobs:
     name: Build
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Build docker images
-      run: docker-compose -f docker-compose.ci.yml build
+      - name: Build docker images
+        run: docker-compose -f docker-compose.ci.yml build
 
     # - name: Connect to a container registry
     #   run: your login steps here....
