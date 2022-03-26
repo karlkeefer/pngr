@@ -32,19 +32,19 @@ func New() *Mailer {
 }
 
 // Link provides environment adjusted link
-func Link(p string, q *url.Values) *url.URL {
-	u, err := url.Parse(os.Getenv("APP_ROOT"))
+func Link(_path string, _query *url.Values) *url.URL {
+	_url, err := url.Parse(os.Getenv("APP_ROOT"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	u.Path = p
+	_url.Path = _path
 
-	if q != nil {
-		u.RawQuery = q.Encode()
+	if _query != nil {
+		_url.RawQuery = _query.Encode()
 	}
 
-	return u
+	return _url
 }
 
 // VerifyEmail sends a link that the user can click to verify their email!
