@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/karlkeefer/pngr/golang/errors"
+	"github.com/QuinnMain/infograph/golang/errors"
 )
 
 type errorResponse struct {

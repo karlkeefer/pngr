@@ -6,9 +6,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/karlkeefer/pngr/golang/env"
-	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/server/write"
+	"github.com/QuinnMain/infograph/golang/env"
+	"github.com/QuinnMain/infograph/golang/errors"
+	"github.com/QuinnMain/infograph/golang/server/write"
 )
 
 // isDev is used in the lag middleware... we don't want to read from env on every request

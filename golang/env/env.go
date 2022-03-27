@@ -1,8 +1,8 @@
 package env
 
 import (
-	"github.com/karlkeefer/pngr/golang/db/wrapper"
-	"github.com/karlkeefer/pngr/golang/mail"
+	"github.com/QuinnMain/infograph/golang/db/wrapper"
+	"github.com/QuinnMain/infograph/golang/mail"
 )
 
 type Env interface {

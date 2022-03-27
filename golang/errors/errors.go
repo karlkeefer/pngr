@@ -30,33 +30,33 @@ var (
 )
 
 // codeMap returns a map of errors to http status codes
-func codeMap() map[error]int {
-	return map[error]int{
-		BadRequestMethod: http.StatusMethodNotAllowed,
-		InternalError:    http.StatusInternalServerError,
+// но почему не сразу static? быстрее же будет?
 
-		NoJSONBody:        http.StatusBadRequest,
-		InvalidEmail:      http.StatusBadRequest,
-		AlreadyRegistered: http.StatusBadRequest,
+var codeMap = map[error]int{
+	BadRequestMethod: http.StatusMethodNotAllowed,
+	InternalError:    http.StatusInternalServerError,
 
-		FailedLogin:          http.StatusUnauthorized,
-		VerificationNotFound: http.StatusNotFound,
-		VerificationExpired:  http.StatusGone,
-		UserNotFound:         http.StatusNotFound,
-		PostNotFound:         http.StatusNotFound,
-		ResetNotFound:        http.StatusNotFound,
+	NoJSONBody:        http.StatusBadRequest,
+	InvalidEmail:      http.StatusBadRequest,
+	AlreadyRegistered: http.StatusBadRequest,
 
-		BadCSRF:           http.StatusUnauthorized,
-		BadOrigin:         http.StatusUnauthorized,
-		RouteUnauthorized: http.StatusUnauthorized,
-		RouteNotFound:     http.StatusNotFound,
-		ExpiredToken:      http.StatusUnauthorized,
-	}
+	FailedLogin:          http.StatusUnauthorized,
+	VerificationNotFound: http.StatusNotFound,
+	VerificationExpired:  http.StatusGone,
+	UserNotFound:         http.StatusNotFound,
+	PostNotFound:         http.StatusNotFound,
+	ResetNotFound:        http.StatusNotFound,
+
+	BadCSRF:           http.StatusUnauthorized,
+	BadOrigin:         http.StatusUnauthorized,
+	RouteUnauthorized: http.StatusUnauthorized,
+	RouteNotFound:     http.StatusNotFound,
+	ExpiredToken:      http.StatusUnauthorized,
 }
 
 // GetCode is a helper to get the relevant code for an error, or just return 500
 func GetCode(e error) (bool, int) {
-	if code, ok := codeMap()[e]; ok {
+	if code, ok := codeMap[e]; ok { // т.е. if ;ok==true{}
 		return true, code
 	}
 	return false, http.StatusInternalServerError

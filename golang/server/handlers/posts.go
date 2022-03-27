@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/env"
-	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/server/write"
+	"github.com/QuinnMain/infograph/golang/db"
+	"github.com/QuinnMain/infograph/golang/env"
+	"github.com/QuinnMain/infograph/golang/errors"
+	"github.com/QuinnMain/infograph/golang/server/write"
 )
 
 func CreatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {

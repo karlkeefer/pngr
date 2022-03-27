@@ -1,5 +1,5 @@
 # PNGR Stack 🏓
-[![Build](https://github.com/karlkeefer/pngr/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/karlkeefer/pngr/actions/workflows/build.yml)
+[![Build](https://github.com/QuinnMain/infograph/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/QuinnMain/infograph/actions/workflows/build.yml)
 
 Dockerized (postgres + nginx + golang + react) starter kit
 
@@ -27,7 +27,7 @@ Install `docker` && `docker-compose`
 ## Quick Start
 ```bash
 # clone the repo
-git clone https://github.com/karlkeefer/pngr.git my_project_name
+git clone https://github.com/QuinnMain/infograph.git my_project_name
 
 # copy the .env template for your local version
 cp .env.example .env

@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/env"
-	"github.com/karlkeefer/pngr/golang/errors"
+	"github.com/QuinnMain/infograph/golang/db"
+	"github.com/QuinnMain/infograph/golang/env"
+	"github.com/QuinnMain/infograph/golang/errors"
+	jwt "github.com/dgrijalva/jwt-go" //  JSON Web Tokens
 )
 
 // jwt-cookie building and parsing

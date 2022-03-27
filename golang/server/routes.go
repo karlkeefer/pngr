@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"runtime/debug"
 
+	"github.com/QuinnMain/infograph/golang/db"
+	"github.com/QuinnMain/infograph/golang/env"
+	"github.com/QuinnMain/infograph/golang/errors"
+	"github.com/QuinnMain/infograph/golang/server/handlers"
+	"github.com/QuinnMain/infograph/golang/server/write"
 	"github.com/julienschmidt/httprouter"
-	"github.com/karlkeefer/pngr/golang/db"
-	"github.com/karlkeefer/pngr/golang/env"
-	"github.com/karlkeefer/pngr/golang/errors"
-	"github.com/karlkeefer/pngr/golang/server/handlers"
-	"github.com/karlkeefer/pngr/golang/server/write"
 )
 
 func (srv *server) ConfigureRouter() {

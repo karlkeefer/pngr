@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/karlkeefer/pngr/golang/db"
+	"github.com/QuinnMain/infograph/golang/db"
 )
 
 type Querier interface {
