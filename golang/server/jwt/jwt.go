@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db"
+	"github.com/QuinnMain/infograph/golang/db/postgres/db"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	jwt "github.com/dgrijalva/jwt-go" //  JSON Web Tokens

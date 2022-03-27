@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	db "github.com/QuinnMain/infograph/golang/db"
+	db "github.com/QuinnMain/infograph/golang/db/postgres/db"
 )
 
 // MockQuerier is a mock of Querier interface.

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/QuinnMain/infograph/golang/db"
+	"github.com/QuinnMain/infograph/golang/db/postgres/db"
 )
 
 type Querier interface {

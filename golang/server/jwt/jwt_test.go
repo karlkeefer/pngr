@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db"
-	"github.com/QuinnMain/infograph/golang/db/wrapper"
+	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	"github.com/QuinnMain/infograph/golang/db/postgres/db/wrapper"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/golang/mock/gomock"

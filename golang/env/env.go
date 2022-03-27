@@ -1,7 +1,7 @@
 package env
 
 import (
-	"github.com/QuinnMain/infograph/golang/db/wrapper"
+	"github.com/QuinnMain/infograph/golang/db/postgres/db/wrapper"
 	"github.com/QuinnMain/infograph/golang/mail"
 )
 
