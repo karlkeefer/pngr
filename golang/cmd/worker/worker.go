@@ -35,7 +35,7 @@ func New() (*Worker, error) {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 
-	env, err := env.New()
+	env, err := env.NewEnv()
 	if err != nil {
 		return nil, err
 	}

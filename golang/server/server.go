@@ -26,7 +26,7 @@ type server struct {
 // New initializes env (database connections and whatnot)
 // and creates a server that implements ServeHTTP
 func New() (*server, error) {
-	env, err := env.New()
+	env, err := env.NewEnv()
 	if err != nil {
 		return nil, err
 	}

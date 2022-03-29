@@ -22,7 +22,6 @@ func main() {
 
 	log.Println("Listening on", port)
 	err = http.ListenAndServe(port, srv)
-
 	if err != nil {
 		log.Fatalln("ListenAndServe error:", err)
 	}

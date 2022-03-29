@@ -13,6 +13,7 @@ services:
     env_file: .env
     depends_on:
       - postgres
+      - mongodb
 
   worker:
     build:
@@ -24,6 +25,7 @@ services:
     env_file: .env
     depends_on:
       - postgres
+      - mongodb
 
   # front-end built with react
   react:
@@ -42,10 +44,44 @@ services:
     volumes:
       - ./golang/sql/schema:/docker-entrypoint-initdb.d/schema
 
-  # mongo:
-  #   build: mongo
-  #   volumes:
-  #     - ./golang/
+  # https://hub.docker.com/_/mongo
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 127.0.0.1:${MONGO_PORT}:${MONGO_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOTADMINUSER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOTPASSWORD}
+      MONGO_INITDB_DATABASE: infograph
+    volumes:
+      - mongodata:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro # исполнится при создании
+    networks:
+      - mongonet
+
+  # https://hub.docker.com/_/mongo-express
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 127.0.0.1:8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOTADMINUSER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOTPASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOTADMINUSER}:${MONGO_ROOTPASSWORD}@mongodb:${MONGO_PORT}/
+    networks:
+      - mongonet
+    depends_on:
+      - mongodb
+
+  # КСТАТИ из https://hub.docker.com/_/mongo (вообще при любом случае смотри сюда сначала)
+  # When a container is started for the first time it will execute files with extensions .sh and .js that are found in /docker-entrypoint-initdb.d. 
+  # Files will be executed in alphabetical order. 
+  # .js files will be executed by mongo using the database specified by the MONGO_INITDB_DATABASE variable, if it is present, or test otherwise. 
+  # You may also switch databases within the .js script.
+
+
 
   # nginx is used for ssl termination
   nginx:
@@ -57,3 +93,9 @@ services:
     depends_on:
       - react
       - golang
+
+networks:
+  mongonet:
+
+volumes:
+  mongodata:

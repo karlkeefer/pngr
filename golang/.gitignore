@@ -8,3 +8,5 @@ workerbin
 main
 
 .vscode-server\
+
+go.sum

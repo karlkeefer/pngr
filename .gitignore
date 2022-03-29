@@ -4,3 +4,4 @@
 /golang/.vscode-server
 /**/.vscode-server/
 /react/.cache
+/golang/go.sum

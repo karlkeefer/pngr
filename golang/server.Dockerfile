@@ -6,7 +6,9 @@ RUN go install github.com/golang/mock/mockgen@v1.6.0
 COPY go.* ./
 RUN go mod download
 COPY . .
+# бегаем тесты и билдим бинарки
 CMD modd -f server.modd.conf
+
 
 FROM golang:1.18 as build
 WORKDIR /root
