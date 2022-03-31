@@ -87,3 +87,9 @@ type TableDivision struct {
 	DivisionTitle *string `bson:"DivisionTitle,omitempty" json:"DivisionTitle,omitempty"`
 	Fields        *bson.D `bson:"Fields,omitempty" json:"Fields,omitempty"`
 }
+
+//! существующие коллекции!
+// db.createCollection("commodityTables") // "матрицы"
+// db.createCollection("commodityCharts") // "графики"
+// db.createCollection("divisions")
+// db.createCollection("users")

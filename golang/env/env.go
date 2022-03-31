@@ -5,18 +5,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+var collectionNames = [4]string{"commodityTables", "commodityCharts", "divisions", "users"}
+
 type Env interface {
 	MDB() *mongo.Database
 	Mailer() *mail.Mailer
+	Collection(string) *mongo.Collection
 }
 
 // default impl
 type env struct {
-	mdb  *mongo.Database
-	mail *mail.Mailer
+	mdb         *mongo.Database
+	mail        *mail.Mailer
+	collections map[string]*mongo.Collection
 }
-
-// accesors (зачем, я не заметил вроде чтобы их вызывали)
 
 func (e *env) MDB() *mongo.Database {
 	return e.mdb
@@ -24,28 +26,44 @@ func (e *env) MDB() *mongo.Database {
 func (e *env) Mailer() *mail.Mailer {
 	return e.mail
 }
+func (e *env) Collection(colname string) *mongo.Collection {
+	return e.collections[colname]
+}
 
 func NewEnv() (Env, error) {
 	mongodb, err := ConnectToMongo()
 	if err != nil {
 		return nil, err
 	}
+	var collections map[string]*mongo.Collection
+	for _, colname := range collectionNames {
+		collections[colname] = mongodb.Collection(colname)
+	}
 
 	return &env{ // как это работает?
-		mdb:  mongodb,
-		mail: mail.New(),
+		mdb:         mongodb,
+		mail:        mail.New(),
+		collections: collections,
 	}, nil
 }
 
 // Mock impl
 func Mock(mdb *mongo.Database) Env {
+	var collections map[string]*mongo.Collection
+	for _, colname := range collectionNames {
+		collections[colname] = mdb.Collection(colname)
+	}
 	return &mock{
-		mdb: mdb,
+		mdb:         mdb,
+		mail:        nil,
+		collections: collections,
 	}
 }
 
 type mock struct {
-	mdb *mongo.Database
+	mdb         *mongo.Database
+	mail        *mail.Mailer
+	collections map[string]*mongo.Collection
 }
 
 func (e *mock) MDB() *mongo.Database {
@@ -54,4 +72,8 @@ func (e *mock) MDB() *mongo.Database {
 
 func (e *mock) Mailer() *mail.Mailer {
 	return nil
+}
+
+func (e *mock) Collection(colname string) *mongo.Collection {
+	return e.collections[colname]
 }

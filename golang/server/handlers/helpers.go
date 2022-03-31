@@ -1,17 +1,17 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/lib/pq"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // isNotFound helps us match common db error
 func isNotFound(err error) bool {
-	return err == sql.ErrNoRows
+	return err == mongo.ErrNoDocuments
 }
 
 // isDupe helps us match common db error
@@ -32,6 +32,7 @@ func getInt64(name string, r *http.Request) (out int64, err error) {
 	return
 }
 
+// мне так не нравится, буду прямо использовать getInt64
 func getID(r *http.Request) (out int64, err error) {
 	return getInt64("id", r)
 }
