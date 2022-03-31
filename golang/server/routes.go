@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
+
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/QuinnMain/infograph/golang/server/handlers"
@@ -48,7 +49,7 @@ func (srv *server) ConfigureRouter() {
 }
 
 // srvHandler is the extended handler function that our API routes use
-type srvHandler func(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc
+type srvHandler func(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc
 
 // helpers for easily adding routes
 func (srv *server) GET(path string, handler srvHandler) {

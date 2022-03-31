@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/QuinnMain/infograph/golang/server/jwt"
@@ -16,7 +16,7 @@ type loginRequest struct {
 	Pass  string
 }
 
-func Login(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Login(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	req := loginRequest{}
 	err := decoder.Decode(&req)
@@ -40,8 +40,10 @@ func Login(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) h
 	return write.JSON(&u)
 }
 
-func Logout(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	u := &db.User{}
+func Logout(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	u := &mdb.MUser{}
 	jwt.WriteUserCookie(w, u)
 	return write.Success()
 }
+
+func LoginMon()

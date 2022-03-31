@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/QuinnMain/infograph/golang/server/jwt"
 	"github.com/QuinnMain/infograph/golang/server/write"
+	"github.com/karlkeefer/pngr/golang/db"
 )
 
 type createResetRequest struct {
 	Email string `json:"email"`
 }
 
-func CreateReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func CreateReset(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
 	req := &createResetRequest{}
 	err := decoder.Decode(req)
@@ -47,7 +48,7 @@ func CreateReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Requ
 	return write.Success()
 }
 
-func DoReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func DoReset(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	code := getString("code", r)
 
 	reset, err := env.DB().FindResetByCode(r.Context(), code)

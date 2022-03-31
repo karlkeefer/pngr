@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/QuinnMain/infograph/golang/server/jwt"
@@ -16,7 +16,7 @@ import (
 func withUserAndEnv(env env.Env, h srvHandler, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	head, _ := shiftPath(r.URL.Path)
 
-	var user *db.User
+	var user *mdb.MUser
 
 	// don't parse user cookie on session routes!
 	if head != "session" {

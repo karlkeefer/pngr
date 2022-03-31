@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/QuinnMain/infograph/golang/server/jwt"
 	"github.com/QuinnMain/infograph/golang/server/write"
+	"github.com/karlkeefer/pngr/golang/db"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -53,24 +54,25 @@ func checkPasswordHash(password, salt, hash string) bool {
 	return err == nil
 }
 
-func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func Signup(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
-	var u db.User
+	var u mdb.MUser
 	err := decoder.Decode(&u)
 	if err != nil || &u == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 
 	// salt and hash it
-	u.Salt = generateRandomString(32)
-	u.Pass, err = hashPassword(u.Pass, u.Salt)
+	salt := generateRandomString(32)
+	u.Salt = &salt
+	password, err := hashPassword(*u.Password, *u.Salt)
 	if err != nil {
 		return write.Error(err)
 	}
-
-	dbUser, err := env.DB().CreateUser(r.Context(), db.CreateUserParams{
+	u.Password = &password
+	dbUser, err := env.DB().CreateUser(r.Context(), mdb.MUser{
 		Email:        u.Email,
-		Pass:         u.Pass,
+		Pass:         u.Password,
 		Salt:         u.Salt,
 		Status:       db.UserStatusUnverified,
 		Verification: generateRandomString(32),
@@ -91,13 +93,13 @@ func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) 
 	return write.Success()
 }
 
-func UpdatePassword(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+func UpdatePassword(env env.Env, user *mdb.MUser, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	var u db.User
+	var u mdb.MUser
 	err := decoder.Decode(&u)
 	if err != nil || &u == nil {
 		return write.Error(errors.NoJSONBody)
@@ -105,14 +107,14 @@ func UpdatePassword(env env.Env, user *db.User, w http.ResponseWriter, r *http.R
 
 	// salt and hash it
 	u.Salt = generateRandomString(32)
-	u.Pass, err = hashPassword(u.Pass, u.Salt)
+	u.Password, err = hashPassword(u.Password, u.Salt)
 	if err != nil {
 		return write.Error(err)
 	}
 
 	err = env.DB().UpdateUserPassword(r.Context(), db.UpdateUserPasswordParams{
 		ID:   user.ID,
-		Pass: u.Pass,
+		Pass: u.Password,
 		Salt: u.Salt,
 	})
 

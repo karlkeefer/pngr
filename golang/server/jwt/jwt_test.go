@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
-	"github.com/QuinnMain/infograph/golang/db/postgres/db/wrapper"
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	"github.com/golang/mock/gomock"
+	"github.com/karlkeefer/pngr/golang/db"
+	"github.com/karlkeefer/pngr/golang/db/wrapper"
 	"github.com/stretchr/testify/assert"
 )
 

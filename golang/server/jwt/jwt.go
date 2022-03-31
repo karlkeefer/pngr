@@ -6,7 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/QuinnMain/infograph/golang/db/postgres/db"
+	mdb "github.com/QuinnMain/infograph/golang/db"
+
 	"github.com/QuinnMain/infograph/golang/env"
 	"github.com/QuinnMain/infograph/golang/errors"
 	jwt "github.com/dgrijalva/jwt-go" //  JSON Web Tokens
@@ -33,12 +34,12 @@ func init() {
 }
 
 type claims struct {
-	User *db.User
+	User *mdb.MUser
 	jwt.StandardClaims
 }
 
 // WriteUserCookie encodes a user's JWT and sets it as an httpOnly & Secure cookie
-func WriteUserCookie(w http.ResponseWriter, u *db.User) {
+func WriteUserCookie(w http.ResponseWriter, u *mdb.MUser) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     cookieName,
 		Value:    encodeUser(u, time.Now()),
@@ -51,16 +52,16 @@ func WriteUserCookie(w http.ResponseWriter, u *db.User) {
 }
 
 // HandleUserCookie attempts to refresh an expired token if the user is still valid
-func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*db.User, error) {
+func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*mdb.MUser, error) {
 	u, err := userFromCookie(r)
 
 	// attempt refresh of expired token:
-	if err == errors.ExpiredToken && u.Status == db.UserStatusActive {
+	if err == errors.ExpiredToken && *u.Status == mdb.UserStatusActive {
 		user, fetchError := e.DB().FindUserByEmail(r.Context(), u.Email)
 		if fetchError != nil {
 			return wipeCookie(e, w)
 		}
-		if user.Status == db.UserStatusActive {
+		if *user.Status == mdb.UserStatusActive {
 			WriteUserCookie(w, &user)
 			return &user, nil
 		} else {
@@ -76,14 +77,14 @@ func HandleUserCookie(e env.Env, w http.ResponseWriter, r *http.Request) (*db.Us
 	return u, err
 }
 
-func wipeCookie(e env.Env, w http.ResponseWriter) (*db.User, error) {
-	u := &db.User{}
+func wipeCookie(e env.Env, w http.ResponseWriter) (*mdb.MUser, error) {
+	u := &mdb.MUser{}
 	WriteUserCookie(w, u)
 	return u, nil
 }
 
 // userFromCookie builds a user object from a JWT, if it's valid
-func userFromCookie(r *http.Request) (*db.User, error) {
+func userFromCookie(r *http.Request) (*mdb.MUser, error) {
 	cookie, _ := r.Cookie(cookieName)
 	var tokenString string
 	if cookie != nil {
@@ -91,14 +92,14 @@ func userFromCookie(r *http.Request) (*db.User, error) {
 	}
 
 	if tokenString == "" {
-		return &db.User{}, nil
+		return &mdb.MUser{}, nil
 	}
 
 	return decodeUser(tokenString)
 }
 
 // encodeUser convert a user struct into a jwt
-func encodeUser(u *db.User, t time.Time) (tokenString string) {
+func encodeUser(u *mdb.MUser, t time.Time) (tokenString string) {
 	claims := claims{
 		u,
 		jwt.StandardClaims{
@@ -118,7 +119,7 @@ func encodeUser(u *db.User, t time.Time) (tokenString string) {
 }
 
 // decodeUser converts a jwt into a user struct (or returns a zero-value user)
-func decodeUser(tokenString string) (*db.User, error) {
+func decodeUser(tokenString string) (*mdb.MUser, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
@@ -139,10 +140,10 @@ func decodeUser(tokenString string) (*db.User, error) {
 	return getUserFromToken(token), nil
 }
 
-func getUserFromToken(token *jwt.Token) *db.User {
+func getUserFromToken(token *jwt.Token) *mdb.MUser {
 	if claims, ok := token.Claims.(*claims); ok {
 		return claims.User
 	}
 
-	return &db.User{}
+	return &mdb.MUser{}
 }

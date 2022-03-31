@@ -59,8 +59,16 @@ type MUser struct {
 	Permissions *bson.A             `bson:"Permissions,omitempty" json:"Permissions,omitempty"`
 	Password    *string             `bson:"Password,omitempty" json:"Password,omitempty"`
 	Salt        *string             `bson:"Salt,omitempty" json:"Salt,omitempty"`
-	Status      *string             `bson:"Status,omitempty" json:"Status,omitempty"`
+	Status      *UserStatus         `bson:"Status,omitempty" json:"Status,omitempty"`
 }
+
+type UserStatus string
+
+const (
+	UserStatusDisabled   UserStatus = "disabled"
+	UserStatusUnverified UserStatus = "unverified"
+	UserStatusActive     UserStatus = "active"
+)
 
 type MDivisionSettings struct {
 	Id                    *primitive.ObjectID   `bson:"_id,omitempty" json:"_id,ompitempty"`
