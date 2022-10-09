@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/karlkeefer/pngr/golang/db"
@@ -59,7 +58,6 @@ func GetPost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request)
 }
 
 func GetPosts(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
-	log.Printf("&#v", user)
 	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}

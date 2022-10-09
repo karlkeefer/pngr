@@ -8,6 +8,7 @@ import (
 
 type Env interface {
 	DB() wrapper.Querier
+	Close()
 	Mailer() *mail.Mailer
 }
 
@@ -20,6 +21,10 @@ type env struct {
 
 func (e *env) DB() wrapper.Querier {
 	return e.querier
+}
+
+func (e *env) Close() {
+	e.db.Close()
 }
 
 func (e *env) Mailer() *mail.Mailer {
@@ -53,6 +58,7 @@ type mock struct {
 func (e *mock) DB() wrapper.Querier {
 	return e.db
 }
+func (e *mock) Close() {}
 
 func (e *mock) Mailer() *mail.Mailer {
 	return nil
