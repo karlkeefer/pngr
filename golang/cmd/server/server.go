@@ -21,7 +21,7 @@ func main() {
 	}
 	defer srv.Close()
 
-	log.Println("Listening on", port)
+	log.Println("API server listening on", port)
 	err = http.ListenAndServe(port, srv)
 
 	if err != nil {

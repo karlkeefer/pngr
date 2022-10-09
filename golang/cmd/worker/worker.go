@@ -16,7 +16,6 @@ func main() {
 		log.Fatalln("Unable to initialize worker", err)
 	}
 
-	log.Println("Starting worker...")
 	wrk.Run()
 }
 
@@ -52,13 +51,12 @@ func (w *Worker) Run() {
 
 	// listen ticks on the timer, or exit signals
 	go func() {
-		for {
-			select {
-			case s := <-w.signalChan:
-				w.handleExit(s)
-			}
+		for s := range w.signalChan {
+			w.handleExit(s)
 		}
 	}()
+
+	log.Println("Worker started")
 
 	// TODO: Grab some tasks from a queue and process them with w.doAsync()
 	// Your implementation should consider a worker pool
@@ -69,10 +67,10 @@ func (w *Worker) Run() {
 }
 
 func (w *Worker) handleExit(s os.Signal) {
-	log.Println("Handling os signal...")
+	// log.Println("Handling os signal...")
 
 	w.wg.Wait()
-	log.Println("Goroutines finished up")
+	// log.Println("Goroutines finished up")
 
 	switch s {
 	case syscall.SIGHUP,
