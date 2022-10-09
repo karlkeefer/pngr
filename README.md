@@ -9,7 +9,7 @@ Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to
 - Hot-reload, front and back, including a test-runner for golang changes
 - [golang-migrate](https://github.com/golang-migrate/migrate) already configured for easy migrations
 - [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and [gomock](https://github.com/golang/mock) for auto-generated mocks (also rigged with hot-reload!)
-- [jwt-go](https://github.com/dgrijalva/jwt-go) cookies with automatic refresh: ready for horizontal scaling
+- [golang-jwt](https://github.com/golang-jwt/jwt) cookies with automatic refresh: ready for horizontal scaling
 - Simple [default middleware for CORS, CSRF, cookie parsing, etc](./golang/server/middleware.go).
 - A golang worker container stubbed out for async (non-API) tasks
 - "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
