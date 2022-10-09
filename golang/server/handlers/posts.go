@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/karlkeefer/pngr/golang/db"
@@ -18,7 +19,7 @@ func CreatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Reque
 	decoder := json.NewDecoder(r.Body)
 	p := &db.Post{}
 	err := decoder.Decode(p)
-	if err != nil || &p == nil {
+	if err != nil || p == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 
@@ -58,6 +59,7 @@ func GetPost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request)
 }
 
 func GetPosts(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
+	log.Printf("&#v", user)
 	if user.Status != db.UserStatusActive {
 		return write.Error(errors.RouteUnauthorized)
 	}
@@ -73,7 +75,7 @@ func UpdatePost(env env.Env, user *db.User, w http.ResponseWriter, r *http.Reque
 	decoder := json.NewDecoder(r.Body)
 	p := &db.Post{}
 	err := decoder.Decode(p)
-	if err != nil || &p == nil {
+	if err != nil || p == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/jackc/pgconn"
 	"github.com/julienschmidt/httprouter"
-	"github.com/lib/pq"
 )
 
 // isNotFound helps us match common db error
@@ -16,7 +16,7 @@ func isNotFound(err error) bool {
 
 // isDupe helps us match common db error
 func isDupe(err error) bool {
-	if err, ok := err.(*pq.Error); ok && err.Code.Class() == "23" {
+	if err, ok := err.(*pgconn.PgError); ok && err.Code == "23505" {
 		// integrity violation
 		return true
 	}

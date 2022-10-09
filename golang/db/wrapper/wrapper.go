@@ -2,9 +2,9 @@ package wrapper
 
 import (
 	"context"
-	"database/sql"
 	"log"
 
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/karlkeefer/pngr/golang/db"
 )
 
@@ -15,11 +15,11 @@ type Querier interface {
 
 type Queries struct {
 	*db.Queries
-	conn *sql.DB
+	conn *pgxpool.Pool
 }
 
 func (q *Queries) WithTx(ctx context.Context, fn func(q db.Querier) error) error {
-	tx, err := q.conn.BeginTx(ctx, nil)
+	tx, err := q.conn.Begin(ctx)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (q *Queries) WithTx(ctx context.Context, fn func(q db.Querier) error) error
 	})
 
 	if err != nil {
-		rollBackErr := tx.Rollback()
+		rollBackErr := tx.Rollback(ctx)
 		if rollBackErr != nil {
 			log.Println(rollBackErr)
 		}
@@ -37,10 +37,10 @@ func (q *Queries) WithTx(ctx context.Context, fn func(q db.Querier) error) error
 		return err
 	}
 
-	return tx.Commit()
+	return tx.Commit(ctx)
 }
 
-func NewQuerier(conn *sql.DB) Querier {
+func NewQuerier(conn *pgxpool.Pool) Querier {
 	return &Queries{
 		Queries: db.New(conn),
 		conn:    conn,

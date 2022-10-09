@@ -3,6 +3,7 @@ packages:
   - path: "db"
     name: "db"
     engine: "postgresql"
+    sql_package: "pgx/v4"
     schema: "./sql/schema/"
     queries: "./sql/queries/"
     emit_json_tags: true

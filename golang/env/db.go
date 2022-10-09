@@ -1,21 +1,21 @@
 package env
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
 	"os"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-func Connect() (conn *sql.DB, err error) {
-	conn, err = sql.Open("postgres", buildConnectionString())
+func Connect() (*pgxpool.Pool, error) {
+	conn, err := pgxpool.Connect(context.Background(), buildConnectionString())
 	if err != nil {
 		return nil, err
 	}
 
-	err = conn.Ping()
+	err = conn.Ping(context.Background())
 	if err != nil {
 		return nil, err
 	}

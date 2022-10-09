@@ -19,7 +19,7 @@ type CreateResetParams struct {
 }
 
 func (q *Queries) CreateReset(ctx context.Context, arg CreateResetParams) (Reset, error) {
-	row := q.db.QueryRowContext(ctx, createReset, arg.UserID, arg.Code)
+	row := q.db.QueryRow(ctx, createReset, arg.UserID, arg.Code)
 	var i Reset
 	err := row.Scan(&i.UserID, &i.Code, &i.CreatedAt)
 	return i, err
@@ -30,7 +30,7 @@ DELETE FROM resets WHERE user_id = $1
 `
 
 func (q *Queries) DeleteResetsForUser(ctx context.Context, userID int64) error {
-	_, err := q.db.ExecContext(ctx, deleteResetsForUser, userID)
+	_, err := q.db.Exec(ctx, deleteResetsForUser, userID)
 	return err
 }
 
@@ -39,7 +39,7 @@ SELECT user_id, code, created_at FROM resets WHERE code = $1 LIMIT 1
 `
 
 func (q *Queries) FindResetByCode(ctx context.Context, code string) (Reset, error) {
-	row := q.db.QueryRowContext(ctx, findResetByCode, code)
+	row := q.db.QueryRow(ctx, findResetByCode, code)
 	var i Reset
 	err := row.Scan(&i.UserID, &i.Code, &i.CreatedAt)
 	return i, err
