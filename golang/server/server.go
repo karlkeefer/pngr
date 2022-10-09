@@ -51,3 +51,7 @@ func (srv *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	srv.router.ServeHTTP(w, r)
 }
+
+func (srv *server) Close() {
+	srv.env.Close()
+}

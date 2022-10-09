@@ -19,6 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("Unable to initialize server", err)
 	}
+	defer srv.Close()
 
 	log.Println("Listening on", port)
 	err = http.ListenAndServe(port, srv)
