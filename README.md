@@ -5,21 +5,29 @@ Dockerized (postgres + nginx + golang + react) starter kit
 
 Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to demonstrate basic CRUD. PNGR is _not_ a CMS.
 
-## Features
+## Features and Stack
+
 - Hot-reload, front and back, including a test-runner for golang changes
+
+### Back-end
 - [golang-migrate](https://github.com/golang-migrate/migrate) already configured for easy migrations
-- [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings and [gomock](https://github.com/golang/mock) for auto-generated mocks (also rigged with hot-reload!)
+- [sqlc](https://github.com/kyleconroy/sqlc) for auto-generated sql bindings
+- [gomock](https://github.com/golang/mock) for auto-generated mocks (also rigged with hot-reload!)
+- [pgx](https://github.com/jackc/pgx) as a top tier db driver
 - [golang-jwt](https://github.com/golang-jwt/jwt) cookies with automatic refresh: ready for horizontal scaling
 - Simple [default middleware for CORS, CSRF, cookie parsing, etc](./golang/server/middleware.go).
+- [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
 - A golang worker container stubbed out for async (non-API) tasks
+
+### Front-end
 - "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
 - Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
 - [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
-- [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
-- Uses [React Context](https://reactjs.org/docs/context.html) for global user state
+- [React Context](https://reactjs.org/docs/context.html) for global user state
 - Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
-- [Semantic UI React](https://react.semantic-ui.com/) for component library - allows changing [theme variables](https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables) with hot-reload
-- Feature development is up to you!
+- [Semantic UI React](https://react.semantic-ui.com/) for component library with functional [theme variables](https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables) and hot-reload
+
+Actual application feature development is up to you!
 
 ## Requirements
 Install `docker` && `docker-compose`
