@@ -19,7 +19,7 @@ func CreateReset(env env.Env, user *db.User, w http.ResponseWriter, r *http.Requ
 	decoder := json.NewDecoder(r.Body)
 	req := &createResetRequest{}
 	err := decoder.Decode(req)
-	if err != nil || &req == nil {
+	if err != nil || req == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 

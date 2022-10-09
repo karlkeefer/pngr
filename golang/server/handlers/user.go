@@ -55,9 +55,9 @@ func checkPasswordHash(password, salt, hash string) bool {
 
 func Signup(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
-	var u db.User
+	u := &db.User{}
 	err := decoder.Decode(&u)
-	if err != nil || &u == nil {
+	if err != nil || u == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 
@@ -97,9 +97,9 @@ func UpdatePassword(env env.Env, user *db.User, w http.ResponseWriter, r *http.R
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	var u db.User
+	u := &db.User{}
 	err := decoder.Decode(&u)
-	if err != nil || &u == nil {
+	if err != nil || u == nil {
 		return write.Error(errors.NoJSONBody)
 	}
 
@@ -133,10 +133,10 @@ type verifyRequest struct {
 
 func Verify(env env.Env, user *db.User, w http.ResponseWriter, r *http.Request) http.HandlerFunc {
 	decoder := json.NewDecoder(r.Body)
-	var req verifyRequest
+	req := &verifyRequest{}
 
 	err := decoder.Decode(&req)
-	if err != nil || &req == nil || req.Code == "" {
+	if err != nil || req == nil || req.Code == "" {
 		return write.Error(errors.NoJSONBody)
 	}
 

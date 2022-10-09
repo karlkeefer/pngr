@@ -23,7 +23,7 @@ type CreateUserParams struct {
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
+	row := q.db.QueryRow(ctx, createUser,
 		arg.Email,
 		arg.Salt,
 		arg.Pass,
@@ -49,7 +49,7 @@ SELECT id, email, pass, salt, status, verification, created_at, updated_at FROM 
 `
 
 func (q *Queries) FindUserByEmail(ctx context.Context, lower string) (User, error) {
-	row := q.db.QueryRowContext(ctx, findUserByEmail, lower)
+	row := q.db.QueryRow(ctx, findUserByEmail, lower)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -69,7 +69,7 @@ SELECT id, email, pass, salt, status, verification, created_at, updated_at FROM 
 `
 
 func (q *Queries) FindUserByID(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRowContext(ctx, findUserByID, id)
+	row := q.db.QueryRow(ctx, findUserByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -89,7 +89,7 @@ SELECT id, email, pass, salt, status, verification, created_at, updated_at FROM 
 `
 
 func (q *Queries) FindUserByVerificationCode(ctx context.Context, verification string) (User, error) {
-	row := q.db.QueryRowContext(ctx, findUserByVerificationCode, verification)
+	row := q.db.QueryRow(ctx, findUserByVerificationCode, verification)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -115,7 +115,7 @@ type UpdateUserPasswordParams struct {
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserPassword, arg.ID, arg.Salt, arg.Pass)
+	_, err := q.db.Exec(ctx, updateUserPassword, arg.ID, arg.Salt, arg.Pass)
 	return err
 }
 
@@ -129,6 +129,6 @@ type UpdateUserStatusParams struct {
 }
 
 func (q *Queries) UpdateUserStatus(ctx context.Context, arg UpdateUserStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserStatus, arg.ID, arg.Status)
+	_, err := q.db.Exec(ctx, updateUserStatus, arg.ID, arg.Status)
 	return err
 }

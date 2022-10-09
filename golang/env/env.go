@@ -1,6 +1,7 @@
 package env
 
 import (
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/karlkeefer/pngr/golang/db/wrapper"
 	"github.com/karlkeefer/pngr/golang/mail"
 )
@@ -12,12 +13,13 @@ type Env interface {
 
 // default impl
 type env struct {
-	db   wrapper.Querier
-	mail *mail.Mailer
+	db      *pgxpool.Pool
+	querier wrapper.Querier
+	mail    *mail.Mailer
 }
 
 func (e *env) DB() wrapper.Querier {
-	return e.db
+	return e.querier
 }
 
 func (e *env) Mailer() *mail.Mailer {
@@ -31,8 +33,9 @@ func New() (Env, error) {
 	}
 
 	return &env{
-		db:   wrapper.NewQuerier(db),
-		mail: mail.New(),
+		db:      db,
+		querier: wrapper.NewQuerier(db),
+		mail:    mail.New(),
 	}, nil
 }
 

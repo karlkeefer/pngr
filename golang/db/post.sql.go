@@ -21,7 +21,7 @@ type CreatePostParams struct {
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
-	row := q.db.QueryRowContext(ctx, createPost,
+	row := q.db.QueryRow(ctx, createPost,
 		arg.AuthorID,
 		arg.Title,
 		arg.Body,
@@ -50,7 +50,7 @@ type DeletePostByIDsParams struct {
 }
 
 func (q *Queries) DeletePostByIDs(ctx context.Context, arg DeletePostByIDsParams) error {
-	_, err := q.db.ExecContext(ctx, deletePostByIDs, arg.AuthorID, arg.ID)
+	_, err := q.db.Exec(ctx, deletePostByIDs, arg.AuthorID, arg.ID)
 	return err
 }
 
@@ -64,7 +64,7 @@ type FindPostByIDsParams struct {
 }
 
 func (q *Queries) FindPostByIDs(ctx context.Context, arg FindPostByIDsParams) (Post, error) {
-	row := q.db.QueryRowContext(ctx, findPostByIDs, arg.AuthorID, arg.ID)
+	row := q.db.QueryRow(ctx, findPostByIDs, arg.AuthorID, arg.ID)
 	var i Post
 	err := row.Scan(
 		&i.ID,
@@ -83,7 +83,7 @@ SELECT id, author_id, title, body, status, created_at, updated_at FROM posts WHE
 `
 
 func (q *Queries) FindPostsByAuthor(ctx context.Context, authorID int64) ([]Post, error) {
-	rows, err := q.db.QueryContext(ctx, findPostsByAuthor, authorID)
+	rows, err := q.db.Query(ctx, findPostsByAuthor, authorID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,9 +104,6 @@ func (q *Queries) FindPostsByAuthor(ctx context.Context, authorID int64) ([]Post
 		}
 		items = append(items, i)
 	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -125,7 +122,7 @@ type UpdatePostParams struct {
 }
 
 func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error) {
-	row := q.db.QueryRowContext(ctx, updatePost,
+	row := q.db.QueryRow(ctx, updatePost,
 		arg.ID,
 		arg.AuthorID,
 		arg.Title,
