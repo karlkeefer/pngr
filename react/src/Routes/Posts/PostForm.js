@@ -47,6 +47,7 @@ const PostForm = () => {
       <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input
+          autoFocus
           size="big"
           name="title"
           type="text"

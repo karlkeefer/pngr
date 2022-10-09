@@ -22,6 +22,7 @@ const SignUpForm = () => {
     <Form error name="signup" loading={loading} onSubmit={handleSubmit}>
       <Message error>{error}</Message>
       <Form.Input
+        autoFocus
         size="big"
         name="email"
         type="email"
