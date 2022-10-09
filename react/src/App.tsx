@@ -17,8 +17,8 @@ const App = () => (
     </Helmet>
     <Router>
       <div id="wrapper">
-        <Nav/>
-        <Routes/>
+        <Nav />
+        <Routes />
       </div>
     </Router>
   </WithUser>
