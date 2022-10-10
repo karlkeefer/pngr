@@ -4,6 +4,7 @@ import API from 'Api'
 
 export const emptyUser = {
   id: 0,
+  email: '',
   status: 0
 };
 

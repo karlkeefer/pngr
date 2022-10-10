@@ -2,7 +2,7 @@ import { useState, useCallback, ChangeEvent } from 'react';
 import _ from 'lodash'
 import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 
-export const useRequest = (initData: Object | undefined): [Boolean, String, Function, any] => {
+export const useRequest = (initData: Object | undefined): [boolean, string, Function, any] => {
   const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
