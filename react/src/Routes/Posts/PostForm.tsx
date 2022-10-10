@@ -11,7 +11,7 @@ const PostForm = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
   const [loading, error, run] = useRequest({})
-  const [fields, handleChange, setFields] = useFields({ title: '', body: '' })
+  const [fields, handleChange, setFields] = useFields<Post>({ title: '', body: '' })
   const [redirectTo, setRedirectTo] = useState('');
 
   const handleSubmit = useCallback(() => {
@@ -40,7 +40,7 @@ const PostForm = () => {
     return <Redirect to={redirectTo} />
   }
 
-  const { title, body } = fields as Post;
+  const { title, body } = fields;
 
   return (
     <SimplePage icon='file alternate outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
