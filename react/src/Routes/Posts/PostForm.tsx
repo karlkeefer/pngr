@@ -5,8 +5,7 @@ import { Redirect } from 'react-router'
 
 import API from 'Api'
 import SimplePage from 'Shared/SimplePage';
-import { useRequest, useFields } from 'Shared/Hooks';
-import { InputChangeHandler, Post, TextAreaChangeHandler } from 'Shared/Types'
+import { useRequest, useFields, TextAreaChangeHandler, InputChangeHandler } from 'Shared/Hooks';
 
 const PostForm = () => {
   const params = useParams<{ id: string }>();

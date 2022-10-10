@@ -2,8 +2,7 @@ import React, { useCallback } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest, useFields } from 'Shared/Hooks';
-import { InputChangeHandler } from 'Shared/Types';
+import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
 
 const ChangePasswordForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })

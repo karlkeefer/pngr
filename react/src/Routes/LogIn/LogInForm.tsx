@@ -4,8 +4,7 @@ import { Redirect, useLocation } from 'react-router-dom'
 
 import API from 'Api'
 import { User as UserContainer } from 'Shared/Context'
-import { useRequest, useFields } from 'Shared/Hooks';
-import { InputChangeHandler, User } from 'Shared/Types'
+import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
 
 const empty = { email: '', pass: '' };
 
