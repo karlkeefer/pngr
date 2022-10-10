@@ -6,6 +6,7 @@ import API from 'Api'
 import { useRequest } from 'Shared/Hooks'
 import { User } from 'Shared/Context'
 import SimplePage from 'Shared/SimplePage'
+import { Post } from 'Shared/Types'
 
 const Posts = () => {
   const [loading, error, run, posts] = useRequest([])
@@ -27,7 +28,7 @@ const Posts = () => {
         </Placeholder.Paragraph>
       </Placeholder> : false}
       {posts.length === 0 && !loading ? <Message warning>No posts found...</Message> : false}
-      {posts.map(Post)}
+      {posts.map(SinglePost)}
       <Button as={Link} to='/post/create' primary icon='plus' content='New post' />
     </SimplePage>
   )
@@ -35,7 +36,7 @@ const Posts = () => {
 
 export default Posts;
 
-const Post = ({ id, title, body }: Post) => (
+const SinglePost = ({ id, title, body }: Post) => (
   <Segment.Group key={id}>
     <Header attached='top' as='h3'>
       <Link to={`/post/${id}`}>{title}</Link>
