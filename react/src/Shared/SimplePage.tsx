@@ -10,7 +10,7 @@ type SimplePageProps = React.PropsWithChildren<{
   error?: string
 }>
 
-const SimplePage: React.FC<SimplePageProps> = ({ title, icon, centered, loading, error, children }) => (
+const SimplePage = ({ title, icon, centered, loading, error, children }: SimplePageProps): JSX.Element => (
   <Container style={{ paddingTop: '7em' }}>
     {title && !loading ?
       <Helmet>
