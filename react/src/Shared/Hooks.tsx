@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, ChangeEvent } from 'react';
 import _ from 'lodash'
+import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 
-export const useRequest = (initData) => {
+export const useRequest = (initData: Object | undefined): [Boolean, String, Function, any] => {
   const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -9,7 +10,7 @@ export const useRequest = (initData) => {
   // we could just return the promise from run(), but using onSuccess and onFailure callbacks 
   // allows us to react before the loading/errors states change - this is mostly useful if 
   // we want to redirect before the not-loading layout can show itself
-  const run = useCallback((promise, onSuccess, onFailure) => {
+  const run = useCallback((promise: Promise<any>, onSuccess: Function, onFailure: Function) => {
     setLoading(true);
     setError('');
 
@@ -37,9 +38,13 @@ export const useRequest = (initData) => {
 // this hook also supports nested properties!
 // You just have to set your input field's name attr appropriately
 // e.g. w/ a schema like {person:{first_name:''}} you can do <input name="person.first_name"/>
-export const useFields = (initFields) => {
+
+export type InputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
+export type TextAreaChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
+
+export const useFields = (initFields: Object): [Object, InputChangeHandler | TextAreaChangeHandler, Function] => {
   const [fields, setFields] = useState(initFields)
-  const handleChange = useCallback((e, {name, type, value, checked}) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>, { name, type, value, checked }: InputOnChangeData) => {
     setFields(f => {
       let out = _.cloneDeep(f)
       _.set(out, name, type === 'checkbox' ? checked : value);
