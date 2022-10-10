@@ -1,7 +1,12 @@
-import { useState, useCallback, ChangeEvent } from 'react';
 import _ from 'lodash'
-import { InputOnChangeData } from 'semantic-ui-react';
-import { InputChangeHandler, RunFunc, TextAreaChangeHandler } from './Types';
+import { useState, useCallback, ChangeEvent } from 'react';
+import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
+
+export type RunFunc<T> = (promise: Promise<any>, onSuccess?: (data: T) => void, onFailure?: Function) => void
+
+export type InputChangeHandler = (event: ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
+export type TextAreaChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
+
 
 export const useRequest = <T extends Object>(initData: T): [boolean, string, RunFunc<T>, T] => {
   const [data, setData] = useState(initData);

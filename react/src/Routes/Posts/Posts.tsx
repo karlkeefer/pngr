@@ -6,7 +6,7 @@ import API from 'Api'
 import { useRequest } from 'Shared/Hooks'
 import { User } from 'Shared/Context'
 import SimplePage from 'Shared/SimplePage'
-import { Post } from 'Shared/Types'
+import { Post } from 'Shared/Models'
 
 const Posts = () => {
   const [loading, error, run, posts] = useRequest([])

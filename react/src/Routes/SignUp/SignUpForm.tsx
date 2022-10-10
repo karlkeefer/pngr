@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 
-import { useRequest, useFields } from 'Shared/Hooks';
 import API from 'Api'
-import { InputChangeHandler } from 'Shared/Types';
+import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
+
 
 const SignUpForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })

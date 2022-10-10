@@ -6,7 +6,7 @@ import { Button } from 'semantic-ui-react'
 import API from 'Api'
 import SimplePage from 'Shared/SimplePage'
 import { useRequest } from 'Shared/Hooks'
-import { Post } from 'Shared/Types'
+import { Post } from 'Shared/Models'
 
 const ViewPost = () => {
   const params = useParams<{ id: string }>();
