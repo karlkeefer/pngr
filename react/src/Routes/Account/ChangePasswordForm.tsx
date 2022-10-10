@@ -3,10 +3,11 @@ import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
 import { useRequest, useFields } from 'Shared/Hooks';
+import { InputChangeHandler } from 'Shared/Types';
 
 const ChangePasswordForm = () => {
-  const [loading, error, run, result] = useRequest({})
-  const [fields, handleChange] = useFields({pass: ''})
+  const [loading, error, run, result] = useRequest({ success: false })
+  const [fields, handleChange] = useFields({ pass: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.updatePassword(fields))
@@ -28,7 +29,7 @@ const ChangePasswordForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleChange} />
+        onChange={handleChange as InputChangeHandler} />
       <Button primary fluid size="huge" type="submit">Update Password</Button>
     </Form>
   )

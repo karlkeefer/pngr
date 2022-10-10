@@ -10,7 +10,7 @@ export const emptyUser = {
 
 export const User = React.createContext({
   user: emptyUser,
-  setUser: () => {},
+  setUser: (user) => {},
   userLoading: false,
   setLoading: ()=> {},
   handleLogout: () => {}

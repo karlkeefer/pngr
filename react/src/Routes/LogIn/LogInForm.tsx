@@ -3,19 +3,20 @@ import { Form, Button, Message } from 'semantic-ui-react'
 import { Redirect, useLocation } from 'react-router-dom'
 
 import API from 'Api'
-import { User } from 'Shared/Context'
+import { User as UserContainer } from 'Shared/Context'
 import { useRequest, useFields } from 'Shared/Hooks';
+import { InputChangeHandler, User } from 'Shared/Types'
 
-const empty = {email: '', pass: ''};
+const empty = { email: '', pass: '' };
 
 const LogInForm = () => {
-  const location = useLocation()
-  const {user, setUser} = useContext(User)
-  const [loading, error, run] = useRequest({})
-  const [fields, handleChange, setFields] = useFields(empty)
+  const location = useLocation<{ from: string }>()
+  const { user, setUser } = useContext(UserContainer)
+  const [loading, error, run] = useRequest<User>(empty)
+  const [fields, handleChange, setFields] = useFields<User>(empty)
 
   const handleSubmit = useCallback(() => {
-    run(API.login(fields), user=>{
+    run(API.login(fields), user => {
       setUser(user);
       setFields(empty)
     });
@@ -23,7 +24,7 @@ const LogInForm = () => {
 
   if (user.id > 0 && !loading) {
     const { from } = location.state || { from: { pathname: '/posts' } };
-    return <Redirect to={from}/>;
+    return <Redirect to={from} />;
   }
 
   const { email, pass } = fields;
@@ -39,7 +40,7 @@ const LogInForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleChange} />
+        onChange={handleChange as InputChangeHandler} />
       <Form.Input
         size="big"
         name="pass"
@@ -47,7 +48,7 @@ const LogInForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleChange} />
+        onChange={handleChange as InputChangeHandler} />
       <Button primary fluid size="huge" type="submit">Log In</Button>
     </Form>
   )
