@@ -3,10 +3,11 @@ import { Form, Button, Message } from 'semantic-ui-react'
 
 import { useRequest, useFields } from 'Shared/Hooks';
 import API from 'Api'
+import { InputChangeHandler } from 'Shared/Types';
 
 const SignUpForm = () => {
-  const [loading, error, run, result] = useRequest({})
-  const [fields, handleChange] = useFields({email: '', pass: ''})
+  const [loading, error, run, result] = useRequest({ success: false })
+  const [fields, handleChange] = useFields({ email: '', pass: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.signup(fields))
@@ -16,7 +17,7 @@ const SignUpForm = () => {
     return <Message positive>Check the developer console to see your verification link!</Message>
   }
 
-  const {email, pass} = fields;
+  const { email, pass } = fields;
 
   return (
     <Form error name="signup" loading={loading} onSubmit={handleSubmit}>
@@ -29,7 +30,7 @@ const SignUpForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleChange} />
+        onChange={handleChange as InputChangeHandler} />
       <Form.Input
         size="big"
         name="pass"
@@ -37,7 +38,7 @@ const SignUpForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleChange} />
+        onChange={handleChange as InputChangeHandler} />
       <Button positive fluid size="huge" type="submit">Create Account</Button>
     </Form>
   )

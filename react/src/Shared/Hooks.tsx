@@ -1,10 +1,9 @@
 import { useState, useCallback, ChangeEvent } from 'react';
 import _ from 'lodash'
-import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
+import { InputOnChangeData } from 'semantic-ui-react';
+import { InputChangeHandler, RunFunc, TextAreaChangeHandler } from './Types';
 
-type RunFunc = (promise: Promise<any>, onSuccess?: Function, onFailure?: Function) => void
-
-export const useRequest = <T extends Object>(initData: T): [boolean, string, RunFunc, T] => {
+export const useRequest = <T extends Object>(initData: T): [boolean, string, RunFunc<T>, T] => {
   const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -12,7 +11,7 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
   // we could just return the promise from run(), but using onSuccess and onFailure callbacks 
   // allows us to react before the loading/errors states change - this is mostly useful if 
   // we want to redirect before the not-loading layout can show itself
-  const run = useCallback((promise: Promise<any>, onSuccess?: Function, onFailure?: Function) => {
+  const run = useCallback((promise: Promise<any>, onSuccess?: (data: T) => void, onFailure?: Function) => {
     setLoading(true);
     setError('');
 
@@ -40,9 +39,6 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
 // this hook also supports nested properties!
 // You just have to set your input field's name attr appropriately
 // e.g. w/ a schema like {person:{first_name:''}} you can do <input name="person.first_name"/>
-
-export type InputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
-export type TextAreaChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
 
 export const useFields = <T extends Object>(initFields: T): [T, InputChangeHandler | TextAreaChangeHandler, Function] => {
   const [fields, setFields] = useState(initFields)
