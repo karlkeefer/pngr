@@ -4,29 +4,33 @@ import { Link } from 'react-router-dom'
 import { Button } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest } from 'Shared/Hooks'
 import SimplePage from 'Shared/SimplePage'
+import { useRequest } from 'Shared/Hooks'
+import { Post } from 'Shared/Types'
 
-const Post = () => {
+const ViewPost = () => {
   const params = useParams<{ id: string }>();
-  const postID = Number(params.id);
-  const [loading, error, run, post] = useRequest({})
+  const [loading, error, run, post] = useRequest<Post>({
+    id: Number(params.id),
+    title: '',
+    body: ''
+  })
 
   // if we have a post ID, fetch it
   useEffect(() => {
-    if (postID) {
-      run(API.getPost(postID))
+    if (post.id) {
+      run(API.getPost(post.id))
     }
-  }, [run, postID])
+  }, [run, post.id])
 
-  const { id, title, body } = post as Post;
+  const { id, title, body } = post;
 
   return (
-    <SimplePage icon='file' title={title} loading={!!loading} error={error}>
+    <SimplePage icon='file' title={title} loading={loading} error={error}>
       <p>{body}</p>
       {id ? <Button as={Link} to={`/post/${id}/edit`} content='Edit' /> : false}
     </SimplePage>
   )
 }
 
-export default Post;
+export default ViewPost;

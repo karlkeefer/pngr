@@ -4,38 +4,42 @@ import { useParams } from 'react-router'
 import { Redirect } from 'react-router'
 
 import API from 'Api'
-import { useRequest, useFields, } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage';
+import { useRequest, useFields } from 'Shared/Hooks';
 import { InputChangeHandler, Post, TextAreaChangeHandler } from 'Shared/Types'
 
 const PostForm = () => {
   const params = useParams<{ id: string }>();
-  const postID = Number(params.id);
-  const [loading, error, run] = useRequest({})
-  const [fields, handleChange, setFields] = useFields<Post>({ title: '', body: '' })
+  const post = {
+    id: Number(params.id),
+    title: '',
+    body: ''
+  };
+  const [loading, error, run] = useRequest<Post>(post)
+  const [fields, handleChange, setFields] = useFields<Post>(post)
   const [redirectTo, setRedirectTo] = useState('');
 
   const handleSubmit = useCallback(() => {
-    const action = postID ? API.updatePost(fields) : API.createPost(fields);
+    const action = post.id ? API.updatePost(fields) : API.createPost(fields);
     run(action, () => {
       setRedirectTo('/posts')
     })
-  }, [postID, fields, run])
+  }, [post.id, fields, run])
 
   const handleDelete = useCallback(() => {
-    run(API.deletePost(postID), () => {
+    run(API.deletePost(post.id), () => {
       setRedirectTo('/posts')
     })
-  }, [run, postID])
+  }, [run, post.id])
 
   // if we have a post ID, fetch it
   useEffect(() => {
-    if (postID) {
-      run(API.getPost(postID), (post: Object) => {
+    if (post.id) {
+      run(API.getPost(post.id), (post) => {
         setFields(post);
       });
     }
-  }, [postID, run, setFields])
+  }, [post.id, run, setFields])
 
   if (redirectTo) {
     return <Redirect to={redirectTo} />
@@ -44,8 +48,8 @@ const PostForm = () => {
   const { title, body } = fields;
 
   return (
-    <SimplePage icon='file alternate outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
-      <Form error name="createPost" loading={!!loading} onSubmit={handleSubmit}>
+    <SimplePage icon='file alternate outline' title={post.id ? `Edit Post #${post.id}` : 'Create a Post'}>
+      <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input
           autoFocus
@@ -64,7 +68,7 @@ const PostForm = () => {
           value={body}
           onChange={handleChange as TextAreaChangeHandler} />
         <Button primary size="huge" type="submit">Save</Button>
-        {postID ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false}
+        {post.id ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false}
       </Form>
     </SimplePage>
   )
