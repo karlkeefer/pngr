@@ -2,7 +2,9 @@ import { useState, useCallback, ChangeEvent } from 'react';
 import _ from 'lodash'
 import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 
-export const useRequest = (initData: Object | undefined): [boolean, string, Function, any] => {
+type RunFunc = (promise: Promise<any>, onSuccess?: Function, onFailure?: Function) => void
+
+export const useRequest = <T extends Object>(initData: T): [boolean, string, RunFunc, T] => {
   const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -10,7 +12,7 @@ export const useRequest = (initData: Object | undefined): [boolean, string, Func
   // we could just return the promise from run(), but using onSuccess and onFailure callbacks 
   // allows us to react before the loading/errors states change - this is mostly useful if 
   // we want to redirect before the not-loading layout can show itself
-  const run = useCallback((promise: Promise<any>, onSuccess: Function, onFailure: Function) => {
+  const run = useCallback((promise: Promise<any>, onSuccess?: Function, onFailure?: Function) => {
     setLoading(true);
     setError('');
 
@@ -42,7 +44,7 @@ export const useRequest = (initData: Object | undefined): [boolean, string, Func
 export type InputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
 export type TextAreaChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
 
-export const useFields = (initFields: Object): [Object, InputChangeHandler | TextAreaChangeHandler, Function] => {
+export const useFields = <T extends Object>(initFields: T): [T, InputChangeHandler | TextAreaChangeHandler, Function] => {
   const [fields, setFields] = useState(initFields)
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>, { name, type, value, checked }: InputOnChangeData) => {
     setFields(f => {
