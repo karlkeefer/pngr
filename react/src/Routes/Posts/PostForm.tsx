@@ -7,11 +7,6 @@ import API from 'Api'
 import { useRequest, useFields, TextAreaChangeHandler, InputChangeHandler } from 'Shared/Hooks';
 import SimplePage from 'Shared/SimplePage';
 
-type PostFields = {
-  title: string,
-  body: string
-}
-
 const PostForm = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
@@ -45,7 +40,7 @@ const PostForm = () => {
     return <Redirect to={redirectTo} />
   }
 
-  const { title, body } = fields as PostFields;
+  const { title, body } = fields as Post;
 
   return (
     <SimplePage icon='file alternate outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
