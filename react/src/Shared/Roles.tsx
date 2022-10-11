@@ -9,5 +9,5 @@ export const LoggedIn = ({ children }: { children: React.ReactNode }) => {
 
 export const Anon = ({ children }: { children: React.ReactNode }) => {
   const { user } = useContext(UserContainer)
-  return <>{user.id === 0 && children}</>
+  return <>{(user.id === 0 || !user.id) && children}</>
 }
