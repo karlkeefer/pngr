@@ -12,7 +12,7 @@ import SimplePage from 'Shared/SimplePage'
 const ViewPost = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
-  const [loading, error, run, post] = useRequest<Post>({} as Post);
+  const [loading, error, run, post] = useRequest({} as Post);
 
   // if we have a post ID, fetch it
   useEffect(() => {

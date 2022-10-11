@@ -12,8 +12,8 @@ import SimplePage from 'Shared/SimplePage';
 const PostForm = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
-  const [loading, error, run] = useRequest<Post>({} as Post)
-  const {fields, handleInputChange, handleTextAreaChange, setFields} = useFields<Post>({} as Post)
+  const [loading, error, run] = useRequest({} as Post)
+  const {fields, handleInputChange, handleTextAreaChange, setFields} = useFields({} as Post)
   const [redirectTo, setRedirectTo] = useState('');
 
   // if we have a post ID, fetch it

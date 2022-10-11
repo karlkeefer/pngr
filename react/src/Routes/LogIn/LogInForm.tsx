@@ -11,8 +11,8 @@ import { UserContainer } from 'Shared/UserContainer'
 const LogInForm = () => {
   const location = useLocation<{ from: string }>()
   const { user, setUser } = useContext(UserContainer)
-  const [loading, error, run] = useRequest<User>({} as User)
-  const {fields, handleInputChange, setFields} = useFields<User>({} as User)
+  const [loading, error, run] = useRequest({} as User)
+  const { fields, handleInputChange, setFields } = useFields({} as User)
 
   const handleSubmit = useCallback(() => {
     run(API.login(fields), user => {
