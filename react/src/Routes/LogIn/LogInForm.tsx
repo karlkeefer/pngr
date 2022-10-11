@@ -4,9 +4,9 @@ import { Redirect, useLocation } from 'react-router-dom'
 import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { UserContainer } from 'Shared/Context'
 import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
 import { User } from 'Shared/Models'
+import { UserContainer } from 'Shared/UserContainer'
 
 const LogInForm = () => {
   const location = useLocation<{ from: string }>()

@@ -12,7 +12,6 @@ export const UserContainer = React.createContext({
   handleLogout: () => { }
 });
 
-
 export const WithUser = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState({} as User)
   const [userLoading, setLoading] = useState(true)

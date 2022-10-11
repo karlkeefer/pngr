@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { UserContainer } from 'Shared/Context'
+import { UserContainer } from 'Shared/UserContainer'
 
 export const LoggedIn = ({ children }: { children: React.ReactNode }) => {
   const { user } = useContext(UserContainer)

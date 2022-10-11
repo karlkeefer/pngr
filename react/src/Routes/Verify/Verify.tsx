@@ -5,10 +5,10 @@ import { Redirect } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { UserContainer } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
 import { User } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage'
+import { UserContainer } from 'Shared/UserContainer'
 
 const Verify = () => {
   const { code } = useParams<{ code: string }>();

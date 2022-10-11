@@ -4,10 +4,10 @@ import { useParams } from 'react-router'
 import { Redirect } from 'react-router-dom'
 
 import API from 'Api'
-import { UserContainer } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
 import { User } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage';
+import { UserContainer } from 'Shared/UserContainer'
 
 const CheckReset = () => {
   const { code } = useParams<{ code: string }>();
