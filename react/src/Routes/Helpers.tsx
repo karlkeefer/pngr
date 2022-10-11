@@ -4,8 +4,8 @@ import { Redirect, RouteProps } from 'react-router'
 import { Route } from 'react-router-dom'
 import { Loader, Container, Dimmer } from 'semantic-ui-react'
 
-import { UserContainer } from 'Shared/Context'
 import SimplePage from 'Shared/SimplePage'
+import { UserContainer } from 'Shared/UserContainer'
 
 // check the user is logged in, and redirect to login screen if still not auth'd
 

@@ -1,19 +1,19 @@
-import react from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 import { Segment, Message, Header, Button, Placeholder } from 'semantic-ui-react'
 
 import API from 'Api'
-import { UserContainer } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks'
 import { Post } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage'
+import { UserContainer } from 'Shared/UserContainer'
 
 const Posts = () => {
   const [loading, error, run, posts] = useRequest([])
-  const { user } = react.useContext(UserContainer)
+  const { user } = useContext(UserContainer)
 
-  react.useEffect(() => {
+  useEffect(() => {
     run(API.getPosts())
   }, [run])
 

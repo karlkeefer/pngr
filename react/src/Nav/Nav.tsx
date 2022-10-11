@@ -4,8 +4,8 @@ import { useLocation } from 'react-router'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { Button, Container, Menu } from 'semantic-ui-react'
 
-import { UserContainer } from 'Shared/Context'
 import { Anon, LoggedIn } from 'Shared/Roles'
+import { UserContainer } from 'Shared/UserContainer'
 
 import './responsive.css'
 

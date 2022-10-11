@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 
 import Nav from 'Nav/Nav'
 import Routes from 'Routes/Routes'
-import { WithUser } from 'Shared/Context'
+import { WithUser } from 'Shared/UserContainer'
 
 const App = () => (
   <WithUser>
