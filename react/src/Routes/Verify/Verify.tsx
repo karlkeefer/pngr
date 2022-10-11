@@ -12,13 +12,14 @@ import { UserContainer } from 'Shared/UserContainer'
 
 const Verify = () => {
   const { code } = useParams<{ code: string }>();
-  const [loading, error, run, result] = useRequest<User>({} as User)
+  const [loading, error, run, user] = useRequest<User>({} as User)
   const [redirect, setRedirect] = useState(false)
   const { userLoading, setUser } = useContext(UserContainer)
 
   useEffect(() => {
     if (!userLoading) {
-      // wait until defailt whoami returns before attempting reset
+      // wait until default whoami (called within the UserContainer) returns 
+      // before attempting reset, otherwise there is a race condition
       run(API.verify({ code }), user => {
         setUser(user);
         setTimeout(() => {
@@ -34,7 +35,8 @@ const Verify = () => {
 
   return (
     <SimplePage title='Account Verification' centered loading={loading} error={error}>
-      {result && result.id ? <Message positive>Success! You have verified your email!</Message> : false}
+      {user && user.id && user.id > 0 && 
+        <Message positive>Success! You have verified your email!</Message>}
     </SimplePage>
   );
 }

@@ -13,18 +13,17 @@ type SimplePageProps = React.PropsWithChildren<{
 
 const SimplePage = ({ title, icon, centered, loading, error, children }: SimplePageProps): JSX.Element => (
   <Container style={{ paddingTop: '7em' }}>
-    {title && !loading ?
+    {title && !loading &&
       <Helmet>
         <title>{title}</title>
-      </Helmet>
-      : false}
+      </Helmet>}
 
     <Content centered={!!centered}>
       <Header as='h1'>
-        {icon ? <Icon name={icon} /> : false}{title}
+        {icon && <Icon name={icon} />}{title}
       </Header>
 
-      {error ? <Message negative>{error}</Message> : false}
+      {error && <Message negative>{error}</Message>}
 
       {loading ? <Loader active inline='centered' /> : children}
     </Content>

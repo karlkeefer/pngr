@@ -11,45 +11,42 @@ import SimplePage from 'Shared/SimplePage';
 
 const PostForm = () => {
   const params = useParams<{ id: string }>();
-  const post = {
-    id: Number(params.id),
-    title: '',
-    body: ''
-  };
-  const [loading, error, run] = useRequest<Post>(post)
-  const [fields, handleChange, setFields] = useFields<Post>(post)
+  const postID = Number(params.id);
+  const [loading, error, run] = useRequest<Post>({} as Post)
+  const [fields, handleChange, setFields] = useFields<Post>({} as Post)
   const [redirectTo, setRedirectTo] = useState('');
-
-  const handleSubmit = useCallback(() => {
-    const action = post.id ? API.updatePost(fields) : API.createPost(fields);
-    run(action, () => {
-      setRedirectTo('/posts')
-    })
-  }, [post.id, fields, run])
-
-  const handleDelete = useCallback(() => {
-    run(API.deletePost(post.id), () => {
-      setRedirectTo('/posts')
-    })
-  }, [run, post.id])
 
   // if we have a post ID, fetch it
   useEffect(() => {
-    if (post.id) {
-      run(API.getPost(post.id), (post) => {
+    if (postID) {
+      run(API.getPost(postID), (post) => {
         setFields(post);
       });
     }
-  }, [post.id, run, setFields])
+  }, [postID, run, setFields])
+
+  // handlers
+  const handleSubmit = useCallback(() => {
+    const action = postID ? API.updatePost(fields) : API.createPost(fields);
+    run(action, () => {
+      setRedirectTo('/posts')
+    })
+  }, [postID, fields, run])
+
+  const handleDelete = useCallback(() => {
+    run(API.deletePost(postID), () => {
+      setRedirectTo('/posts')
+    })
+  }, [run, postID])
 
   if (redirectTo) {
     return <Redirect to={redirectTo} />
   }
 
-  const { title, body } = fields;
+  const { id, title, body } = fields;
 
   return (
-    <SimplePage icon='file alternate outline' title={post.id ? `Edit Post #${post.id}` : 'Create a Post'}>
+    <SimplePage icon='file alternate outline' title={id ? `Edit Post #${id}` : 'Create a Post'}>
       <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input
@@ -69,7 +66,8 @@ const PostForm = () => {
           value={body}
           onChange={handleChange as TextAreaChangeHandler} />
         <Button primary size="huge" type="submit">Save</Button>
-        {post.id ? <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button> : false}
+        {id && id > 0 &&
+          <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button>}
       </Form>
     </SimplePage>
   )
