@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react'
+
 import { useParams } from 'react-router'
-import { Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
+import { Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { User } from 'Shared/Context'
+import { UserContainer } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
+import { User } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage'
 
 const Verify = () => {
-  const { code } = useParams();
-  const [loading, error, run, result] = useRequest({})
+  const { code } = useParams<{ code: string }>();
+  const [loading, error, run, result] = useRequest<User>({} as User)
   const [redirect, setRedirect] = useState(false)
-  const { userLoading, setUser } = useContext(User)
+  const { userLoading, setUser } = useContext(UserContainer)
 
   useEffect(() => {
     if (!userLoading) {
       // wait until defailt whoami returns before attempting reset
-      run(API.verify({code}), user => {
+      run(API.verify({ code }), user => {
         setUser(user);
         setTimeout(() => {
           setRedirect(true);
@@ -27,7 +29,7 @@ const Verify = () => {
   }, [run, setUser, setRedirect, code, userLoading])
 
   if (redirect) {
-    return <Redirect to="/posts"/>
+    return <Redirect to="/posts" />
   }
 
   return (

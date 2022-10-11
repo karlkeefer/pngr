@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Menu, Container, Button } from 'semantic-ui-react'
-import { useLocation } from 'react-router'
-import { NavLink } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react'
 
-import { User } from 'Shared/Context'
-import { LoggedIn, Anon } from 'Shared/Roles';
+import { useLocation } from 'react-router'
+import { NavLink, NavLinkProps } from 'react-router-dom'
+import { Button, Container, Menu } from 'semantic-ui-react'
+
+import { UserContainer } from 'Shared/Context'
+import { Anon, LoggedIn } from 'Shared/Roles'
 
 import './responsive.css'
 
 // helper for semanticUI + react-router
-const MenuLink = props => (
+const MenuLink = (props: NavLinkProps) => (
   <NavLink
     {...props}
     activeClassName="active"
@@ -19,9 +20,9 @@ const MenuLink = props => (
 const Nav = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false)
-  const {handleLogout} = useContext(User)
+  const { handleLogout } = useContext(UserContainer)
 
-  useEffect(()=>{
+  useEffect(() => {
     setOpen(false);
   }, [location])
 
@@ -29,7 +30,7 @@ const Nav = () => {
 
   return <Menu stackable fixed="top" inverted>
     <Container>
-      <Button id="toggler" fluid color='black' icon='sidebar' onClick={() => setOpen(!open)}/>
+      <Button id="toggler" fluid color='black' icon='sidebar' onClick={() => setOpen(!open)} />
       <Menu.Menu className={menuClass} position="left" id="override">
         <Menu.Item as={MenuLink} exact to="/" name="Home" />
         <LoggedIn>
@@ -38,13 +39,13 @@ const Nav = () => {
       </Menu.Menu>
       <Menu.Menu className={menuClass} position="right">
         <Anon>
-          <Menu.Item as={MenuLink} exact to={{pathname:"/login", state:{from:location}}} name="Log In" />
+          <Menu.Item as={MenuLink} exact to={{ pathname: "/login", state: { from: location } }} name="Log In" />
           <Menu.Item as={MenuLink} exact to="/signup" name="Sign Up" />
         </Anon>
         <LoggedIn>
-          <Menu.Item link={true} onClick={handleLogout} content="Log Out"/>
+          <Menu.Item link={true} onClick={handleLogout} content="Log Out" />
         </LoggedIn>
-      </Menu.Menu> 
+      </Menu.Menu>
     </Container>
   </Menu>
 }

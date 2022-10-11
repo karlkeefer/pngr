@@ -1,20 +1,20 @@
 import React from 'react'
+
 import { Switch, Route } from 'react-router-dom'
 
-import { PrivateRoute, NoMatch } from 'Routes/Helpers'
-
-import Home from 'Routes/Home/Home'
-import SignUp from 'Routes/SignUp/SignUp'
-import LogIn from 'Routes/LogIn/LogIn'
-import Reset from 'Routes/Reset/Reset'
-import CheckReset from 'Routes/Reset/CheckReset'
 import ChangePassword from 'Routes/Account/ChangePassword'
-import Verify from 'Routes/Verify/Verify'
-import Posts from 'Routes/Posts/Posts'
+import { PrivateRoute, NoMatch } from 'Routes/Helpers'
+import Home from 'Routes/Home/Home'
+import LogIn from 'Routes/LogIn/LogIn'
 import Post from 'Routes/Posts/Post'
 import PostForm from 'Routes/Posts/PostForm'
+import Posts from 'Routes/Posts/Posts'
+import CheckReset from 'Routes/Reset/CheckReset'
+import Reset from 'Routes/Reset/Reset'
+import SignUp from 'Routes/SignUp/SignUp'
+import Verify from 'Routes/Verify/Verify'
 
-const Routes = (props) => (
+const Routes = () => (
   <Switch>
     <Route exact path="/" component={Home} />
     <Route exact path="/signup" component={SignUp}/>

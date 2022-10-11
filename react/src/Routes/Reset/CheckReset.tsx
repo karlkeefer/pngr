@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
+
 import { useParams } from 'react-router'
 import { Redirect } from 'react-router-dom'
 
 import API from 'Api'
-import { User } from 'Shared/Context'
+import { UserContainer } from 'Shared/Context'
 import { useRequest } from 'Shared/Hooks';
+import { User } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage';
 
 const CheckReset = () => {
-  const { code } = useParams();
-  const [loading, error, run] = useRequest({})
+  const { code } = useParams<{ code: string }>();
+  const [loading, error, run] = useRequest<User>({} as User)
   const [redirect, setRedirect] = useState('/posts')
-  const { user, userLoading, setUser } = useContext(User)
+  const { user, userLoading, setUser } = useContext(UserContainer)
 
   useEffect(() => {
     if (!userLoading) {
@@ -23,12 +25,12 @@ const CheckReset = () => {
     }
   }, [run, userLoading, setUser, setRedirect, code])
 
-  if (user.id > 0 && redirect) {
-    return <Redirect to={redirect}/>
+  if (user.id && user.id > 0 && redirect) {
+    return <Redirect to={redirect} />
   }
 
   return (
-    <SimplePage title='Logging you in...' loading={userLoading || loading} error={error} centered/>
+    <SimplePage title='Logging you in...' loading={userLoading || loading} error={error} centered />
   )
 }
 
