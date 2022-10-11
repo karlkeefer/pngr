@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Form, Message, Button } from 'semantic-ui-react'
+
 import { useParams } from 'react-router'
 import { Redirect } from 'react-router'
+import { Form, Message, Button } from 'semantic-ui-react'
 
 import API from 'Api'
-import SimplePage from 'Shared/SimplePage';
 import { useRequest, useFields, TextAreaChangeHandler, InputChangeHandler } from 'Shared/Hooks';
+import { Post } from 'Shared/Models'
+import SimplePage from 'Shared/SimplePage';
 
 const PostForm = () => {
   const params = useParams<{ id: string }>();

@@ -1,27 +1,27 @@
 import React, { useCallback, useContext } from 'react'
-import { Form, Button, Message } from 'semantic-ui-react'
+
 import { Redirect, useLocation } from 'react-router-dom'
+import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { User as UserContainer } from 'Shared/Context'
+import { UserContainer } from 'Shared/Context'
 import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
-
-const empty = { email: '', pass: '' };
+import { User } from 'Shared/Models'
 
 const LogInForm = () => {
   const location = useLocation<{ from: string }>()
   const { user, setUser } = useContext(UserContainer)
-  const [loading, error, run] = useRequest<User>(empty)
-  const [fields, handleChange, setFields] = useFields<User>(empty)
+  const [loading, error, run] = useRequest<User>({} as User)
+  const [fields, handleChange, setFields] = useFields<User>({} as User)
 
   const handleSubmit = useCallback(() => {
     run(API.login(fields), user => {
       setUser(user);
-      setFields(empty)
+      setFields({} as User)
     });
   }, [run, fields, setFields, setUser])
 
-  if (user.id > 0 && !loading) {
+  if (user.id && user.id > 0 && !loading) {
     const { from } = location.state || { from: { pathname: '/posts' } };
     return <Redirect to={from} />;
   }

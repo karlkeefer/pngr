@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
+
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Button } from 'semantic-ui-react'
 
 import API from 'Api'
-import SimplePage from 'Shared/SimplePage'
 import { useRequest } from 'Shared/Hooks'
 import { Post } from 'Shared/Models'
+import SimplePage from 'Shared/SimplePage'
 
 const ViewPost = () => {
   const params = useParams<{ id: string }>();

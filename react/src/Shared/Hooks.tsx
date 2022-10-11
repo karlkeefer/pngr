@@ -1,5 +1,6 @@
-import _ from 'lodash'
 import { useState, useCallback, ChangeEvent } from 'react';
+
+import _ from 'lodash'
 import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 
 export type RunFunc<T> = (promise: Promise<any>, onSuccess?: (data: T) => void, onFailure?: Function) => void
