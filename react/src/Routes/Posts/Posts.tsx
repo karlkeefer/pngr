@@ -20,15 +20,17 @@ const Posts = () => {
   return (
     <SimplePage icon='copy' title='My Posts' error={error}>
       <p>This page fetches some protected data that only the logged in user ({user.email}) can see!</p>
-      {loading ? <Placeholder style={{ marginBottom: '1em' }}>
-        <Placeholder.Paragraph>
-          <Placeholder.Line />
-          <Placeholder.Line />
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Paragraph>
-      </Placeholder> : false}
-      {posts.length === 0 && !loading ? <Message warning>No posts found...</Message> : false}
+      {loading &&
+        <Placeholder style={{ marginBottom: '1em' }}>
+          <Placeholder.Paragraph>
+            <Placeholder.Line />
+            <Placeholder.Line />
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder.Paragraph>
+        </Placeholder>}
+      {posts.length === 0 && !loading && 
+        <Message warning>No posts found...</Message>}
       {posts.map(SinglePost)}
       <Button as={Link} to='/post/create' primary icon='plus' content='New post' />
     </SimplePage>

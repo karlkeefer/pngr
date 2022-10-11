@@ -11,25 +11,23 @@ import SimplePage from 'Shared/SimplePage'
 
 const ViewPost = () => {
   const params = useParams<{ id: string }>();
-  const [loading, error, run, post] = useRequest<Post>({
-    id: Number(params.id),
-    title: '',
-    body: ''
-  })
+  const postID = Number(params.id);
+  const [loading, error, run, post] = useRequest<Post>({} as Post);
 
   // if we have a post ID, fetch it
   useEffect(() => {
-    if (post.id) {
-      run(API.getPost(post.id))
+    if (postID) {
+      run(API.getPost(postID))
     }
-  }, [run, post.id])
+  }, [run, postID])
 
   const { id, title, body } = post;
 
   return (
     <SimplePage icon='file' title={title} loading={loading} error={error}>
       <p>{body}</p>
-      {id ? <Button as={Link} to={`/post/${id}/edit`} content='Edit' /> : false}
+      {id && id > 0 && 
+        <Button as={Link} to={`/post/${id}/edit`} content='Edit' />}
     </SimplePage>
   )
 }
