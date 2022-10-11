@@ -3,12 +3,12 @@ import React, { useCallback } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
+import { useRequest, useFields } from 'Shared/Hooks';
 
 
 const ResetForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })
-  const [fields, handleChange] = useFields({ email: '' })
+  const {fields, handleInputChange} = useFields({ email: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.reset(fields))
@@ -30,7 +30,7 @@ const ResetForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleChange as InputChangeHandler} />
+        onChange={handleInputChange} />
       <Button primary fluid size="huge" type="submit">Reset Password</Button>
     </Form>
   )

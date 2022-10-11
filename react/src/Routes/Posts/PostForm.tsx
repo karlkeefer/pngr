@@ -5,7 +5,7 @@ import { Redirect } from 'react-router'
 import { Form, Message, Button } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest, useFields, TextAreaChangeHandler, InputChangeHandler } from 'Shared/Hooks';
+import { useRequest, useFields } from 'Shared/Hooks';
 import { Post } from 'Shared/Models'
 import SimplePage from 'Shared/SimplePage';
 
@@ -13,7 +13,7 @@ const PostForm = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
   const [loading, error, run] = useRequest<Post>({} as Post)
-  const [fields, handleChange, setFields] = useFields<Post>({} as Post)
+  const {fields, handleInputChange, handleTextAreaChange, setFields} = useFields<Post>({} as Post)
   const [redirectTo, setRedirectTo] = useState('');
 
   // if we have a post ID, fetch it
@@ -57,14 +57,14 @@ const PostForm = () => {
           placeholder="Post Title"
           required
           value={title}
-          onChange={handleChange as InputChangeHandler} />
+          onChange={handleInputChange} />
         <Form.TextArea
           name="body"
           rows={4}
           placeholder="Post content"
           required
           value={body}
-          onChange={handleChange as TextAreaChangeHandler} />
+          onChange={handleTextAreaChange} />
         <Button primary size="huge" type="submit">Save</Button>
         {id && id > 0 &&
           <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button>}
