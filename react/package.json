@@ -34,7 +34,7 @@
     "@types/lodash": "^4.14.186",
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.3.3",
-    "eslint-import-resolver-typescript": "^3.5.1",
+    "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
     "semantic-ui-less": "^2.4.1"
   }

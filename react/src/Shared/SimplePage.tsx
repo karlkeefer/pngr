@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
-import { Container, Grid, Header, Icon, Message, Loader, SemanticICONS } from 'semantic-ui-react'
+
 import { Helmet } from 'react-helmet'
+import { Container, Grid, Header, Icon, Message, Loader, SemanticICONS } from 'semantic-ui-react'
 
 type SimplePageProps = React.PropsWithChildren<{
   title: string
