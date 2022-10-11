@@ -3,12 +3,12 @@ import React, { useCallback } from 'react'
 import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
+import { useRequest, useFields } from 'Shared/Hooks';
 
 
 const SignUpForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })
-  const [fields, handleChange] = useFields({ email: '', pass: '' })
+  const {fields, handleInputChange} = useFields({ email: '', pass: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.signup(fields))
@@ -31,7 +31,7 @@ const SignUpForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleChange as InputChangeHandler} />
+        onChange={handleInputChange} />
       <Form.Input
         size="big"
         name="pass"
@@ -39,7 +39,7 @@ const SignUpForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleChange as InputChangeHandler} />
+        onChange={handleInputChange} />
       <Button positive fluid size="huge" type="submit">Create Account</Button>
     </Form>
   )

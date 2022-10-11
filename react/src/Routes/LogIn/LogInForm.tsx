@@ -4,7 +4,7 @@ import { Redirect, useLocation } from 'react-router-dom'
 import { Form, Button, Message } from 'semantic-ui-react'
 
 import API from 'Api'
-import { useRequest, useFields, InputChangeHandler } from 'Shared/Hooks';
+import { useRequest, useFields } from 'Shared/Hooks';
 import { User } from 'Shared/Models'
 import { UserContainer } from 'Shared/UserContainer'
 
@@ -12,7 +12,7 @@ const LogInForm = () => {
   const location = useLocation<{ from: string }>()
   const { user, setUser } = useContext(UserContainer)
   const [loading, error, run] = useRequest<User>({} as User)
-  const [fields, handleChange, setFields] = useFields<User>({} as User)
+  const {fields, handleInputChange, setFields} = useFields<User>({} as User)
 
   const handleSubmit = useCallback(() => {
     run(API.login(fields), user => {
@@ -39,7 +39,7 @@ const LogInForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleChange as InputChangeHandler} />
+        onChange={handleInputChange} />
       <Form.Input
         size="big"
         name="pass"
@@ -47,7 +47,7 @@ const LogInForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleChange as InputChangeHandler} />
+        onChange={handleInputChange} />
       <Button primary fluid size="huge" type="submit">Log In</Button>
     </Form>
   )
