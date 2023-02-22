@@ -13,7 +13,7 @@ const PostForm = () => {
   const params = useParams<{ id: string }>();
   const postID = Number(params.id);
   const [loading, error, run] = useRequest({} as Post)
-  const {fields, handleInputChange, handleTextAreaChange, setFields} = useFields({} as Post)
+  const {fields, handleChange, setFields} = useFields({} as Post)
   const [redirectTo, setRedirectTo] = useState('');
 
   // if we have a post ID, fetch it
@@ -57,14 +57,14 @@ const PostForm = () => {
           placeholder="Post Title"
           required
           value={title}
-          onChange={handleInputChange} />
+          onChange={handleChange} />
         <Form.TextArea
           name="body"
           rows={4}
           placeholder="Post content"
           required
           value={body}
-          onChange={handleTextAreaChange} />
+          onChange={handleChange} />
         <Button primary size="huge" type="submit">Save</Button>
         {id && id > 0 &&
           <Button negative size="huge" type="button" onClick={handleDelete}>Delete</Button>}

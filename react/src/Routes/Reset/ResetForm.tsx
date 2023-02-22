@@ -8,7 +8,7 @@ import { useRequest, useFields } from 'Shared/Hooks';
 
 const ResetForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })
-  const {fields, handleInputChange} = useFields({ email: '' })
+  const {fields, handleChange} = useFields({ email: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.reset(fields))
@@ -30,7 +30,7 @@ const ResetForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Button primary fluid size="huge" type="submit">Reset Password</Button>
     </Form>
   )

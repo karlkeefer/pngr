@@ -17,17 +17,19 @@ Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to
 - [golang-jwt](https://github.com/golang-jwt/jwt) cookies with automatic refresh: ready for horizontal scaling
 - Simple [default middleware for CORS, CSRF, cookie parsing, etc](./golang/server/middleware.go).
 - [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
-- A golang worker container stubbed out for async (non-API) tasks
 
 ### Front-end
-- "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
-- Unejected [Create React App](https://github.com/facebookincubator/create-react-app) as the basis for the front-end
+- Unejected [Create React App](https://github.com/facebookincubator/create-react-app) 
 - [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
 - [React Context](https://reactjs.org/docs/context.html) for global user state
-- Functional-style components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
+- Functional-style typescript components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
 - [Semantic UI React](https://react.semantic-ui.com/) for component library with functional [theme variables](https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables) and hot-reload
 
-Actual application feature development is up to you!
+### Other goodies
+- "Server-side rendering" with a [prerender sidecar container](./prerender/Dockerfile)
+- A golang worker container stubbed out for async (non-API) tasks
+
+Feature development is up to you!
 
 ## Requirements
 Install `docker` && `docker-compose`

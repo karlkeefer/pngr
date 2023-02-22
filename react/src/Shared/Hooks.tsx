@@ -42,9 +42,7 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
 // You just have to set your input field's name attr appropriately
 // e.g. w/ a schema like {person:{first_name:''}} you can do <input name="person.first_name"/>
 
-
-export type InputChangeHandler = (event: ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
-export type TextAreaChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
+export type ChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, data: InputOnChangeData | TextAreaProps) => void
 
 type ChangeData = {
   name: string
@@ -53,7 +51,7 @@ type ChangeData = {
   checked?: boolean
 }
 
-export const useFields = <T extends Object>(initFields: T): {fields: T, handleInputChange: InputChangeHandler, handleTextAreaChange: TextAreaChangeHandler, setFields: (newFieldValues: T) => void} => {
+export const useFields = <T extends Object>(initFields: T): {fields: T, handleChange: ChangeHandler, setFields: (newFieldValues: T) => void} => {
   const [fields, setFields] = useState(initFields)
 
   // changeHandler works for <Input> and <TextArea>, but the onChange field for semantic-ui form components 
@@ -66,13 +64,9 @@ export const useFields = <T extends Object>(initFields: T): {fields: T, handleIn
     });
   }, [setFields])
 
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>, cd: InputOnChangeData) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, cd: InputOnChangeData | TextAreaProps) => {
     changeHandler(cd as ChangeData)
   }, [changeHandler])
 
-  const handleTextAreaChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>, cd: TextAreaProps) => {
-    changeHandler(cd as ChangeData)
-  }, [changeHandler])
-
-  return {fields, handleInputChange, handleTextAreaChange, setFields};
+  return {fields, handleChange, setFields};
 }

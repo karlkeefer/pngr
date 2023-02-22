@@ -7,7 +7,7 @@ import { useRequest, useFields } from 'Shared/Hooks';
 
 const ChangePasswordForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })
-  const {fields, handleInputChange} = useFields({ pass: '' })
+  const {fields, handleChange} = useFields({ pass: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.updatePassword(fields))
@@ -29,7 +29,7 @@ const ChangePasswordForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Button primary fluid size="huge" type="submit">Update Password</Button>
     </Form>
   )

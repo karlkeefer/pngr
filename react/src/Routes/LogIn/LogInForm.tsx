@@ -12,7 +12,7 @@ const LogInForm = () => {
   const location = useLocation<{ from: string }>()
   const { user, setUser } = useContext(UserContainer)
   const [loading, error, run] = useRequest({} as User)
-  const { fields, handleInputChange, setFields } = useFields({} as User)
+  const { fields, handleChange, setFields } = useFields({} as User)
 
   const handleSubmit = useCallback(() => {
     run(API.login(fields), user => {
@@ -39,7 +39,7 @@ const LogInForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Form.Input
         size="big"
         name="pass"
@@ -47,7 +47,7 @@ const LogInForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Button primary fluid size="huge" type="submit">Log In</Button>
     </Form>
   )

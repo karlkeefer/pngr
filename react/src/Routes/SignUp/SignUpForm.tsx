@@ -8,7 +8,7 @@ import { useRequest, useFields } from 'Shared/Hooks';
 
 const SignUpForm = () => {
   const [loading, error, run, result] = useRequest({ success: false })
-  const {fields, handleInputChange} = useFields({ email: '', pass: '' })
+  const {fields, handleChange} = useFields({ email: '', pass: '' })
 
   const handleSubmit = useCallback(() => {
     run(API.signup(fields))
@@ -31,7 +31,7 @@ const SignUpForm = () => {
         placeholder="Email"
         required
         value={email}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Form.Input
         size="big"
         name="pass"
@@ -39,7 +39,7 @@ const SignUpForm = () => {
         placeholder="Password"
         required
         value={pass}
-        onChange={handleInputChange} />
+        onChange={handleChange} />
       <Button positive fluid size="huge" type="submit">Create Account</Button>
     </Form>
   )
