@@ -18,7 +18,7 @@ func Error(err error) http.HandlerFunc {
 		found, code := errors.GetCode(err)
 		if !found {
 			// unexpected error - we should clean this up to avoid showing sql errors in the browser
-			log.Println("Unexpected Error: ", err)
+			log.Printf("%s %s: Unexpected Error: %s", r.Method, r.URL.Path, err)
 			err = errors.InternalError
 		}
 		w.WriteHeader(code)
