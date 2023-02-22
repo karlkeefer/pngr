@@ -1,17 +1,17 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 	"strconv"
 
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 	"github.com/julienschmidt/httprouter"
 )
 
 // isNotFound helps us match common db error
 func isNotFound(err error) bool {
-	return err == sql.ErrNoRows
+	return err == pgx.ErrNoRows
 }
 
 // isDupe helps us match common db error
