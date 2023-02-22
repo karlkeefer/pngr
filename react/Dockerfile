@@ -1,11 +1,11 @@
-FROM node:10.13-alpine as dev
+FROM node:16-alpine as dev
 WORKDIR /root/
 CMD echo "getting latest npm modules" \
     && npm install \
     && echo "installation complete, starting" \
     && npm start
 
-FROM node:10.13-alpine as build
+FROM node:16-alpine as build
 WORKDIR /root
 COPY ./package*.json ./
 RUN npm ci --cache .npm
