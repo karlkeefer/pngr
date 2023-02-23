@@ -1,4 +1,4 @@
-FROM golang:1.19 as dev
+FROM golang:1.20.1 as dev
 WORKDIR /root
 RUN go install github.com/cortesi/modd/cmd/modd@latest
 COPY go.* ./
@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 CMD modd -f worker.modd.conf
 
-FROM golang:1.19 as build
+FROM golang:1.20.1 as build
 WORKDIR /root
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o workerbin ./cmd/worker/worker.go
