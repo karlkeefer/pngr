@@ -1,31 +1,29 @@
-import React, { useContext } from 'react'
+import { ReactNode, useContext } from "react";
 
-import { Redirect, RouteProps } from 'react-router'
-import { Route } from 'react-router-dom'
-import { Loader, Container, Dimmer } from 'semantic-ui-react'
+import { Redirect } from "react-router-dom";
+import { Loader, Container, Dimmer } from "semantic-ui-react";
 
-import SimplePage from 'Shared/SimplePage'
-import { UserContainer } from 'Shared/UserContainer'
+import SimplePage from "Shared/SimplePage";
+import { UserContainer } from "Shared/UserContainer";
+
+type RequireAuthProps = {
+  children: ReactNode;
+  redirectTo: string;
+};
 
 // check the user is logged in, and redirect to login screen if still not auth'd
+export function RequireAuth({ children, redirectTo }: RequireAuthProps) {
+  const { user, userLoading } = useContext(UserContainer);
 
-export const PrivateRoute = ({ component, location, ...rest }: RouteProps ) => {
-  const { user, userLoading } = useContext(UserContainer)
-  const C = component as React.FC
+  if (userLoading) {
+    return <BigLoader />;
+  }
 
-  return (
-    <Route {...rest} render={(props) => {
-      if (userLoading) {
-        return <BigLoader />
-      }
+  if (!user.id) {
+    return <Redirect to={redirectTo} />;
+  }
 
-      if (!user.id) {
-        return <Redirect to={{ pathname: '/login', state: { from: location } }} />
-      }
-
-      return <C />
-    }} />
-  );
+  return <>{children}</>
 }
 
 export const NoMatch = () => (
