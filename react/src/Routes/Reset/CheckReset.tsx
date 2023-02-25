@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 
-import { useParams } from 'react-router'
-import { Redirect } from 'react-router-dom'
+import { useNavigate, useParams } from "react-router-dom";
 
 import API from 'Api'
 import { useRequest } from 'Shared/Hooks';
@@ -12,22 +11,24 @@ import { UserContainer } from 'Shared/UserContainer'
 const CheckReset = () => {
   const { code } = useParams<{ code: string }>();
   const [loading, error, run] = useRequest<User>({} as User)
-  const [redirect, setRedirect] = useState('/posts')
-  const { user, userLoading, setUser } = useContext(UserContainer)
+  const { userLoading, setUser } = useContext(UserContainer)
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userLoading) {
       // wait until defailt whoami returns before attempting reset
-      run(API.checkReset(code), user => {
-        setRedirect('/account/password');
-        setUser(user);
+      run(API.checkReset(code!), user => {
+        debugger
+        if (user.id) {
+          navigate("/account/password");
+          setUser(user);
+          return 
+        }
+        debugger
+        navigate("/posts");
       });
     }
-  }, [run, userLoading, setUser, setRedirect, code])
-
-  if (user.id && user.id > 0 && redirect) {
-    return <Redirect to={redirect} />
-  }
+  }, [run, userLoading, setUser, code, navigate])
 
   return (
     <SimplePage title='Logging you in...' loading={userLoading || loading} error={error} centered />

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 
-import { useParams } from 'react-router'
-import { Redirect } from 'react-router-dom'
+import { useNavigate, useParams } from "react-router-dom";
 import { Message } from 'semantic-ui-react'
 
 import API from 'Api'
@@ -13,25 +12,26 @@ import { UserContainer } from 'Shared/UserContainer'
 const Verify = () => {
   const { code } = useParams<{ code: string }>();
   const [loading, error, run, user] = useRequest<User>({} as User)
-  const [redirect, setRedirect] = useState(false)
   const { userLoading, setUser } = useContext(UserContainer)
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userLoading) {
       // wait until default whoami (called within the UserContainer) returns 
       // before attempting reset, otherwise there is a race condition
+      if(!code){
+        navigate("/")
+        return
+      }
+
       run(API.verify({ code }), user => {
         setUser(user);
         setTimeout(() => {
-          setRedirect(true);
+          navigate("/posts")
         }, 2500);
       })
     }
-  }, [run, setUser, setRedirect, code, userLoading])
-
-  if (redirect) {
-    return <Redirect to="/posts" />
-  }
+  }, [run, setUser, code, userLoading, navigate])
 
   return (
     <SimplePage title='Account Verification' centered loading={loading} error={error}>

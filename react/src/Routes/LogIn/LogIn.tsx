@@ -1,14 +1,17 @@
-import React from 'react'
+import { useContext } from 'react'
 
 import { Link } from 'react-router-dom'
 import { Segment } from 'semantic-ui-react'
 
 import SimplePage from 'Shared/SimplePage'
+import { UserContainer } from 'Shared/UserContainer'
 
 import LogInForm from './LogInForm'
 
-const LogIn = () => (
-  <SimplePage title='Log In to your account' centered>
+const LogIn = () =>{ 
+  const { userLoading } = useContext(UserContainer)
+  return (
+  <SimplePage title='Log In to your account' centered loading={userLoading}>
     <Segment.Group>
       <Segment>
         <LogInForm />
@@ -19,6 +22,6 @@ const LogIn = () => (
       </Segment>
     </Segment.Group>
   </SimplePage>
-);
+);}
 
 export default LogIn;
