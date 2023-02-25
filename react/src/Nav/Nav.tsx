@@ -1,21 +1,13 @@
 import { useContext, useEffect, useState } from 'react'
 
 import { useLocation } from 'react-router'
-import { NavLink, NavLinkProps } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Button, Container, Menu } from 'semantic-ui-react'
 
 import { Anon, LoggedIn } from 'Shared/Roles'
 import { UserContainer } from 'Shared/UserContainer'
 
 import './responsive.css'
-
-// helper for semanticUI + react-router
-const MenuLink = (props: NavLinkProps) => (
-  <NavLink
-    {...props}
-    activeClassName="active"
-  />
-);
 
 const Nav = () => {
   const location = useLocation();
@@ -32,15 +24,15 @@ const Nav = () => {
     <Container>
       <Button id="toggler" fluid color='black' icon='sidebar' onClick={() => setOpen(!open)} />
       <Menu.Menu className={menuClass} position="left" id="override">
-        <Menu.Item as={MenuLink} exact to="/" name="Home" />
+        <Menu.Item as={NavLink} to="/" name="Home" />
         <LoggedIn>
-          <Menu.Item as={MenuLink} to="/posts" name="Posts" />
+          <Menu.Item as={NavLink} to="/posts" name="Posts" />
         </LoggedIn>
       </Menu.Menu>
       <Menu.Menu className={menuClass} position="right">
         <Anon>
-          <Menu.Item as={MenuLink} exact to={{ pathname: "/login", state: { from: location } }} name="Log In" />
-          <Menu.Item as={MenuLink} exact to="/signup" name="Sign Up" />
+          <Menu.Item as={NavLink} to={{ pathname: "/login", state: { from: location } }} name="Log In" />
+          <Menu.Item as={NavLink} to="/signup" name="Sign Up" />
         </Anon>
         <LoggedIn>
           <Menu.Item link={true} onClick={handleLogout} content="Log Out" />

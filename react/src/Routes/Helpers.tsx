@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from "react";
 
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Loader, Container, Dimmer } from "semantic-ui-react";
 
 import SimplePage from "Shared/SimplePage";
@@ -20,7 +20,7 @@ export function RequireAuth({ children, redirectTo }: RequireAuthProps) {
   }
 
   if (!user.id) {
-    return <Redirect to={redirectTo} />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <>{children}</>

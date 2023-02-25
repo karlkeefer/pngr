@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 
-import { useParams } from 'react-router'
-import { Redirect } from 'react-router'
+import { useParams, useNavigate } from "react-router-dom";
 import { Form, Message, Button } from 'semantic-ui-react'
 
 import API from 'Api'
@@ -14,7 +13,7 @@ const PostForm = () => {
   const postID = Number(params.id);
   const [loading, error, run] = useRequest({} as Post)
   const {fields, handleChange, setFields} = useFields({} as Post)
-  const [redirectTo, setRedirectTo] = useState('');
+  const navigate = useNavigate();
 
   // if we have a post ID, fetch it
   useEffect(() => {
@@ -28,20 +27,18 @@ const PostForm = () => {
   // handlers
   const handleSubmit = useCallback(() => {
     const action = postID ? API.updatePost(fields) : API.createPost(fields);
-    run(action, () => {
-      setRedirectTo('/posts')
+    run(action, (data) => {
+      navigate(`/post/${data.id}`);
     })
-  }, [postID, fields, run])
+  }, [postID, fields, run, navigate])
 
   const handleDelete = useCallback(() => {
     run(API.deletePost(postID), () => {
-      setRedirectTo('/posts')
+      navigate('/posts')
     })
-  }, [run, postID])
+  }, [run, postID, navigate])
 
-  if (redirectTo) {
-    return <Redirect to={redirectTo} />
-  }
+  
 
   const { id, title, body } = fields;
 

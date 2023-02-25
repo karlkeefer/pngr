@@ -1,6 +1,4 @@
-import React from 'react'
-
-import { Switch, Route } from 'react-router-dom'
+import { Routes as ReactRouterRoutes, Route } from "react-router-dom";
 
 import ChangePassword from 'Routes/Account/ChangePassword'
 import { NoMatch, RequireAuth } from "Routes/Helpers";
@@ -15,64 +13,57 @@ import SignUp from 'Routes/SignUp/SignUp'
 import Verify from 'Routes/Verify/Verify'
 
 const Routes = () => (
-  <Switch>
-    <Route exact path="/" component={Home} />
-    <Route exact path="/signup" component={SignUp}/>
-    <Route exact path="/login" component={LogIn}/>
-    <Route exact path="/reset" component={Reset}/>
-    <Route exact path="/reset/:code" component={CheckReset}/>
-    <Route exact path="/verify/:code" component={Verify}/>
+  <ReactRouterRoutes>
+    <Route path="/" element={<Home />} />
+    <Route path="/signup" element={<SignUp />}/>
+    <Route path="/login" element={<LogIn />}/>
+    <Route path="/reset" element={<Reset />}/>
+    <Route path="/reset/:code" element={<CheckReset />}/>
+    <Route path="/verify/:code" element={<Verify />}/>
     
     {/* crud post routes */}
     <Route
-        exact
-        path="/account/password"
-        render={() => (
-          <RequireAuth redirectTo="/login">
-            <ChangePassword />
-          </RequireAuth>
-        )}
+      path="/account/password"
+      element={
+        <RequireAuth redirectTo="/login">
+          <ChangePassword />
+        </RequireAuth>
+      }
       />
     <Route
-      exact
       path="/posts"
-      render={() => {
-        return (
-          <RequireAuth redirectTo="/login">
-            <Posts />
-          </RequireAuth>
-        );
-      }}
+      element={
+        <RequireAuth redirectTo="/login">
+          <Posts />
+        </RequireAuth>
+      }
     />
     <Route
-      exact
       path="/post/create"
-      render={() => (
+      element={
         <RequireAuth redirectTo="/login">
           <PostForm />
         </RequireAuth>
-      )}
+      }
     />
     <Route
-      exact
       path="/post/:id/edit"
-      render={() => (
+      element={
         <RequireAuth redirectTo="/login">
           <PostForm />
         </RequireAuth>
-      )}
+      }
     />
     <Route
-      exact
       path="/post/:id"
-      render={() => (
+      element={
         <RequireAuth redirectTo="/login">
           <Post />
         </RequireAuth>
-      )}
+      }
     />
-    <Route component={NoMatch} />
-  </Switch>
+    <Route element={<NoMatch />} />
+  </ReactRouterRoutes>
 )
 
 export default Routes;
