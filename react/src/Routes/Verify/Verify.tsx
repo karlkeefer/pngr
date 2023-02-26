@@ -19,7 +19,7 @@ const Verify = () => {
     if (!userLoading) {
       // wait until default whoami (called within the UserContainer) returns 
       // before attempting reset, otherwise there is a race condition
-      if(!code){
+      if (!code) {
         navigate("/")
         return
       }

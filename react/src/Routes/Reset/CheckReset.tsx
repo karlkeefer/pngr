@@ -17,13 +17,11 @@ const CheckReset = () => {
   useEffect(() => {
     if (!userLoading) {
       // wait until defailt whoami returns before attempting reset
-      run(API.checkReset(code!), user => {
+      run(API.checkReset(code as string), user => {
         if (user.id) {
-          navigate("/account/password");
           setUser(user);
-          return 
+          navigate("/account/password");
         }
-        navigate("/posts");
       });
     }
   }, [run, userLoading, setUser, code, navigate])

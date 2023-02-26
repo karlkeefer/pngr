@@ -20,7 +20,7 @@ const SimplePage = ({ title, icon, centered, loading, error, children }: SimpleP
 
     <Content centered={!!centered}>
       <Header as='h1'>
-        {icon && <Icon name={icon} />}{loading ? <PlaceholderTitle/> : title}
+        {icon && <Icon name={icon} />}{loading ? <PlaceholderTitle centered={centered}/> : title}
       </Header>
 
       {error && <Message negative>{error}</Message>}
@@ -32,8 +32,13 @@ const SimplePage = ({ title, icon, centered, loading, error, children }: SimpleP
 
 export default SimplePage;
 
-const PlaceholderTitle = () => (
-  <div style={{display:'table-cell', width: '10em', paddingTop: '0.4em', paddingLeft: '0.5em'}}>
+const PlaceholderTitle = ({ centered }: { centered?: boolean}) => (
+  <div style={{
+    display:'table-cell',
+    width: '10em',
+    paddingTop: '0.4em', 
+    paddingLeft: centered!! ? '' : '0.5em',
+    }}>
     <Placeholder>
       <Placeholder.Header>
         <Placeholder.Line/>
