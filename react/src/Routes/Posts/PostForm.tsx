@@ -38,12 +38,10 @@ const PostForm = () => {
     })
   }, [run, postID, navigate])
 
-  
-
   const { id, title, body } = fields;
 
   return (
-    <SimplePage icon='file alternate outline' title={id ? `Edit Post #${id}` : 'Create a Post'}>
+    <SimplePage icon='file alternate outline' title={postID ? `Edit Post #${postID}` : 'Create a Post'}>
       <Form error name="createPost" loading={loading} onSubmit={handleSubmit}>
         <Message error>{error}</Message>
         <Form.Input

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
-import { Segment, Message, Header, Button, Placeholder } from 'semantic-ui-react'
+import { Segment, Message, Header, Button, Placeholder, SegmentGroup, PlaceholderHeader } from 'semantic-ui-react'
 
 import API from 'Api'
 import { useRequest } from 'Shared/Hooks'
@@ -18,17 +18,9 @@ const Posts = () => {
   }, [run])
 
   return (
-    <SimplePage icon='copy' title='My Posts' error={error}>
+    <SimplePage icon='copy outline' title='My Posts' error={error}>
       <p>This page fetches some protected data that only the logged in user ({user.email}) can see!</p>
-      {loading &&
-        <Placeholder style={{ marginBottom: '1em' }}>
-          <Placeholder.Paragraph>
-            <Placeholder.Line />
-            <Placeholder.Line />
-            <Placeholder.Line />
-            <Placeholder.Line />
-          </Placeholder.Paragraph>
-        </Placeholder>}
+      {loading && <PostsPlaceholder/>}
       {posts.length === 0 && !loading && 
         <Message warning>No posts found...</Message>}
       {posts.map(SinglePost)}
@@ -38,6 +30,26 @@ const Posts = () => {
 }
 
 export default Posts;
+
+const PostsPlaceholder = () => (
+  <SegmentGroup style={{ marginBottom: '1em' }}>
+    <Segment attached='bottom'>
+      <Placeholder>
+        <Placeholder.Header>
+          <Placeholder.Line/>
+        </Placeholder.Header>
+      </Placeholder>
+    </Segment>
+    <Segment attached='top'>
+      <Placeholder>
+        <Placeholder.Paragraph>
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Paragraph>
+      </Placeholder>
+    </Segment>
+  </SegmentGroup>
+)
 
 const SinglePost = ({ id, title, body }: Post) => (
   <Segment.Group key={id}>

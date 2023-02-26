@@ -24,8 +24,8 @@ const ViewPost = () => {
   const { id, title, body } = post;
 
   return (
-    <SimplePage icon='file' title={title} loading={loading} error={error}>
-      <p>{body}</p>
+    <SimplePage icon='file alternate outline' title={title} loading={loading} error={error}>
+      <p style={{whiteSpace: 'pre'}}>{body}</p>
       {id && id > 0 && 
         <Button as={Link} to={`/post/${id}/edit`} content='Edit' />}
     </SimplePage>

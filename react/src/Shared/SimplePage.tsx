@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 import { Helmet } from 'react-helmet'
-import { Container, Grid, Header, Icon, Message, Loader, SemanticICONS } from 'semantic-ui-react'
+import { Container, Grid, Header, Icon, Message, SemanticICONS, Placeholder } from 'semantic-ui-react'
 
 type SimplePageProps = React.PropsWithChildren<{
   title: string
@@ -20,17 +20,37 @@ const SimplePage = ({ title, icon, centered, loading, error, children }: SimpleP
 
     <Content centered={!!centered}>
       <Header as='h1'>
-        {icon && <Icon name={icon} />}{title}
+        {icon && <Icon name={icon} />}{loading ? <PlaceholderTitle/> : title}
       </Header>
 
       {error && <Message negative>{error}</Message>}
 
-      {loading ? <Loader active inline='centered' /> : children}
+      {loading ? <PlaceholderPost/> : children}
     </Content>
   </Container>
 );
 
 export default SimplePage;
+
+const PlaceholderTitle = () => (
+  <div style={{display:'table-cell', width: '10em', paddingTop: '0.4em', paddingLeft: '0.5em'}}>
+    <Placeholder>
+      <Placeholder.Header>
+        <Placeholder.Line/>
+      </Placeholder.Header>
+    </Placeholder>
+  </div>
+)
+
+const PlaceholderPost = () => (
+  <Placeholder>
+    <Placeholder.Paragraph>
+      <Placeholder.Line/>
+      <Placeholder.Line/>
+      <Placeholder.Line/>
+    </Placeholder.Paragraph>
+  </Placeholder>
+)
 
 type ContentProps = {
   children: ReactNode;
