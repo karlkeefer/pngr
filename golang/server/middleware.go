@@ -40,7 +40,7 @@ func lag(fn http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-const localDev = "https://localhost"
+const localDev = "http://localhost:4500"
 
 // only returns an origin if it matches our list
 func validateOrigin(r *http.Request) string {

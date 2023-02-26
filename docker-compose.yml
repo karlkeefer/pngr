@@ -42,13 +42,13 @@ services:
     volumes:
       - ./golang/sql/schema:/docker-entrypoint-initdb.d/schema
 
-  # nginx is used for ssl termination
+  # nginx is used to proxy /api
   nginx:
     build: 
       context: nginx
       target: dev
     ports:
-      - "443:443"
+      - "4500:4500"
     depends_on:
       - react
       - golang

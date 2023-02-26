@@ -45,9 +45,8 @@ cp .env.example .env
 # build and start the containers
 docker-compose up
 ```
-1) Visit `https://localhost` (*note **https***)
-2) Approve the self-signed cert
-3) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
+1) Visit `http://localhost:4500`
+2) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
 
 <img src="./docs/demo.png" width="400"/>
 
