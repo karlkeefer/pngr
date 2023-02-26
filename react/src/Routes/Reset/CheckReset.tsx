@@ -18,13 +18,11 @@ const CheckReset = () => {
     if (!userLoading) {
       // wait until defailt whoami returns before attempting reset
       run(API.checkReset(code!), user => {
-        debugger
         if (user.id) {
           navigate("/account/password");
           setUser(user);
           return 
         }
-        debugger
         navigate("/posts");
       });
     }

@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from "react";
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { Loader, Container, Dimmer } from "semantic-ui-react";
 
 import SimplePage from "Shared/SimplePage";
@@ -8,19 +8,19 @@ import { UserContainer } from "Shared/UserContainer";
 
 type RequireAuthProps = {
   children: ReactNode;
-  redirectTo: string;
 };
 
 // check the user is logged in, and redirect to login screen if still not auth'd
-export function RequireAuth({ children, redirectTo }: RequireAuthProps) {
+export const RequireAuth = ({ children }: RequireAuthProps) => {
   const { user, userLoading } = useContext(UserContainer);
+  const { pathname } = useLocation();
 
   if (userLoading) {
     return <BigLoader />;
   }
 
   if (!user.id) {
-    return <Navigate to={redirectTo} replace />;
+    return <Navigate to='/login' state={{from: pathname}} replace />;
   }
 
   return <>{children}</>
