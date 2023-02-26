@@ -25,7 +25,7 @@ const Routes = () => (
     <Route
       path="/account/password"
       element={
-        <RequireAuth redirectTo="/login">
+        <RequireAuth>
           <ChangePassword />
         </RequireAuth>
       }
@@ -33,7 +33,7 @@ const Routes = () => (
     <Route
       path="/posts"
       element={
-        <RequireAuth redirectTo="/login">
+        <RequireAuth>
           <Posts />
         </RequireAuth>
       }
@@ -41,7 +41,7 @@ const Routes = () => (
     <Route
       path="/post/create"
       element={
-        <RequireAuth redirectTo="/login">
+        <RequireAuth>
           <PostForm />
         </RequireAuth>
       }
@@ -49,7 +49,7 @@ const Routes = () => (
     <Route
       path="/post/:id/edit"
       element={
-        <RequireAuth redirectTo="/login">
+        <RequireAuth>
           <PostForm />
         </RequireAuth>
       }
@@ -57,7 +57,7 @@ const Routes = () => (
     <Route
       path="/post/:id"
       element={
-        <RequireAuth redirectTo="/login">
+        <RequireAuth>
           <Post />
         </RequireAuth>
       }

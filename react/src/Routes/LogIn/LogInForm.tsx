@@ -16,10 +16,9 @@ const LogInForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!user.id){
-      return
+    if (user.id) {
+      navigate("/posts", { replace: true})
     }
-    navigate("/posts", { replace: true})
   }, [user, navigate])
 
   const handleSubmit = useCallback(() => {
