@@ -1,4 +1,4 @@
-import { useState, useCallback, ChangeEvent } from 'react';
+import { useState, useCallback, ChangeEvent, useRef, useEffect } from 'react';
 
 import _ from 'lodash'
 import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
@@ -9,6 +9,13 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
   const [data, setData] = useState(initData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // prevent setters if component is unmounted
+  // this can happen if e.g. onSuccess callback causes page navigation
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    return () => void (isMountedRef.current = false);
+  }, []);
 
   // we could just return the promise from run(), but using onSuccess and onFailure callbacks 
   // allows us to react before the loading/errors states change - this is mostly useful if 
@@ -22,15 +29,19 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
         if (onSuccess) {
           onSuccess(data);
         }
-        setData(data);
-        setLoading(false);
+        if (isMountedRef.current) {
+          setData(data);
+          setLoading(false);
+        }
       })
       .catch(error => {
         if (onFailure) {
           onFailure(error);
         }
-        setError(error);
-        setLoading(false);
+        if (isMountedRef.current) {
+          setError(error);
+          setLoading(false);
+        }
       });
   }, [])
 

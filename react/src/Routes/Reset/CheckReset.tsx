@@ -20,7 +20,7 @@ const CheckReset = () => {
       run(API.checkReset(code as string), user => {
         if (user.id) {
           setUser(user);
-          navigate("/account/password");
+          navigate("/change-password");
         }
       });
     }

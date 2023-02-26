@@ -32,8 +32,6 @@ const LogInForm = () => {
     });
   }, [run, fields, setFields, setUser, navigate, location.state])
 
-  const { email, pass } = fields;
-
   return (
     <Form error name="login" loading={loading} onSubmit={handleSubmit}>
       <Message error>{error}</Message>
@@ -44,7 +42,6 @@ const LogInForm = () => {
         type="email"
         placeholder="Email"
         required
-        value={email}
         onChange={handleChange} />
       <Form.Input
         size="big"
@@ -52,7 +49,6 @@ const LogInForm = () => {
         type="password"
         placeholder="Password"
         required
-        value={pass}
         onChange={handleChange} />
       <Button primary fluid size="huge" type="submit">Log In</Button>
     </Form>

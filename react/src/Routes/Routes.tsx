@@ -23,7 +23,7 @@ const Routes = () => (
     
     {/* crud post routes */}
     <Route
-      path="/account/password"
+      path="/change-password"
       element={
         <RequireAuth>
           <ChangePassword />
