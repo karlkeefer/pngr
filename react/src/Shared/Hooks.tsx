@@ -1,7 +1,7 @@
-import { useState, useCallback, ChangeEvent, useRef, useEffect } from 'react';
+import { useState, useCallback, ChangeEvent, useRef, useEffect, SyntheticEvent, FormEvent } from 'react';
 
 import _ from 'lodash'
-import { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
+import { CheckboxProps, DropdownProps, InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 
 export type RunFunc<T> = (promise: Promise<any>, onSuccess?: (data: T) => void, onFailure?: Function) => void
 
@@ -52,8 +52,11 @@ export const useRequest = <T extends Object>(initData: T): [boolean, string, Run
 // this hook also supports nested properties!
 // You just have to set your input field's name attr appropriately
 // e.g. w/ a schema like {person:{first_name:''}} you can do <input name="person.first_name"/>
+type Evt = SyntheticEvent<HTMLElement, Event> | ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | FormEvent<HTMLInputElement> | null
+type Data = InputOnChangeData | TextAreaProps | CheckboxProps | DropdownProps
 
-export type ChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, data: InputOnChangeData | TextAreaProps) => void
+export type ChangeHandler = (event: Evt, data: Data) => void
+
 
 type ChangeData = {
   name: string
@@ -75,7 +78,7 @@ export const useFields = <T extends Object>(initFields: T): {fields: T, handleCh
     });
   }, [setFields])
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, cd: InputOnChangeData | TextAreaProps) => {
+  const handleChange = useCallback((e: Evt, cd: Data) => {
     changeHandler(cd as ChangeData)
   }, [changeHandler])
 
