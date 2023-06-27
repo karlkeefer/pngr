@@ -10,7 +10,7 @@ WORKDIR /root
 COPY ./package*.json ./
 RUN npm ci --cache .npm
 COPY . . 
-RUN npm run build -o app
+RUN npm run build
 
 # multistage build...
 # this runs a lil nginx instance to serve the app
