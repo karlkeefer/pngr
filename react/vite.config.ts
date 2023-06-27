@@ -20,6 +20,7 @@ export default defineConfig({
         'node_modules/',
       ],
     },
+    cache: false
   },
   server: {
     host: true,
