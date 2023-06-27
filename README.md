@@ -19,7 +19,8 @@ Only implements `users`, `sessions`, `password_resets`, and a toy `post` type to
 - [httprouter](github.com/julienschmidt/httprouter) for [simple back-end routing](./golang/server/routes.go)
 
 ### Front-end
-- Unejected [Create React App](https://github.com/facebookincubator/create-react-app) 
+- [Vite](https://vitejs.dev/) dev server
+- [Vitest](https://vitest.dev/) integration
 - [React Router](https://github.com/ReactTraining/react-router) for [front-end routing](./react/src/Routes/Routes.js)
 - [React Context](https://reactjs.org/docs/context.html) for global user state
 - Functional-style typescript components throughout, including some helpful [custom hooks to simplify building forms](./react/src/Routes/Posts/PostForm.js)
@@ -49,6 +50,11 @@ docker-compose up
 2) Make changes to go, sql, or react code, and enjoy hot-reload goodness!
 
 <img src="./docs/demo.png" width="400"/>
+
+## Run client-side test watcher
+```bash
+docker-compose exec react npm run test
+```
 
 ## Database Helpers
 
