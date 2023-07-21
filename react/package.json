@@ -53,8 +53,6 @@
     "vite": "^4.3.9",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.32.2",
-    "webpack-hot-middleware": "^2.25.2",
-    "webpack-plugin-serve": "^1.6.0"
+    "vitest": "^0.32.2"
   }
 }
